@@ -2,7 +2,7 @@
 
 A web app that helps entrepreneurs validate business ideas by finding real problems people are complaining about online — before building anything.
 
-**Live demo:** _[add your URL here]_
+**Live demo:** [https://raz76.github.io/urbanvoice-discover-tool/]
 
 ---
 
