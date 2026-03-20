@@ -318,6 +318,32 @@ function showLandingScreen() {
     btn.disabled = STATE.rawIdea.trim().length < 3;
   }
 
+  // Reset button — testing only, remove before final launch
+  const existingReset = document.getElementById('btn-owner-reset');
+  if (existingReset) existingReset.remove();
+  const resetBtn = document.createElement('button');
+  resetBtn.id = 'btn-owner-reset';
+  resetBtn.textContent = '[reset rate limit]';
+  resetBtn.style.cssText = 'display:block;margin:8px auto 0;font-size:0.75rem;color:var(--text-faint);background:none;border:none;cursor:pointer;text-decoration:underline;';
+  resetBtn.addEventListener('click', async () => {
+    resetBtn.textContent = '[resetting...]';
+    try {
+      await fetch(`${WORKER_URL}/reset-rate`, {
+        method: 'POST',
+        headers: { 'x-api-key': UV_SECRET, 'X-Owner-Token': OWNER_TOKEN },
+      });
+      STATE.dailyCount = 0;
+      STATE.gateSubmitted = false;
+      localStorage.removeItem('uv_gate_submitted');
+      resetBtn.textContent = '[reset ✓]';
+      setTimeout(() => { resetBtn.textContent = '[reset rate limit]'; }, 2000);
+    } catch {
+      resetBtn.textContent = '[reset failed]';
+    }
+  });
+  const footer = document.querySelector('.landing-footer');
+  if (footer) footer.insertAdjacentElement('beforebegin', resetBtn);
+
   input.addEventListener('input', () => {
     charCount.textContent = input.value.length;
     btn.disabled = input.value.trim().length < 3;

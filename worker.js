@@ -84,6 +84,13 @@ export default {
       return json({ ok: true });
     }
 
+    // ── POST /reset-rate (owner only) ────────────────────────────
+    if (url.pathname === '/reset-rate' && request.method === 'POST') {
+      if (!authorized) return json({ error: 'Unauthorized' }, 401);
+      await env.UV_RATE.delete(`ip:${clientIp}`);
+      return json({ ok: true });
+    }
+
     // ── GET /test ─────────────────────────────────────────────────
     if (url.pathname === '/test') {
       const query = url.searchParams.get('q') || 'dog anxiety';
