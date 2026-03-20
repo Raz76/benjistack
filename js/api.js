@@ -6,8 +6,9 @@
 
 'use strict';
 
-const WORKER_URL = 'https://wispy-salad-64ee.razvan-petrescu76.workers.dev';
-const UV_SECRET  = '0a91b983bbe44f231f860a3affb77582acb853c4'; // shared secret — must match worker
+const WORKER_URL   = 'https://wispy-salad-64ee.razvan-petrescu76.workers.dev';
+const UV_SECRET    = '0a91b983bbe44f231f860a3affb77582acb853c4'; // shared secret — must match worker
+const OWNER_TOKEN  = 'za-owner-zegret'; // must match OWNER_TOKEN env var in Cloudflare Worker
 
 // ----------------------------------------------------------------
 // Core request helpers
@@ -20,12 +21,15 @@ function parseJSON(raw) {
 }
 
 async function callAnthropic(systemPrompt, userPrompt) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'x-api-key': UV_SECRET,
+  };
+  if (localStorage.getItem('uv_owner') === 'true') headers['X-Owner-Token'] = OWNER_TOKEN;
+
   const res = await fetch(WORKER_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': UV_SECRET,
-    },
+    headers,
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 2048,
@@ -44,8 +48,11 @@ async function callAnthropic(systemPrompt, userPrompt) {
 }
 
 async function callSearch(query) {
+  const searchHeaders = { 'x-api-key': UV_SECRET };
+  if (localStorage.getItem('uv_owner') === 'true') searchHeaders['X-Owner-Token'] = OWNER_TOKEN;
+
   const res = await fetch(`${WORKER_URL}/search?q=${encodeURIComponent(query)}`, {
-    headers: { 'x-api-key': UV_SECRET },
+    headers: searchHeaders,
   });
 
   if (!res.ok) {

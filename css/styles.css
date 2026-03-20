@@ -426,6 +426,32 @@ img { max-width: 100%; display: block; }
   text-align: center;
 }
 
+/* Gate modal — wider to accommodate GHL iframe */
+.gate-modal {
+  max-width: 560px;
+  padding: 32px 28px;
+}
+
+.gate-iframe-wrap {
+  margin: 16px 0 8px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.gate-skip-link {
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+  font-size: 0.82rem;
+  color: var(--text-faint);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.gate-skip-link:hover {
+  color: var(--text-muted);
+}
+
 /* ============================================================
    LOADING SCREEN (reusable)
    ============================================================ */

@@ -863,18 +863,6 @@ function renderSummaryScreen(container) {
       <button class="btn-download" id="btn-download-pdf">⬇ Download PDF Report</button>
     </div>
 
-    <!-- PDF email gate (shown inline if email not yet collected) -->
-    <div id="pdf-gate" class="email-gate" style="margin-top: 24px; display: none;">
-      <div class="email-gate-title">Get Your Full PDF Report</div>
-      <p class="email-gate-sub">
-        Enter your email to download your validated business blueprint as a PDF.
-        You'll only need to do this once.
-      </p>
-      <div class="email-gate-row">
-        <input type="email" id="pdf-email-input" class="email-gate-input" placeholder="your@email.com" autocomplete="email" />
-        <button class="btn-primary" id="btn-pdf-email-submit">Send My Report →</button>
-      </div>
-    </div>
   `;
 
   screen.appendChild(body);
@@ -884,49 +872,17 @@ function renderSummaryScreen(container) {
     Object.assign(STATE, {
       currentStep: 0,
       rawIdea: '', selectedAngle: null, selectedProblem: null,
-      selectedSolution: null, selectedBrand: null, userEmail: '',
+      selectedSolution: null, selectedBrand: null,
       angles: [], problems: [], solutions: [], validations: [], validation: null,
-      brandOptions: [], emailUnlocked: false, anglesSkipped: false,
-      nearMissNote: '',
+      brandOptions: [], anglesSkipped: false, nearMissNote: '',
     });
     updateProgressDots(0);
     renderScreen('landing');
   });
 
   document.getElementById('btn-download-pdf').addEventListener('click', () => {
-    const savedEmail = getStoredEmail();
-    if (savedEmail) {
-      generatePDF();
-    } else {
-      // Show inline email gate
-      document.getElementById('pdf-gate').style.display = 'block';
-      document.getElementById('btn-download-pdf').style.display = 'none';
-      document.getElementById('pdf-email-input').focus();
-    }
+    generatePDF();
   });
-
-  // Wire email gate submit
-  setTimeout(() => {
-    const submitBtn   = document.getElementById('btn-pdf-email-submit');
-    const emailInput  = document.getElementById('pdf-email-input');
-    if (!submitBtn) return;
-
-    const submit = () => {
-      const email = emailInput.value.trim();
-      if (!email || !email.includes('@')) {
-        emailInput.style.borderColor = '#ff4444';
-        return;
-      }
-      saveStoredEmail(email);
-      STATE.userEmail     = email;
-      STATE.emailUnlocked = true;
-      document.getElementById('pdf-gate').style.display = 'none';
-      generatePDF();
-    };
-
-    submitBtn.addEventListener('click', submit);
-    emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
-  }, 0);
 }
 
 // ----------------------------------------------------------------
@@ -1097,16 +1053,33 @@ function generatePDF() {
   </div>` : ''}
 
   <div class="section">
-    <div class="label">What's Next?</div>
+    <div class="label">Suggested Next Steps</div>
+    <ol style="padding-left:20px; margin-top:8px;">
+      <li style="margin-bottom:10px; font-size:11pt; color:#333; line-height:1.6;">
+        <strong>Validate demand manually.</strong> Find 5–10 people who match your target audience
+        and ask them one question: "How do you currently deal with [the problem]?" Listen for pain
+        words — frustration, cost, time wasted.
+      </li>
+      <li style="margin-bottom:10px; font-size:11pt; color:#333; line-height:1.6;">
+        <strong>Find your first customer before you build.</strong> Post in one relevant community
+        (Reddit, Facebook group, LinkedIn) describing the problem and asking if anyone would pay
+        for a solution. A handful of "yes" responses is more valuable than months of planning.
+      </li>
+      <li style="margin-bottom:10px; font-size:11pt; color:#333; line-height:1.6;">
+        <strong>Test your messaging.</strong> Write three versions of a one-paragraph pitch for your
+        idea. Share each with someone in your target audience and see which one makes them lean in.
+        The winning message becomes your brand voice.
+      </li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="label">Ready to Build?</div>
     <p style="margin-bottom:12px; line-height:1.7; font-size:11pt;">
-      You've identified a real problem, chosen a business model, and validated the market.
-      Most people stop here. UrbanVoice helps you go from this blueprint to a live product.
+      UrbanVoice helps founders go from validated idea to live product — without writing code
+      or managing developers. If this idea has potential and you want a clear path forward,
+      a free 30-minute call is the best next step.
     </p>
-    <ul style="margin-bottom:20px;">
-      <li>Full product roadmap and feature prioritization</li>
-      <li>No-code MVP design and build — live in weeks, not months</li>
-      <li>Launch strategy and first-customer acquisition</li>
-    </ul>
     <div style="background:#fff5ee; border:2px solid #ff6a00; border-radius:8px; padding:20px; text-align:center;">
       <div style="font-size:12pt; font-weight:700; color:#1a1a2e; margin-bottom:6px;">Book a Free 30-Minute Strategy Call</div>
       <div style="font-size:10pt; color:#888; margin-bottom:12px;">No pitch. No pressure. Just a clear plan for your next steps.</div>

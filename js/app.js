@@ -16,16 +16,20 @@ const STATE = {
   selectedProblem: null,
   selectedSolution: null,
   selectedBrand: null,
-  userEmail: '',
   angles: [],
   problems: [],
   solutions: [],
   validations: [],   // pre-computed array of 5 validation objects (one per solution)
   validation: null,  // the selected solution's validation (set on card click)
   brandOptions: [],
-  emailUnlocked: false,
   anglesSkipped: false,
   nearMissNote: '',
+  // Gate / rate limiting
+  ownerMode: false,
+  confirmed: false,
+  dailyCount: 0,
+  dailyLimit: 1,
+  gateSubmitted: false,
 };
 
 const STEPS = [
@@ -39,48 +43,188 @@ const STEPS = [
 ];
 
 // ----------------------------------------------------------------
-// RATE LIMITING
-// 3 runs/day without email, 10/day after email given
+// RATE LIMITING — Worker-based (IP tracked server-side)
 // ----------------------------------------------------------------
-const FREE_DAILY_LIMIT  = 3;
-const EMAIL_DAILY_LIMIT = 10;
-
-function getStoredEmail() {
-  return localStorage.getItem('uv_email') || '';
-}
-
-function saveStoredEmail(email) {
-  localStorage.setItem('uv_email', email);
-}
-
-function getRateData() {
-  const today = new Date().toISOString().slice(0, 10);
+async function checkRateStatus() {
+  if (STATE.ownerMode) return;
   try {
-    const saved = JSON.parse(localStorage.getItem('uv_rate') || '{}');
-    if (saved.date !== today) return { date: today, count: 0 };
-    return saved;
+    const headers = { 'x-api-key': UV_SECRET };
+    if (STATE.ownerMode) headers['X-Owner-Token'] = OWNER_TOKEN;
+    const res  = await fetch(`${WORKER_URL}/rate-check`, { headers });
+    if (!res.ok) return;
+    const data = await res.json();
+    STATE.confirmed  = data.confirmed  || false;
+    STATE.dailyCount = data.count      || 0;
+    STATE.dailyLimit = data.limit      || 1;
   } catch {
-    return { date: today, count: 0 };
+    // fail open — don't block users if Worker has a hiccup
   }
 }
 
-function incrementRuns() {
-  const r = getRateData();
-  r.count++;
-  localStorage.setItem('uv_rate', JSON.stringify(r));
+// Returns true if the journey was gated (caller should abort), false if clear to proceed.
+async function checkJourneyStart() {
+  if (STATE.ownerMode) return false;
+  try {
+    const headers = { 'x-api-key': UV_SECRET, 'Content-Type': 'application/json' };
+    const res = await fetch(`${WORKER_URL}/journey-start`, { method: 'POST', headers });
+    if (res.ok) {
+      const data = await res.json();
+      STATE.dailyCount++;
+      STATE.dailyLimit = data.remaining !== undefined
+        ? STATE.dailyCount + data.remaining
+        : STATE.dailyLimit;
+      return false; // clear to proceed
+    }
+    if (res.status === 429) {
+      const data = await res.json().catch(() => ({}));
+      if (data.reason === 'unconfirmed') {
+        STATE.gateSubmitted ? showPendingConfirmation() : showEmailGate();
+      } else {
+        showDailyLimitWall();
+      }
+      return true; // gated
+    }
+  } catch {
+    return false; // fail open
+  }
+  return false;
 }
 
-function isRateLimited() {
-  const r = getRateData();
-  const limit = getStoredEmail() ? EMAIL_DAILY_LIMIT : FREE_DAILY_LIMIT;
-  return r.count >= limit;
+// ----------------------------------------------------------------
+// EMAIL GATE MODAL — GHL iframe form
+// ----------------------------------------------------------------
+function showEmailGate() {
+  const existing = document.getElementById('gate-modal');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'gate-modal';
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal gate-modal">
+      <h2 class="modal-title">You've discovered one idea.</h2>
+      <p class="modal-desc">
+        Ready to explore more? Enter your details below to unlock 3 searches per day.
+      </p>
+      <div class="gate-iframe-wrap">
+        <iframe
+          src="https://links.urbanvoice.ai/widget/form/lDgjUTQXJ4CuJBhzanD4"
+          style="width:100%;height:412px;border:none;border-radius:3px"
+          id="inline-lDgjUTQXJ4CuJBhzanD4"
+          data-layout="{'id':'INLINE'}"
+          data-trigger-type="alwaysShow"
+          data-activation-type="alwaysActivated"
+          data-deactivation-type="neverDeactivate"
+          data-form-name="Urban Voice Discover Gate"
+          data-height="412"
+          data-layout-iframe-id="inline-lDgjUTQXJ4CuJBhzanD4"
+          data-form-id="lDgjUTQXJ4CuJBhzanD4"
+          title="Urban Voice Discover Gate">
+        </iframe>
+      </div>
+      <a href="${BOOKING_LINK}" target="_blank" class="gate-skip-link">
+        Skip — book a free call directly →
+      </a>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  window.addEventListener('message', handleGHLMessage);
 }
 
-function getRateLimitInfo() {
-  const r    = getRateData();
-  const hasEmail = !!getStoredEmail();
-  const limit = hasEmail ? EMAIL_DAILY_LIMIT : FREE_DAILY_LIMIT;
-  return { count: r.count, limit, hasEmail, remaining: Math.max(0, limit - r.count) };
+function handleGHLMessage(event) {
+  if (!event.data) return;
+  const d = event.data;
+  const isSubmit =
+    (typeof d === 'string' && d.includes('form_submitted')) ||
+    (typeof d === 'object' && (
+      d.type === 'form_submitted' ||
+      d.event === 'formSubmit' ||
+      d.page?.url?.includes('submitted')
+    ));
+  if (!isSubmit) return;
+
+  window.removeEventListener('message', handleGHLMessage);
+  STATE.gateSubmitted = true;
+  localStorage.setItem('uv_gate_submitted', 'true');
+
+  const modal = document.getElementById('gate-modal')?.querySelector('.modal');
+  if (modal) {
+    modal.innerHTML = `
+      <h2 class="modal-title">Almost there!</h2>
+      <p class="modal-desc">
+        Check your email and click the confirmation link to unlock 3 searches per day.
+      </p>
+      <p class="modal-note" style="margin-top:16px;">
+        Ready to take this idea further?
+      </p>
+      <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
+         style="display:block;text-align:center;margin-top:12px;text-decoration:none;">
+        Book a Free Discovery Call →
+      </a>
+      <button class="btn-secondary" id="btn-gate-close"
+              style="width:100%;margin-top:10px;">
+        Close
+      </button>
+    `;
+    document.getElementById('btn-gate-close')?.addEventListener('click', () => {
+      document.getElementById('gate-modal')?.remove();
+    });
+  }
+}
+
+function showPendingConfirmation() {
+  const existing = document.getElementById('gate-modal');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'gate-modal';
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <h2 class="modal-title">Check Your Email</h2>
+      <p class="modal-desc">
+        Click the confirmation link we sent you to unlock 3 searches per day.
+      </p>
+      <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
+         style="display:block;text-align:center;margin-top:20px;text-decoration:none;">
+        Book a Free Discovery Call →
+      </a>
+      <button class="btn-secondary" id="btn-gate-close"
+              style="width:100%;margin-top:10px;">
+        Close
+      </button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById('btn-gate-close').addEventListener('click', () => overlay.remove());
+}
+
+function showDailyLimitWall() {
+  const existing = document.getElementById('gate-modal');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'gate-modal';
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <h2 class="modal-title">You're on a roll.</h2>
+      <p class="modal-desc">
+        You've used all 3 searches for today. Your limit resets at midnight —
+        or if you've found an idea worth pursuing, let's talk now.
+      </p>
+      <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
+         style="display:block;text-align:center;margin-top:20px;text-decoration:none;">
+        Book a Free Discovery Call →
+      </a>
+      <button class="btn-secondary" id="btn-gate-close"
+              style="width:100%;margin-top:10px;">
+        Come Back Tomorrow
+      </button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById('btn-gate-close').addEventListener('click', () => overlay.remove());
 }
 
 // ----------------------------------------------------------------
@@ -95,7 +239,6 @@ function goTo(stepName) {
 
 function goBack() {
   // If going back from problems and angles was skipped, return to landing
-  // (there's no angles screen to go back to — the search was auto-sufficient)
   if (STATE.currentStep === STEPS.indexOf('problems') && STATE.anglesSkipped) {
     STATE.currentStep = 0;
     updateProgressDots(0);
@@ -147,13 +290,13 @@ function renderScreen(stepName) {
 
   switch (stepName) {
     case null:
-    case 'landing':   showLandingScreen();              break;
-    case 'angles':    renderAnglesScreen(container);    break;
-    case 'problems':  renderProblemsScreen(container);  break;
-    case 'solutions': renderSolutionsScreen(container); break;
-    case 'validation':renderValidationScreen(container);break;
-    case 'brand':     renderBrandScreen(container);     break;
-    case 'summary':   renderSummaryScreen(container);   break;
+    case 'landing':    showLandingScreen();              break;
+    case 'angles':     renderAnglesScreen(container);    break;
+    case 'problems':   renderProblemsScreen(container);  break;
+    case 'solutions':  renderSolutionsScreen(container); break;
+    case 'validation': renderValidationScreen(container);break;
+    case 'brand':      renderBrandScreen(container);     break;
+    case 'summary':    renderSummaryScreen(container);   break;
     default: console.warn('Unknown step:', stepName);
   }
 }
@@ -175,9 +318,6 @@ function showLandingScreen() {
     btn.disabled = STATE.rawIdea.trim().length < 3;
   }
 
-  // Show usage counter on landing
-  renderUsageCounter();
-
   input.addEventListener('input', () => {
     charCount.textContent = input.value.length;
     btn.disabled = input.value.trim().length < 3;
@@ -190,130 +330,76 @@ function showLandingScreen() {
   btn.addEventListener('click', handleDiscover);
 }
 
-function renderUsageCounter() {
-  const info = getRateLimitInfo();
-  const existing = document.getElementById('usage-counter');
-  if (existing) existing.remove();
-
-  const el = document.createElement('p');
-  el.id = 'usage-counter';
-  el.className = 'usage-counter';
-
-  if (info.hasEmail) {
-    el.textContent = `${info.remaining} of ${info.limit} searches remaining today`;
-  } else {
-    el.textContent = `${info.remaining} free search${info.remaining !== 1 ? 'es' : ''} remaining today`;
-  }
-
-  // Small reset link for testing — click to wipe daily count and stored email
-  const resetLink = document.createElement('span');
-  resetLink.textContent = ' [reset]';
-  resetLink.style.cssText = 'font-size:0.75rem; color: var(--text-faint); cursor:pointer; text-decoration:underline; margin-left:6px;';
-  resetLink.title = 'Reset usage counter (testing only)';
-  resetLink.addEventListener('click', () => {
-    localStorage.removeItem('uv_rate');
-    localStorage.removeItem('uv_email');
-    STATE.userEmail = '';
-    STATE.emailUnlocked = false;
-    renderUsageCounter();
-  });
-  el.appendChild(resetLink);
-
-  const footer = document.querySelector('.landing-footer');
-  if (footer) footer.insertAdjacentElement('beforebegin', el);
-}
-
 async function handleDiscover() {
   const input = document.getElementById('idea-input');
   const idea  = input.value.trim();
   if (!idea || idea.length < 3) return;
 
-  if (isRateLimited()) {
-    showRateLimitModal();
-    return;
-  }
+  const gated = await checkJourneyStart();
+  if (gated) return;
 
   STATE.rawIdea = idea;
-  incrementRuns();
   goTo('angles');
 }
 
 // ----------------------------------------------------------------
-// RATE LIMIT MODAL
+// CONFIRMATION HANDLER — called on ?confirmed=true in URL
 // ----------------------------------------------------------------
-function showRateLimitModal() {
-  const hasEmail = !!getStoredEmail();
-  const existing = document.getElementById('rate-modal');
-  if (existing) existing.remove();
-
-  const overlay = document.createElement('div');
-  overlay.id = 'rate-modal';
-  overlay.className = 'modal-overlay';
-
-  if (hasEmail) {
-    overlay.innerHTML = `
-      <div class="modal">
-        <h2 class="modal-title">Daily Limit Reached</h2>
-        <p class="modal-desc">
-          You've used all ${EMAIL_DAILY_LIMIT} searches for today. Come back tomorrow —
-          your limit resets at midnight.
-        </p>
-        <button class="btn-primary" id="btn-rate-close" style="width:100%;">Got It</button>
-      </div>
-    `;
-  } else {
-    overlay.innerHTML = `
-      <div class="modal">
-        <h2 class="modal-title">Daily Limit Reached</h2>
-        <p class="modal-desc">
-          You've used your ${FREE_DAILY_LIMIT} free searches for today.
-          Enter your email to unlock ${EMAIL_DAILY_LIMIT} searches per day.
-        </p>
-        <div class="modal-field">
-          <label for="rate-email-input">Your Email</label>
-          <input type="email" id="rate-email-input" placeholder="your@email.com" />
-        </div>
-        <button class="btn-primary" id="btn-rate-unlock" style="width:100%; margin-top:8px;">Unlock More Searches</button>
-        <p class="modal-note" style="margin-top:12px;">Or come back tomorrow for 3 more free searches.</p>
-        <button class="btn-secondary" id="btn-rate-close" style="width:100%; margin-top:8px;">Maybe Later</button>
-      </div>
-    `;
-  }
-
-  document.body.appendChild(overlay);
-
-  document.getElementById('btn-rate-close').addEventListener('click', () => overlay.remove());
-
-  if (!hasEmail) {
-    document.getElementById('btn-rate-unlock').addEventListener('click', () => {
-      const emailInput = document.getElementById('rate-email-input');
-      const email = emailInput.value.trim();
-      if (!email || !email.includes('@')) {
-        emailInput.style.borderColor = '#ff4444';
-        return;
-      }
-      saveStoredEmail(email);
-      STATE.userEmail = email;
-      STATE.emailUnlocked = true;
-      overlay.remove();
-      // Reset today's count to 0 so they can proceed
-      const r = getRateData();
-      r.count = 0;
-      localStorage.setItem('uv_rate', JSON.stringify(r));
-      renderUsageCounter();
-    });
+async function handleEmailConfirmation() {
+  try {
+    const headers = { 'x-api-key': UV_SECRET, 'Content-Type': 'application/json' };
+    await fetch(`${WORKER_URL}/confirm`, { method: 'POST', headers });
+    STATE.confirmed  = true;
+    STATE.dailyLimit = 3;
+    STATE.gateSubmitted = false;
+    localStorage.removeItem('uv_gate_submitted');
+  } catch {
+    // fail silently — they'll just hit the gate again if needed
   }
 }
 
 // ----------------------------------------------------------------
 // INIT
 // ----------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-  // Pre-fill email from localStorage if returning user
-  const storedEmail = getStoredEmail();
-  if (storedEmail) {
-    STATE.userEmail     = storedEmail;
-    STATE.emailUnlocked = true;
+document.addEventListener('DOMContentLoaded', async () => {
+  const params = new URLSearchParams(window.location.search);
+
+  // Owner mode activation
+  if (params.get('owner') === OWNER_TOKEN) {
+    localStorage.setItem('uv_owner', 'true');
+    params.delete('owner');
+    const clean = params.toString();
+    history.replaceState({}, '', clean ? `?${clean}` : window.location.pathname);
   }
+
+  // Owner mode deactivation
+  if (params.has('reset_owner')) {
+    localStorage.removeItem('uv_owner');
+    params.delete('reset_owner');
+    const clean = params.toString();
+    history.replaceState({}, '', clean ? `?${clean}` : window.location.pathname);
+  }
+
+  // Email confirmation from GHL link
+  if (params.has('confirmed')) {
+    await handleEmailConfirmation();
+    params.delete('confirmed');
+    const clean = params.toString();
+    history.replaceState({}, '', clean ? `?${clean}` : window.location.pathname);
+  }
+
+  // Restore owner mode from localStorage
+  if (localStorage.getItem('uv_owner') === 'true') {
+    STATE.ownerMode = true;
+  }
+
+  // Restore gate-submitted flag
+  if (localStorage.getItem('uv_gate_submitted') === 'true') {
+    STATE.gateSubmitted = true;
+  }
+
+  // Fetch current rate status from Worker
+  await checkRateStatus();
+
   showLandingScreen();
 });
