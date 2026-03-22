@@ -1092,7 +1092,7 @@ function generatePDF() {
 <body>
 
   <div class="header">
-    <div class="brand">URBANVOICE</div>
+    <div class="brand">BENJISTACK</div>
     <div class="report-meta">
       Problem Discovery Report<br>
       Generated ${date}
@@ -1187,13 +1187,12 @@ function generatePDF() {
   <div class="section">
     <div class="label">Ready to Build?</div>
     <p style="margin-bottom:12px; line-height:1.7; font-size:11pt;">
-      BenjiStack · AI-curated tools and ideas for online business builders
-      or managing developers. If this idea has potential and you want a clear path forward,
-      a free 30-minute call is the best next step.
+      BenjiStack · AI-curated ideas and the exact tools to build them. If this report helped, get weekly
+      validated ideas and tool recommendations straight to your inbox.
     </p>
     <div style="background:#fff5ee; border:2px solid #ff6a00; border-radius:8px; padding:20px; text-align:center;">
-      <div style="font-size:12pt; font-weight:700; color:#1a1a2e; margin-bottom:6px;">Book a Free 30-Minute Strategy Call</div>
-      <div style="font-size:10pt; color:#888; margin-bottom:12px;">No pitch. No pressure. Just a clear plan for your next steps.</div>
+      <div style="font-size:12pt; font-weight:700; color:#1a1a2e; margin-bottom:6px;">Get the Weekly Newsletter</div>
+      <div style="font-size:10pt; color:#888; margin-bottom:12px;">Free. No spam. Unsubscribe anytime.</div>
       <a href="https://newsletter.benjistack.com" style="color:#ff6a00; font-weight:700; font-size:12pt; text-decoration:none;">newsletter.benjistack.com</a>
     </div>
   </div>
