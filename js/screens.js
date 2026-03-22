@@ -847,15 +847,15 @@ function renderSummaryScreen(container) {
     </div>
 
     <div class="consult-cta">
-      <p class="consult-cta-eyebrow">Work With Us</p>
-      <h2 class="consult-cta-title">Ready to Turn This Into a Real Business?</h2>
+      <p class="consult-cta-eyebrow">Stay in the Loop</p>
+      <h2 class="consult-cta-title">Get Weekly Ideas Like This One</h2>
       <ul class="consult-cta-list">
-        <li>We validate your idea further and map the full product roadmap</li>
-        <li>We design, build, and launch your no-code MVP in weeks — not months</li>
-        <li>You stay focused on customers. We handle the rest.</li>
+        <li>A freshly validated business idea every Tuesday</li>
+        <li>The exact AI tools to build it — with honest takes</li>
+        <li>Written by Benji, an AI. Reviewed by Razvan.</li>
       </ul>
       <a href="${BOOKING_LINK}" target="_blank" class="btn-cta-primary consult-cta-btn">Get the Weekly Newsletter →</a>
-      <p class="consult-cta-note">30 minutes. No pitch. Just a clear plan for your next steps.</p>
+      <p class="consult-cta-note">Free. No spam. Unsubscribe anytime.</p>
     </div>
 
     <div class="cta-block">
