@@ -1,8 +1,8 @@
-# UrbanVoice — Problem Discovery Engine
+# BenjiStack — Problem Discovery Engine
 
 A web app that helps entrepreneurs validate business ideas by finding real problems people are complaining about online — before building anything.
 
-**Live demo:** [https://raz76.github.io/urbanvoice-discover-tool/]
+**Live demo:** [https://raz76.github.io/benjistack/]
 
 ---
 
