@@ -108,7 +108,7 @@ function showEmailGate() {
       </p>
       <div class="gate-iframe-wrap">
         <iframe
-          src="https://links.urbanvoice.ai/widget/form/lDgjUTQXJ4CuJBhzanD4"
+          
           style="width:100%;height:412px;border:none;border-radius:3px"
           id="inline-lDgjUTQXJ4CuJBhzanD4"
           data-layout="{'id':'INLINE'}"

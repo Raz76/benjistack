@@ -6,7 +6,7 @@
 
 'use strict';
 
-const BOOKING_LINK = 'https://urbanvoice.ai/free-call';
+const BOOKING_LINK = 'https://newsletter.benjistack.com';
 
 // ----------------------------------------------------------------
 // HELPER: Create a standard screen wrapper with header + back nav
@@ -23,7 +23,7 @@ function createScreenShell(id, { showBack = true } = {}) {
   const header = document.createElement('header');
   header.className = 'screen-header';
   header.innerHTML = `
-    <img src="Brand/logo_11.png" alt="UrbanVoice" class="screen-logo" />
+    <img src="Brand/logo_11.png" alt="BenjiStack" class="screen-logo" />
     ${showBack ? `<button class="btn-back" id="btn-back-${id}">← Back</button>` : ''}
   `;
   screen.appendChild(header);
@@ -629,7 +629,7 @@ function renderValidationScreen(container) {
 
     <div class="consult-banner">
       <span>Want someone to build this for you?</span>
-      <a href="${BOOKING_LINK}" target="_blank" class="consult-banner-link">Book a Free Strategy Call →</a>
+      <a href="${BOOKING_LINK}" target="_blank" class="consult-banner-link">Get the Weekly Newsletter →</a>
     </div>
 
     <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
@@ -854,7 +854,7 @@ function renderSummaryScreen(container) {
         <li>We design, build, and launch your no-code MVP in weeks — not months</li>
         <li>You stay focused on customers. We handle the rest.</li>
       </ul>
-      <a href="${BOOKING_LINK}" target="_blank" class="btn-cta-primary consult-cta-btn">Book a Free Strategy Call →</a>
+      <a href="${BOOKING_LINK}" target="_blank" class="btn-cta-primary consult-cta-btn">Get the Weekly Newsletter →</a>
       <p class="consult-cta-note">30 minutes. No pitch. Just a clear plan for your next steps.</p>
     </div>
 
@@ -881,7 +881,118 @@ function renderSummaryScreen(container) {
   });
 
   document.getElementById('btn-download-pdf').addEventListener('click', () => {
-    generatePDF();
+    showEmailCapture(() => generatePDF());
+  });
+}
+
+// ----------------------------------------------------------------
+// EMAIL CAPTURE — shown before PDF download
+// ----------------------------------------------------------------
+function showEmailCapture(onSuccess) {
+  // If already captured this session, skip straight to PDF
+  if (sessionStorage.getItem('benjistack_subscribed')) {
+    onSuccess();
+    return;
+  }
+
+  // Build modal
+  const overlay = document.createElement('div');
+  overlay.id = 'email-capture-overlay';
+  overlay.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,0.7);
+    display:flex;align-items:center;justify-content:center;
+    z-index:9999;padding:20px;
+  `;
+
+  overlay.innerHTML = `
+    <div style="
+      background:#fff;border-radius:16px;padding:36px;max-width:460px;width:100%;
+      box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center;
+    ">
+      <div style="font-size:2rem;margin-bottom:12px">📬</div>
+      <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px;color:#111">
+        Get your full PDF report
+      </h2>
+      <p style="color:#555;font-size:0.95rem;margin-bottom:24px;line-height:1.5">
+        Enter your email to download — and get weekly validated business ideas
+        + AI tools to build them, from Benji's newsletter.
+      </p>
+      <input
+        type="email"
+        id="capture-email"
+        placeholder="your@email.com"
+        style="
+          width:100%;padding:12px 16px;border:2px solid #e0e0e0;
+          border-radius:8px;font-size:1rem;box-sizing:border-box;
+          margin-bottom:12px;outline:none;
+        "
+      />
+      <div id="capture-error" style="color:#e53e3e;font-size:0.85rem;margin-bottom:8px;display:none"></div>
+      <button id="capture-submit" style="
+        width:100%;padding:14px;background:#111;color:#fff;
+        border:none;border-radius:8px;font-size:1rem;font-weight:600;
+        cursor:pointer;margin-bottom:10px;
+      ">
+        Download My Report →
+      </button>
+      <button id="capture-skip" style="
+        background:none;border:none;color:#999;font-size:0.85rem;
+        cursor:pointer;text-decoration:underline;
+      ">
+        No thanks, skip
+      </button>
+      <p style="font-size:0.75rem;color:#aaa;margin-top:12px">
+        No spam. Unsubscribe anytime. Written by Benji, an AI.
+      </p>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const emailInput = document.getElementById('capture-email');
+  const submitBtn = document.getElementById('capture-submit');
+  const skipBtn = document.getElementById('capture-skip');
+  const errorDiv = document.getElementById('capture-error');
+
+  emailInput.focus();
+
+  submitBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errorDiv.textContent = 'Please enter a valid email address.';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    submitBtn.textContent = 'Subscribing…';
+    submitBtn.disabled = true;
+    errorDiv.style.display = 'none';
+
+    try {
+      // Open beehiiv subscribe page in new tab with email pre-filled
+      const subscribeUrl = `https://newsletter.benjistack.com/subscribe?email=${encodeURIComponent(email)}&utm_source=validator-tool&utm_medium=pdf-gate&utm_campaign=tool-signup`;
+      window.open(subscribeUrl, '_blank');
+
+      sessionStorage.setItem('benjistack_subscribed', '1');
+      document.body.removeChild(overlay);
+      onSuccess();
+
+    } catch (err) {
+      // On any error, still let them download — don't block the user
+      sessionStorage.setItem('benjistack_subscribed', '1');
+      document.body.removeChild(overlay);
+      onSuccess();
+    }
+  });
+
+  skipBtn.addEventListener('click', () => {
+    document.body.removeChild(overlay);
+    onSuccess();
+  });
+
+  // Allow Enter key
+  emailInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submitBtn.click();
   });
 }
 
@@ -900,7 +1011,7 @@ function generatePDF() {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>UrbanVoice Report — ${STATE.rawIdea}</title>
+  <title>BenjiStack Report — ${STATE.rawIdea}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -1076,19 +1187,19 @@ function generatePDF() {
   <div class="section">
     <div class="label">Ready to Build?</div>
     <p style="margin-bottom:12px; line-height:1.7; font-size:11pt;">
-      UrbanVoice helps founders go from validated idea to live product — without writing code
+      BenjiStack · AI-curated tools and ideas for online business builders
       or managing developers. If this idea has potential and you want a clear path forward,
       a free 30-minute call is the best next step.
     </p>
     <div style="background:#fff5ee; border:2px solid #ff6a00; border-radius:8px; padding:20px; text-align:center;">
       <div style="font-size:12pt; font-weight:700; color:#1a1a2e; margin-bottom:6px;">Book a Free 30-Minute Strategy Call</div>
       <div style="font-size:10pt; color:#888; margin-bottom:12px;">No pitch. No pressure. Just a clear plan for your next steps.</div>
-      <a href="https://urbanvoice.ai/free-call" style="color:#ff6a00; font-weight:700; font-size:12pt; text-decoration:none;">urbanvoice.ai/free-call</a>
+      <a href="https://newsletter.benjistack.com" style="color:#ff6a00; font-weight:700; font-size:12pt; text-decoration:none;">newsletter.benjistack.com</a>
     </div>
   </div>
 
   <div class="footer">
-    Generated by UrbanVoice.AI — Problem Discovery Engine &nbsp;|&nbsp; urbanvoice.ai
+    Generated by BenjiStack — Business Idea Validator · benjistack.com
   </div>
 
 </body>
