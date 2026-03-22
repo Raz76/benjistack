@@ -969,9 +969,14 @@ function showEmailCapture(onSuccess) {
     errorDiv.style.display = 'none';
 
     try {
-      // Open beehiiv subscribe page in new tab with email pre-filled
-      const subscribeUrl = `https://newsletter.benjistack.com/subscribe?email=${encodeURIComponent(email)}&utm_source=validator-tool&utm_medium=pdf-gate&utm_campaign=tool-signup`;
-      window.open(subscribeUrl, '_blank');
+      // POST directly to beehiiv's subscribe endpoint (no API key needed)
+      // mode: 'no-cors' = fire and forget, can't read response but request is sent
+      await fetch('https://app.beehiiv.com/subscribe', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `email=${encodeURIComponent(email)}&publication_id=pub_67a3d01a-868c-40ab-8273-c5ba5e65829f&utm_source=validator-tool&utm_medium=pdf-gate&utm_campaign=tool-signup`
+      });
 
       sessionStorage.setItem('benjistack_subscribed', '1');
       document.body.removeChild(overlay);
