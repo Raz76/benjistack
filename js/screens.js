@@ -243,9 +243,6 @@ function renderAnglesContent(body, reason) {
     </p>
     ${reason ? `<p style="font-size:0.8rem; color: var(--text-faint); font-style: italic; margin-bottom: 20px;">${reason}</p>` : ''}
     <div class="choice-grid" id="angles-grid"></div>
-    <div style="margin-top: 28px; display: flex; justify-content: flex-end;">
-      <button class="btn-primary" id="btn-angles-next" disabled>Search This Niche →</button>
-    </div>
 
     <div class="refine-section">
       <p class="refine-label">Or add more context yourself</p>
@@ -270,21 +267,22 @@ function renderAnglesContent(body, reason) {
       <div class="choice-card-content">
         <div class="choice-card-title">${angle.title}</div>
         <div class="choice-card-desc">${angle.description}</div>
+        <button class="choice-card-cta" type="button">Search this niche →</button>
       </div>
     `;
-    card.addEventListener('click', () => {
+    const selectAngle = () => {
       document.querySelectorAll('#angles-grid .choice-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       STATE.selectedAngle = angle.title;
-      document.getElementById('btn-angles-next').disabled = false;
+    };
+    card.addEventListener('click', selectAngle);
+    card.querySelector('.choice-card-cta').addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectAngle();
+      STATE.problems = [];
+      goTo('problems');
     });
     grid.appendChild(card);
-  });
-
-  document.getElementById('btn-angles-next').addEventListener('click', () => {
-    if (!STATE.selectedAngle) return;
-    STATE.problems = [];
-    goTo('problems');
   });
 
   wireRefinementInput(body);
@@ -415,11 +413,6 @@ function renderProblemsContent(body) {
     </p>
     ${nearMissBanner}
     <div class="choice-grid" id="problems-grid"></div>
-    <div style="margin-top: 28px; display: flex; justify-content: flex-end;">
-      <button class="btn-primary" id="btn-problems-next" disabled>
-        I Want to Solve This →
-      </button>
-    </div>
   `;
 
   const grid = document.getElementById('problems-grid');
@@ -446,25 +439,26 @@ function renderProblemsContent(body) {
           <span style="flex: 1;"></span>
           ${sourceBadges}
         </div>
+        <button class="choice-card-cta" type="button">I want to solve this →</button>
       </div>
     `;
-    card.addEventListener('click', () => {
+    const selectProblem = () => {
       document.querySelectorAll('#problems-grid .choice-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       STATE.selectedProblem = problem;
-      document.getElementById('btn-problems-next').disabled = false;
+    };
+    card.addEventListener('click', selectProblem);
+    card.querySelector('.choice-card-cta').addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectProblem();
+      STATE.solutions = [];
+      STATE.validations = [];
+      STATE.validation = null;
+      goTo('solutions');
     });
     grid.appendChild(card);
   });
 
-  document.getElementById('btn-problems-next').addEventListener('click', () => {
-    if (!STATE.selectedProblem) return;
-    // Reset solutions + validations so a different problem always gets fresh results
-    STATE.solutions = [];
-    STATE.validations = [];
-    STATE.validation = null;
-    goTo('solutions');
-  });
 }
 
 // ----------------------------------------------------------------
@@ -510,11 +504,6 @@ function renderSolutionsContent(body) {
       Pick the idea that fits you best.
     </p>
     <div class="choice-grid" id="solutions-grid"></div>
-    <div style="margin-top: 28px; display: flex; justify-content: flex-end;">
-      <button class="btn-primary" id="btn-solutions-next" disabled>
-        See Full Validation →
-      </button>
-    </div>
   `;
 
   const grid = document.getElementById('solutions-grid');
@@ -555,22 +544,24 @@ function renderSolutionsContent(body) {
           <div style="font-family: var(--font-head); font-size: 1.4rem; color: ${scoreColor}; flex-shrink: 0;">${score}<span style="font-size: 0.9rem; color: var(--text-faint);">/10</span></div>
         </div>
         <div class="choice-card-desc">${solution.description}</div>
+        <button class="choice-card-cta" type="button">See full validation →</button>
       </div>
     `;
-    card.addEventListener('click', () => {
+    const selectSolution = () => {
       document.querySelectorAll('#solutions-grid .choice-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
       STATE.selectedSolution = solution;
-      STATE.validation = STATE.validations[i]; // set pre-computed validation for this solution
-      document.getElementById('btn-solutions-next').disabled = false;
+      STATE.validation = STATE.validations[i];
+    };
+    card.addEventListener('click', selectSolution);
+    card.querySelector('.choice-card-cta').addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectSolution();
+      goTo('validation');
     });
     grid.appendChild(card);
   });
 
-  document.getElementById('btn-solutions-next').addEventListener('click', () => {
-    if (!STATE.selectedSolution) return;
-    goTo('validation');
-  });
 }
 
 // ----------------------------------------------------------------
@@ -1007,6 +998,13 @@ function showEmailCapture(onSuccess) {
 function generatePDF() {
   const v = STATE.validation;
   const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const previewHost = /127\.0\.0\.1:3002\/workspace|vscode-webview|vscode-file/i.test(window.location.href);
+  const popup = window.open('', '_blank');
+
+  if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+    alert('PDF export needs a normal browser window or popup permission. If you are testing inside a VS Code preview, open the app in a regular browser and try again.');
+    return;
+  }
 
   const altList = v?.currentAlternatives?.length
     ? v.currentAlternatives.map(a => `<li>${a}</li>`).join('')
@@ -1019,77 +1017,128 @@ function generatePDF() {
   <title>BenjiStack Report — ${STATE.rawIdea}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #171717;
+      --paper: #ffffff;
+      --rule: #d9d2c7;
+      --muted: #5e5850;
+      --signal: #0d7a52;
+      --signal-light: #eef7f2;
+    }
     body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 12pt;
-      color: #1a1a2e;
+      font-family: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11.5pt;
+      color: var(--ink);
+      background: var(--paper);
       padding: 48px;
       max-width: 760px;
       margin: 0 auto;
+      line-height: 1.65;
     }
     .header {
-      border-bottom: 3px solid #ff6a00;
-      padding-bottom: 20px;
-      margin-bottom: 32px;
+      border-bottom: 1.5px solid var(--rule);
+      padding-bottom: 18px;
+      margin-bottom: 30px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      gap: 16px;
     }
-    .brand { font-size: 22pt; font-weight: 900; letter-spacing: 0.04em; color: #ff6a00; }
-    .report-meta { font-size: 9pt; color: #888; text-align: right; }
+    .brand {
+      font-size: 22pt;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+    .brand .stack { color: var(--signal); }
+    .report-meta {
+      font-size: 8.5pt;
+      color: var(--muted);
+      text-align: right;
+      font-family: 'DM Mono', 'Courier New', monospace;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1.6;
+    }
     .section {
-      margin-bottom: 28px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid #e8e8f0;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--rule);
     }
     .section:last-of-type { border-bottom: none; }
     .label {
       font-size: 8pt;
-      font-weight: 700;
-      letter-spacing: 0.12em;
+      font-weight: 500;
+      letter-spacing: 0.11em;
       text-transform: uppercase;
-      color: #999;
-      margin-bottom: 6px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-family: 'DM Mono', 'Courier New', monospace;
     }
-    .value { font-size: 11pt; color: #1a1a2e; line-height: 1.6; }
-    .value strong { font-size: 12pt; }
+    .value {
+      font-size: 11pt;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+    .value strong {
+      font-size: 12pt;
+      font-weight: 700;
+    }
     .score {
-      font-size: 32pt;
-      font-weight: 900;
-      color: #ff6a00;
+      font-size: 31pt;
+      font-weight: 800;
+      color: var(--signal);
       line-height: 1;
+      letter-spacing: -0.04em;
     }
     .verdict {
-      background: #fff5ee;
-      border-left: 4px solid #ff6a00;
+      background: var(--signal-light);
+      border-left: 4px solid var(--signal);
       padding: 14px 18px;
-      font-style: italic;
-      color: #333;
-      margin-top: 8px;
+      color: #2b2b2b;
+      margin-top: 10px;
       border-radius: 0 6px 6px 0;
+      font-style: italic;
     }
     .brand-name {
       font-size: 24pt;
-      font-weight: 900;
-      color: #ff6a00;
-      letter-spacing: 0.06em;
+      font-weight: 800;
+      color: var(--signal);
+      letter-spacing: -0.04em;
     }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
-    .stat { background: #f5f5fa; padding: 14px; border-radius: 6px; }
-    .stat-label { font-size: 8pt; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-    .stat-value { font-size: 11pt; font-weight: 600; color: #1a1a2e; }
-    ul { padding-left: 20px; margin-top: 6px; }
-    li { margin-bottom: 4px; font-size: 10pt; color: #555; }
-    .footer {
-      margin-top: 48px;
-      padding-top: 16px;
-      border-top: 1px solid #e8e8f0;
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+    .stat {
+      background: #faf8f4;
+      padding: 14px;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+    }
+    .stat-label {
       font-size: 8pt;
-      color: #bbb;
-      text-align: center;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+      font-family: 'DM Mono', 'Courier New', monospace;
     }
+    .stat-value { font-size: 11pt; font-weight: 600; color: var(--ink); }
+    ul, ol { padding-left: 20px; margin-top: 8px; }
+    li { margin-bottom: 6px; font-size: 10.5pt; color: #333; }
+    .footer {
+      margin-top: 44px;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
+      font-size: 8pt;
+      color: var(--muted);
+      text-align: center;
+      font-family: 'DM Mono', 'Courier New', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    a { color: var(--signal); }
     @media print {
-      body { padding: 0; }
+      body { padding: 0; background: #fff; }
       @page { margin: 2cm; }
     }
   </style>
@@ -1097,61 +1146,61 @@ function generatePDF() {
 <body>
 
   <div class="header">
-    <div class="brand">BENJISTACK</div>
+    <div class="brand">Benji<span class="stack">Stack</span></div>
     <div class="report-meta">
-      Problem Discovery Report<br>
-      Generated ${date}
+      Validation report<br>
+      ${date}
     </div>
   </div>
 
   <div class="section">
-    <div class="label">Idea Explored</div>
+    <div class="label">Idea explored</div>
     <div class="value"><strong>${STATE.rawIdea}</strong></div>
-    ${STATE.selectedAngle ? `<div class="value" style="margin-top:6px; color:#888;">Niche: ${STATE.selectedAngle}</div>` : ''}
+    ${STATE.selectedAngle ? `<div class="value" style="margin-top:6px; color:#5e5850;">Niche: ${STATE.selectedAngle}</div>` : ''}
   </div>
 
   <div class="section">
-    <div class="label">Problem Identified</div>
+    <div class="label">Problem identified</div>
     <div class="value">
       <strong>${STATE.selectedProblem?.title || '—'}</strong><br>
       ${STATE.selectedProblem?.description || ''}
     </div>
     ${STATE.selectedProblem?.quotes?.length ? `
     <div style="margin-top: 12px;">
-      ${STATE.selectedProblem.quotes.map(q => `<div style="font-style:italic; color:#666; font-size:10pt; margin-bottom:6px; padding-left:12px; border-left:3px solid #ff6a00;">"${q}"</div>`).join('')}
+      ${STATE.selectedProblem.quotes.map(q => `<div style="font-style:italic; color:#4c4741; font-size:10pt; margin-bottom:6px; padding-left:12px; border-left:3px solid #0d7a52;">"${q}"</div>`).join('')}
     </div>` : ''}
   </div>
 
   <div class="section">
-    <div class="label">Business Idea</div>
+    <div class="label">Business idea</div>
     <div class="value">
       <strong>${STATE.selectedSolution?.title || '—'}</strong><br>
       ${STATE.selectedSolution?.description || ''}
     </div>
-    ${STATE.selectedSolution?.score ? `<div style="margin-top:8px; font-size:9pt; color:#888;">Opportunity score: <strong>${STATE.selectedSolution.score}/10</strong></div>` : ''}
+    ${STATE.selectedSolution?.score ? `<div style="margin-top:8px; font-size:9pt; color:#5e5850;">Opportunity score: <strong>${STATE.selectedSolution.score}/10</strong></div>` : ''}
   </div>
 
   ${v ? `
   <div class="section">
-    <div class="label">Market Validation</div>
-    <div class="score">${v.opportunityScore}<span style="font-size:16pt; color:#999;">/10</span></div>
+    <div class="label">Market validation</div>
+    <div class="score">${v.opportunityScore}<span style="font-size:16pt; color:#8a8880;">/10</span></div>
     <div class="grid" style="margin-top: 16px;">
       <div class="stat">
         <div class="stat-label">Monetizable</div>
         <div class="stat-value">${v.monetizable ? '✓ Yes' : '✗ Unclear'}</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Willingness to Pay</div>
+        <div class="stat-label">Willingness to pay</div>
         <div class="stat-value">${v.willingnessToPay}</div>
       </div>
       <div class="stat" style="grid-column: 1 / -1;">
-        <div class="stat-label">Estimated Price Range</div>
+        <div class="stat-label">Estimated price range</div>
         <div class="stat-value">${v.estimatedPriceRange}</div>
       </div>
     </div>
     ${altList ? `
     <div style="margin-top:16px;">
-      <div class="label">Current Alternatives</div>
+      <div class="label">What people use instead</div>
       <ul>${altList}</ul>
     </div>` : ''}
     <div class="verdict">${v.verdict}</div>
@@ -1159,7 +1208,7 @@ function generatePDF() {
 
   ${STATE.selectedBrand ? `
   <div class="section">
-    <div class="label">Brand Identity</div>
+    <div class="label">Brand identity</div>
     <div class="brand-name">${STATE.selectedBrand.name}</div>
     <div class="value" style="margin-top: 8px;">
       <em>"${STATE.selectedBrand.tagline}"</em><br>
@@ -1169,7 +1218,7 @@ function generatePDF() {
   </div>` : ''}
 
   <div class="section">
-    <div class="label">Suggested Next Steps</div>
+    <div class="label">Suggested next steps</div>
     <ol style="padding-left:20px; margin-top:8px;">
       <li style="margin-bottom:10px; font-size:11pt; color:#333; line-height:1.6;">
         <strong>Validate demand manually.</strong> Find 5–10 people who match your target audience
@@ -1190,15 +1239,15 @@ function generatePDF() {
   </div>
 
   <div class="section">
-    <div class="label">Ready to Build?</div>
+    <div class="label">Ready to build?</div>
     <p style="margin-bottom:12px; line-height:1.7; font-size:11pt;">
-      BenjiStack · AI-curated ideas and the exact tools to build them. If this report helped, get weekly
-      validated ideas and tool recommendations straight to your inbox.
+      BenjiStack helps you validate ideas with real demand signals before you waste time building the wrong thing.
+      If this report helped, get weekly validated ideas and tool recommendations straight to your inbox.
     </p>
-    <div style="background:#fff5ee; border:2px solid #ff6a00; border-radius:8px; padding:20px; text-align:center;">
-      <div style="font-size:12pt; font-weight:700; color:#1a1a2e; margin-bottom:6px;">Get the Weekly Newsletter</div>
-      <div style="font-size:10pt; color:#888; margin-bottom:12px;">Free. No spam. Unsubscribe anytime.</div>
-      <a href="https://newsletter.benjistack.com" style="color:#ff6a00; font-weight:700; font-size:12pt; text-decoration:none;">newsletter.benjistack.com</a>
+    <div style="background:#ffffff; border:1.5px solid #d9d2c7; border-radius:8px; padding:20px; text-align:center;">
+      <div style="font-size:12pt; font-weight:700; color:#171717; margin-bottom:6px;">Get the weekly newsletter</div>
+      <div style="font-size:10pt; color:#5e5850; margin-bottom:12px;">Free. No spam. Unsubscribe anytime.</div>
+      <a href="https://newsletter.benjistack.com" style="color:#0d7a52; font-weight:700; font-size:12pt; text-decoration:none;">newsletter.benjistack.com</a>
     </div>
   </div>
 
@@ -1209,9 +1258,20 @@ function generatePDF() {
 </body>
 </html>`;
 
-  const w = window.open('', '_blank');
-  w.document.write(html);
-  w.document.close();
-  w.focus();
-  setTimeout(() => w.print(), 600);
+  popup.document.write(html);
+  popup.document.close();
+  popup.focus();
+  setTimeout(() => {
+    try {
+      popup.print();
+    } catch (err) {
+      if (previewHost) {
+        alert('Printing is limited in embedded previews. Open the site in a normal browser to download/print the PDF.');
+      }
+    }
+  }, 600);
+}
+}
+    }
+  }, 600);
 }
