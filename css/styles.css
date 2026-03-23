@@ -1,29 +1,30 @@
 /* ============================================================
-   URBANVOICE — PROBLEM DISCOVERY ENGINE
+   BENJISTACK — EDITORIAL VALIDATION UI
    Design tokens, base, components, screens
    ============================================================ */
 
 /* ---- TOKENS ---- */
 :root {
-  --bg:          #222639;
-  --bg-card:     #2c3050;
-  --bg-input:    #1c1f33;
-  --bg-modal:    #1a1d2e;
-  --accent:      #ff6a00;
-  --accent-dim:  rgba(255, 106, 0, 0.15);
-  --accent-glow: rgba(255, 106, 0, 0.35);
-  --text:        #f0f0f0;
-  --text-muted:  #b0b6d4;
-  --text-faint:  #8289a8;
-  --border:      rgba(255,255,255,0.08);
-  --border-focus:rgba(255, 106, 0, 0.6);
+  --bg:          #FAFAF8;
+  --bg-card:     #FFFFFF;
+  --bg-input:    #F6F3EE;
+  --bg-modal:    #FFFFFF;
+  --accent:      #0D7A52;
+  --accent-dim:  rgba(13, 122, 82, 0.10);
+  --accent-glow: rgba(13, 122, 82, 0.18);
+  --text:        #1A1A1A;
+  --text-muted:  #5F5A54;
+  --text-faint:  #8A8880;
+  --border:      #E8E5DF;
+  --border-focus:rgba(13, 122, 82, 0.35);
   --radius-sm:   8px;
   --radius-md:   14px;
   --radius-lg:   20px;
-  --shadow-card: 0 4px 32px rgba(0,0,0,0.4);
+  --shadow-card: 0 10px 30px rgba(26, 26, 26, 0.05);
   --transition:  0.25s ease;
-  --font-body:   'Inter', sans-serif;
-  --font-head:   'Bebas Neue', sans-serif;
+  --font-body:   'Plus Jakarta Sans', sans-serif;
+  --font-head:   'Plus Jakarta Sans', sans-serif;
+  --font-mono:   'DM Mono', monospace;
 }
 
 /* ---- RESET ---- */
@@ -191,7 +192,7 @@ img { max-width: 100%; display: block; }
 }
 
 .logo {
-  height: 48px;
+  height: 42px;
   width: auto;
 }
 
@@ -1292,6 +1293,10 @@ img { max-width: 100%; display: block; }
   .btn-cta-primary,
   .btn-download {
     width: 100%;
+    justify-content: center;
+  }
+}
+dth: 100%;
     justify-content: center;
   }
 }
