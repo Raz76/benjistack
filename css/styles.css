@@ -255,10 +255,12 @@ img { max-width: 100%; display: block; }
 
 .search-label {
   display: block;
-  font-weight: 600;
-  font-size: 1rem;
-  margin-bottom: 6px;
-  color: var(--text);
+  font-weight: 700;
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: var(--text-faint);
 }
 
 .search-hint {
@@ -308,7 +310,7 @@ img { max-width: 100%; display: block; }
 .trust-strip {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  gap: 12px;
 }
 
 .trust-item {
@@ -1292,6 +1294,23 @@ img { max-width: 100%; display: block; }
   }
 
   .btn-cta-primary,
+  .btn-download {
+    width: 100%;
+    justify-content: center;
+  }
+}
+dth: 100%;
+    justify-content: center;
+  }
+}
+ }
+}
+content: center;
+  }
+}
+ }
+}
+mary,
   .btn-download {
     width: 100%;
     justify-content: center;
