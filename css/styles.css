@@ -1077,8 +1077,8 @@ img { max-width: 100%; display: block; }
 }
 
 .btn-cta-primary:hover {
-  background: #0a6746;
-  box-shadow: 0 8px 28px var(--accent-glow);
+  background: #0f8c61;
+  box-shadow: 0 10px 28px rgba(13, 122, 82, 0.20);
   text-decoration: none;
   color: #fff;
 }
