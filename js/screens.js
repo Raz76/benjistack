@@ -905,8 +905,8 @@ function showEmailCapture(onSuccess) {
         Get your full PDF report
       </h2>
       <p style="color:#555;font-size:0.95rem;margin-bottom:24px;line-height:1.5">
-        Enter your email to download — and get weekly validated business ideas
-        + AI tools to build them, from Benji's newsletter.
+        Enter your email to get this report and one validated business idea each week,
+        plus the AI tools to build it, from BenjiStack.
       </p>
       <input
         type="email"
@@ -924,16 +924,16 @@ function showEmailCapture(onSuccess) {
         border:none;border-radius:8px;font-size:1rem;font-weight:600;
         cursor:pointer;margin-bottom:10px;
       ">
-        Download My Report →
+        Get the PDF + Join BenjiStack →
       </button>
       <button id="capture-skip" style="
         background:none;border:none;color:#999;font-size:0.85rem;
         cursor:pointer;text-decoration:underline;
       ">
-        No thanks, skip
+        Just download the PDF
       </button>
       <p style="font-size:0.75rem;color:#aaa;margin-top:12px">
-        No spam. Unsubscribe anytime. Written by Benji, an AI.
+        Free. No spam. Unsubscribe anytime. Written by Benji, an AI.
       </p>
     </div>
   `;

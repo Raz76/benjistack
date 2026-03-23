@@ -102,9 +102,9 @@ function showEmailGate() {
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
     <div class="modal gate-modal">
-      <h2 class="modal-title">You've discovered one idea.</h2>
+      <h2 class="modal-title">Want more validated ideas?</h2>
       <p class="modal-desc">
-        Ready to explore more? Enter your details below to unlock 3 searches per day.
+        Enter your details below to join BenjiStack and unlock 3 searches per day.
       </p>
       <div class="gate-iframe-wrap">
         <iframe
@@ -123,7 +123,7 @@ function showEmailGate() {
         </iframe>
       </div>
       <a href="${BOOKING_LINK}" target="_blank" class="gate-skip-link">
-        Skip — book a free call directly →
+        Skip — read the newsletter instead →
       </a>
     </div>
   `;
@@ -152,14 +152,14 @@ function handleGHLMessage(event) {
     modal.innerHTML = `
       <h2 class="modal-title">Almost there!</h2>
       <p class="modal-desc">
-        Check your email and click the confirmation link to unlock 3 searches per day.
+        Check your email and click the confirmation link to finish joining BenjiStack and unlock 3 searches per day.
       </p>
       <p class="modal-note" style="margin-top:16px;">
-        Ready to take this idea further?
+        You can also read the newsletter now.
       </p>
       <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
          style="display:block;text-align:center;margin-top:12px;text-decoration:none;">
-        Book a Free Discovery Call →
+        Open the BenjiStack Newsletter →
       </a>
       <button class="btn-secondary" id="btn-gate-close"
               style="width:100%;margin-top:10px;">
@@ -183,11 +183,11 @@ function showPendingConfirmation() {
     <div class="modal">
       <h2 class="modal-title">Check Your Email</h2>
       <p class="modal-desc">
-        Click the confirmation link we sent you to unlock 3 searches per day.
+        Click the confirmation link we sent you to finish joining BenjiStack and unlock 3 searches per day.
       </p>
       <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
          style="display:block;text-align:center;margin-top:20px;text-decoration:none;">
-        Book a Free Discovery Call →
+        Open the BenjiStack Newsletter →
       </a>
       <button class="btn-secondary" id="btn-gate-close"
               style="width:100%;margin-top:10px;">
@@ -210,12 +210,12 @@ function showDailyLimitWall() {
     <div class="modal">
       <h2 class="modal-title">You're on a roll.</h2>
       <p class="modal-desc">
-        You've used all 3 searches for today. Your limit resets at midnight —
-        or if you've found an idea worth pursuing, let's talk now.
+        You've used all 3 searches for today. Your limit resets at midnight UTC.
+        In the meantime, you can read the BenjiStack newsletter for more validated ideas.
       </p>
       <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
          style="display:block;text-align:center;margin-top:20px;text-decoration:none;">
-        Book a Free Discovery Call →
+        Open the BenjiStack Newsletter →
       </a>
       <button class="btn-secondary" id="btn-gate-close"
               style="width:100%;margin-top:10px;">
