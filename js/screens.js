@@ -1163,8 +1163,8 @@ function generatePDF() {
     <div class="brand-name">${STATE.selectedBrand.name}</div>
     <div class="value" style="margin-top: 8px;">
       <em>"${STATE.selectedBrand.tagline}"</em><br>
-      <span style="color:#888; font-size:10pt;">For: ${STATE.selectedBrand.targetAudience}</span><br>
-      <span style="color:#666; font-size:10pt; margin-top:4px; display:block;">${STATE.selectedBrand.positioning}</span>
+      <span style="color:#5e5850; font-size:10pt;">For: ${STATE.selectedBrand.targetAudience}</span><br>
+      <span style="color:#4c4741; font-size:10pt; margin-top:4px; display:block;">${STATE.selectedBrand.positioning}</span>
     </div>
   </div>` : ''}
 
