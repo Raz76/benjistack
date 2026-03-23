@@ -133,7 +133,7 @@ img { max-width: 100%; display: block; }
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #ff8533;
+  background: #0a6746;
   transform: translateY(-1px);
   box-shadow: 0 6px 20px var(--accent-glow);
 }
@@ -1077,7 +1077,7 @@ img { max-width: 100%; display: block; }
 }
 
 .btn-cta-primary:hover {
-  background: #ff8533;
+  background: #0a6746;
   box-shadow: 0 8px 28px var(--accent-glow);
   text-decoration: none;
   color: #fff;
@@ -1367,6 +1367,13 @@ dth: 100%;
  }
 }
 content: center;
+  }
+}
+ }
+}
+ }
+}
+: center;
   }
 }
  }
