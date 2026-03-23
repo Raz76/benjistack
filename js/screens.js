@@ -838,14 +838,14 @@ function renderSummaryScreen(container) {
     </div>
 
     <div class="consult-cta">
-      <p class="consult-cta-eyebrow">Stay in the Loop</p>
-      <h2 class="consult-cta-title">Get Weekly Ideas Like This One</h2>
+      <p class="consult-cta-eyebrow">Keep the momentum going</p>
+      <h2 class="consult-cta-title">Get useful help, not just another idea</h2>
       <ul class="consult-cta-list">
-        <li>A freshly validated business idea every Tuesday</li>
-        <li>The exact AI tools to build it — with honest takes</li>
-        <li>Written by Benji, an AI. Reviewed by Razvan.</li>
+        <li>Validated business ideas worth paying attention to</li>
+        <li>Useful tools that can actually save you time</li>
+        <li>Simple checklists for starting and growing an online business</li>
       </ul>
-      <a href="${BOOKING_LINK}" target="_blank" class="btn-cta-primary consult-cta-btn">Get the Weekly Newsletter →</a>
+      <a href="${BOOKING_LINK}" target="_blank" class="btn-cta-primary consult-cta-btn">Join BenjiStack →</a>
       <p class="consult-cta-note">Free. No spam. Unsubscribe anytime.</p>
     </div>
 
@@ -902,11 +902,10 @@ function showEmailCapture(onSuccess) {
     ">
       <div style="font-size:2rem;margin-bottom:12px">📬</div>
       <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px;color:#111">
-        Get your full PDF report
+        Download the PDF and get useful help
       </h2>
       <p style="color:#555;font-size:0.95rem;margin-bottom:24px;line-height:1.5">
-        Enter your email to get this report and one validated business idea each week,
-        plus the AI tools to build it, from BenjiStack.
+        Join BenjiStack to receive validated business ideas, useful tools, and simple checklists for starting and growing an online business — then continue with your PDF download.
       </p>
       <input
         type="email"
@@ -924,7 +923,7 @@ function showEmailCapture(onSuccess) {
         border:none;border-radius:8px;font-size:1rem;font-weight:600;
         cursor:pointer;margin-bottom:10px;
       ">
-        Get the PDF + Join BenjiStack →
+        Join BenjiStack + Continue →
       </button>
       <button id="capture-skip" style="
         background:none;border:none;color:#999;font-size:0.85rem;
