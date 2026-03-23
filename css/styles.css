@@ -683,20 +683,21 @@ img { max-width: 100%; display: block; }
   margin-top: 14px;
   padding: 10px 14px;
   border-radius: var(--radius-sm);
-  border: 1.25px solid var(--border);
-  background: #fffdfa;
-  color: var(--accent);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
   font-family: var(--font-body);
   font-size: 0.84rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+  transition: background var(--transition), border-color var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
 .choice-card-cta:hover {
-  background: rgba(13, 122, 82, 0.06);
-  border-color: var(--accent);
+  background: #0a6746;
+  border-color: #0a6746;
   transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(13, 122, 82, 0.12);
 }
 
 .choice-card-title {
