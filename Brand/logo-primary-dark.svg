@@ -1,0 +1,12 @@
+<svg width="760" height="120" viewBox="0 0 760 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">BenjiStack primary logo dark</title>
+  <desc id="desc">BenjiStack logo optimized for dark backgrounds.</desc>
+  <g transform="translate(0 10)">
+    <rect x="0" y="0" width="46" height="16" rx="6" fill="#FAFAF8"/>
+    <rect x="0" y="24" width="66" height="16" rx="6" fill="#3EE8A0"/>
+    <rect x="0" y="48" width="57" height="16" rx="6" fill="#FAFAF8"/>
+    <circle cx="76" cy="8" r="8" fill="#3EE8A0"/>
+  </g>
+  <text x="110" y="74" font-family="'Plus Jakarta Sans', Inter, Arial, sans-serif" font-size="64" font-weight="800" letter-spacing="-2.5" fill="#FAFAF8">Benji</text>
+  <text x="280" y="74" font-family="'Plus Jakarta Sans', Inter, Arial, sans-serif" font-size="64" font-weight="800" letter-spacing="-2.5" fill="#3EE8A0">Stack</text>
+</svg>

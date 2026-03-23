@@ -39,6 +39,7 @@ body {
   display: flex;
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
+  background-image: radial-gradient(circle at top, rgba(13,122,82,0.04), transparent 28%);
 }
 
 a { color: var(--accent); text-decoration: none; }

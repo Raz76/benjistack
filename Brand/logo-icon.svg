@@ -1,0 +1,8 @@
+<svg width="160" height="120" viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">BenjiStack icon</title>
+  <desc id="desc">BenjiStack icon with three stacked bars and a signal dot.</desc>
+  <rect x="8" y="14" width="58" height="18" rx="7" fill="#1A1A1A"/>
+  <rect x="8" y="42" width="82" height="18" rx="7" fill="#0D7A52"/>
+  <rect x="8" y="70" width="70" height="18" rx="7" fill="#1A1A1A"/>
+  <circle cx="101" cy="23" r="10" fill="#0D7A52"/>
+</svg>

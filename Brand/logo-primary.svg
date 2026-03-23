@@ -1,0 +1,13 @@
+<svg width="760" height="120" viewBox="0 0 760 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">BenjiStack primary logo</title>
+  <desc id="desc">BenjiStack logo with stacked icon and split-color single-word wordmark on transparent background.</desc>
+  <g transform="translate(0 10)">
+    <rect x="0" y="0" width="46" height="16" rx="6" fill="#1A1A1A"/>
+    <rect x="0" y="24" width="66" height="16" rx="6" fill="#0D7A52"/>
+    <rect x="0" y="48" width="57" height="16" rx="6" fill="#1A1A1A"/>
+    <circle cx="76" cy="8" r="8" fill="#0D7A52"/>
+  </g>
+  <text x="110" y="74" font-family="'Plus Jakarta Sans', Inter, Arial, sans-serif" font-size="64" font-weight="800" letter-spacing="-2.5">
+    <tspan fill="#1A1A1A">Benji</tspan><tspan fill="#0D7A52">Stack</tspan>
+  </text>
+</svg>

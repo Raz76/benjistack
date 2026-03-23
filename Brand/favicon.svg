@@ -1,0 +1,8 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">BenjiStack favicon</title>
+  <desc id="desc">Minimal BenjiStack favicon with balanced stacked bars and a signal dot.</desc>
+  <rect x="9" y="18" width="22" height="8" rx="3" fill="#1A1A1A"/>
+  <rect x="9" y="31" width="31" height="8" rx="3" fill="#0D7A52"/>
+  <rect x="9" y="44" width="26" height="8" rx="3" fill="#1A1A1A" opacity="0.92"/>
+  <circle cx="45" cy="22" r="5" fill="#0D7A52"/>
+</svg>
