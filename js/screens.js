@@ -639,7 +639,7 @@ function renderValidationScreen(container) {
   document.getElementById('btn-validation-next').addEventListener('click', () => {
     STATE.selectedBrand = null;
     STATE.brandOptions = [];
-    goTo('summary');
+    showEmailCapture(() => goTo('summary'));
   });
 }
 
@@ -774,57 +774,207 @@ function renderBrandContent(body) {
 // ----------------------------------------------------------------
 // SCREEN: SUMMARY (Step 7)
 // ----------------------------------------------------------------
-function renderSummaryScreen(container) {
+async function renderSummaryScreen(container) {
   const screen = createScreenShell('screen-summary', { showBack: true });
   const body = document.createElement('div');
   body.className = 'screen-body';
 
   const v = STATE.validation;
+  const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const playbookData = await getPlaybooksData();
+  const businessTypeId = classifyBusinessType();
+  const playbook = getPlaybookForType(playbookData, businessTypeId);
+  const preferredLaunchPath = getLaunchPhasePreference(playbook);
+  const launchPaths = playbook?.launch?.paths || {};
+  const preferredLaunch = launchPaths[preferredLaunchPath];
+  const secondaryLaunch = launchPaths[preferredLaunchPath === 'all_in_one' ? 'best_of_breed' : 'all_in_one'];
+  const altList = v?.currentAlternatives?.length ? v.currentAlternatives.map(a => `<li>${escapeHtml(a)}</li>`).join('') : '';
+  const weeklyPlan = build30DayPlan(playbook);
+  const canonicalProblemTitle = getProblemLabel();
+  const score = Number(v?.opportunityScore || STATE.selectedSolution?.score || 0);
+  const pursueNow = score >= 7 ? 'Yes — this is worth testing now.' : score >= 5 ? 'Maybe — test it quickly before investing too much.' : 'Only if you can validate demand very cheaply.';
 
   body.innerHTML = `
-    <p class="screen-eyebrow">Step 5 of 5 — Your Discovery Report</p>
-    <h1 class="screen-title">You're Ready to Build</h1>
+    <p class="screen-eyebrow">Step 5 of 5 — Full report</p>
+    <h1 class="screen-title">Your BenjiStack report</h1>
     <p class="screen-desc">
-      Here's everything you discovered. This is your validated business blueprint.
+      This is the full report — the practical plan, recommended stack, and next steps for turning this idea into something real.
     </p>
 
-    <div class="card">
-      <div class="summary-section">
-        <div class="summary-label">Your Idea</div>
-        <div class="summary-value">${STATE.rawIdea}</div>
-      </div>
-      ${STATE.selectedAngle ? `
-      <div class="summary-section">
-        <div class="summary-label">Niche</div>
-        <div class="summary-value">${STATE.selectedAngle}</div>
-      </div>` : ''}
-      <div class="summary-section">
-        <div class="summary-label">Problem to Solve</div>
-        <div class="summary-value">
-          <strong>${STATE.selectedProblem?.title || '—'}</strong><br>
-          <span style="color: var(--text-muted); font-size: 0.9rem;">${STATE.selectedProblem?.description || ''}</span>
+    <div class="report-view">
+      <div class="report-cover">
+        <div class="report-eyebrow">BenjiStack blueprint · ${escapeHtml(date)}</div>
+        <h2 class="report-cover-title">Launch, prepare, and <span>grow</span> this idea</h2>
+        <p class="report-cover-sub">This report turns your validation results into a practical business plan — with tools, tradeoffs, and the fastest path to momentum for this type of business.</p>
+        <div class="report-meta-grid">
+          <div class="report-card">
+            <div class="report-mini-label">Idea explored</div>
+            <strong>${escapeHtml(STATE.rawIdea)}</strong>
+            ${STATE.selectedAngle ? `<div class="report-meta-small">Niche: ${escapeHtml(STATE.selectedAngle)}</div>` : ''}
+          </div>
+          <div class="report-card">
+            <div class="report-mini-label">Business type</div>
+            <strong>${escapeHtml(playbook?.label || 'Hybrid online business')}</strong>
+            <div class="report-meta-small">${escapeHtml(playbook?.summary || 'A mixed model that needs a simple first path.')}</div>
+          </div>
+          <div class="report-card">
+            <div class="report-mini-label">Fastest path to revenue</div>
+            <strong>${escapeHtml(playbook?.fastestPathToRevenue || 'Validate demand fast before building too much.')}</strong>
+          </div>
+          <div class="report-card">
+            <div class="report-mini-label">Opportunity score</div>
+            <div class="report-score">${escapeHtml(String(v?.opportunityScore || STATE.selectedSolution?.score || '—'))}<span>/10</span></div>
+          </div>
         </div>
       </div>
-      <div class="summary-section">
-        <div class="summary-label">Business Idea</div>
-        <div class="summary-value">
-          <strong>${STATE.selectedSolution?.title || '—'}</strong><br>
-          <span style="color: var(--text-muted); font-size: 0.9rem;">${STATE.selectedSolution?.description || ''}</span>
+
+      <section class="report-section">
+        <div class="report-section-label">1 · What you found</div>
+        <h3 class="report-section-title">Proof before polish</h3>
+        <div class="report-grid">
+          <div class="report-card">
+            <div class="report-mini-label">Problem identified</div>
+            <strong>${escapeHtml(canonicalProblemTitle || '—')}</strong>
+            <div>${escapeHtml(STATE.selectedProblem?.description || '')}</div>
+            ${(STATE.selectedProblem?.quotes || []).slice(0, 2).map(q => `<div class="report-quote">“${escapeHtml(q)}”</div>`).join('')}
+          </div>
+          <div class="report-card">
+            <div class="report-mini-label">Business idea</div>
+            <strong>${escapeHtml(STATE.selectedSolution?.title || '—')}</strong>
+            <div>${escapeHtml(STATE.selectedSolution?.description || '')}</div>
+          </div>
+          ${v ? `
+          <div class="report-card">
+            <div class="report-mini-label">Market validation</div>
+            <strong>${v.monetizable ? 'Monetizable signal exists' : 'Signal is still weak'}</strong>
+            <div>Willingness to pay: ${escapeHtml(v.willingnessToPay || 'Unknown')}</div>
+            <div>Estimated price range: ${escapeHtml(v.estimatedPriceRange || 'Unknown')}</div>
+          </div>` : ''}
+          ${altList ? `
+          <div class="report-card">
+            <div class="report-mini-label">What people use instead</div>
+            <ul>${altList}</ul>
+          </div>` : ''}
         </div>
-      </div>
-      ${v ? `
-      <div class="summary-section">
-        <div class="summary-label">Opportunity Score</div>
-        <div class="summary-value" style="font-family: var(--font-head); font-size: 1.8rem; color: var(--accent);">${v.opportunityScore}<span style="font-size: 1rem; color: var(--text-muted);">/10</span></div>
-      </div>
-      <div class="summary-section">
-        <div class="summary-label">Estimated Price Range</div>
-        <div class="summary-value">${v.estimatedPriceRange}</div>
-      </div>
-      <div class="summary-section">
-        <div class="summary-label">Validation Verdict</div>
-        <div class="val-verdict" style="margin-top: 8px;">${v.verdict}</div>
-      </div>` : ''}
+        ${v?.verdict ? `<div class="report-callout">${escapeHtml(v.verdict)}</div>` : ''}
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-label">2 · Business type snapshot</div>
+        <h3 class="report-section-title">Why this business model fits</h3>
+        <div class="report-grid">
+          <div class="report-card">
+            <div class="report-mini-label">Why this fits</div>
+            <strong>${escapeHtml(playbook?.label || 'Hybrid online business')}</strong>
+            <div>${escapeHtml(playbook?.summary || '')}</div>
+          </div>
+          <div class="report-card">
+            <div class="report-mini-label">Fastest route</div>
+            <strong>Get to signal quickly</strong>
+            <div>${escapeHtml(playbook?.fastestPathToRevenue || '')}</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-label">3 · Prepare phase</div>
+        <h3 class="report-section-title">Set the foundations before you launch</h3>
+        <div class="report-card">
+          <div class="report-phase-head">
+            <div class="report-phase-name">Prepare</div>
+            <div class="report-phase-pill">Clarity first</div>
+          </div>
+          <div class="report-mini-label">Objective</div>
+          <div>${escapeHtml(phaseObjective(playbook, 'prepare'))}</div>
+          <div class="report-mini-label" style="margin-top:12px;">Actions</div>
+          ${renderListItems(phaseActionItems(playbook, 'prepare'))}
+          <div class="report-mini-label" style="margin-top:12px;">Tools</div>
+          <div class="report-tool-grid">${renderToolList(preparePhaseTools(), { phase: 'prepare' })}</div>
+          <div class="report-callout">Prepare success checkpoint: ${escapeHtml(phaseSuccessCheckpoint(playbook, 'prepare'))}</div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-label">4 · Launch phase</div>
+        <h3 class="report-section-title">Build the stack and go live</h3>
+        <div class="report-phase-grid">
+          ${preferredLaunch ? `
+          <div class="report-card">
+            <div class="report-phase-head">
+              <div class="report-phase-name">Recommended path: ${escapeHtml(preferredLaunch.label)}</div>
+              <div class="report-phase-pill">Best fit now</div>
+            </div>
+            <div class="report-muted">${escapeHtml(preferredLaunch.whyChooseThis || '')}</div>
+            <div class="report-mini-label" style="margin-top:12px;">Objective</div>
+            <div>${escapeHtml(phaseObjective(playbook, 'launch'))}</div>
+            <div class="report-mini-label" style="margin-top:12px;">Actions</div>
+            ${renderListItems(phaseActionItems(playbook, 'launch'))}
+            <div class="report-mini-label" style="margin-top:12px;">Tools</div>
+            <div class="report-tool-grid">${renderToolList(preferredLaunch.tools || [], { phase: 'launch', launchPath: preferredLaunchPath })}</div>
+          </div>` : ''}
+          ${secondaryLaunch ? `
+          <div class="report-card">
+            <div class="report-phase-head">
+              <div class="report-phase-name">Alternative path: ${escapeHtml(secondaryLaunch.label)}</div>
+              <div class="report-phase-pill">Use if it fits better</div>
+            </div>
+            <div class="report-muted">${escapeHtml(secondaryLaunch.whyChooseThis || '')}</div>
+            <div class="report-mini-label" style="margin-top:12px;">Tradeoff</div>
+            <div>${preferredLaunchPath === 'all_in_one' ? 'You get more flexibility and usually lower software cost, but more setup overhead.' : 'You simplify setup and keep more things in one place, but accept less flexibility.'}</div>
+            <div class="report-mini-label" style="margin-top:12px;">Tools</div>
+            <div class="report-tool-grid">${renderToolList(secondaryLaunch.tools || [], { phase: 'launch', launchPath: preferredLaunchPath === 'all_in_one' ? 'best_of_breed' : 'all_in_one' })}</div>
+          </div>` : ''}
+        </div>
+        <div class="report-callout">Launch success checkpoint: ${escapeHtml(phaseSuccessCheckpoint(playbook, 'launch'))}</div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-label">5 · Grow phase</div>
+        <h3 class="report-section-title">Scale what is already working</h3>
+        <div class="report-card">
+          <div class="report-phase-head">
+            <div class="report-phase-name">Grow</div>
+            <div class="report-phase-pill">Scale with discipline</div>
+          </div>
+          <div class="report-mini-label">Objective</div>
+          <div>${escapeHtml(playbook?.grow?.objective || '')}</div>
+          <div class="report-mini-label" style="margin-top:12px;">Actions</div>
+          ${renderListItems(phaseActionItems(playbook, 'grow'))}
+          <div class="report-mini-label" style="margin-top:12px;">Tools</div>
+          <div class="report-tool-grid">${renderToolList(playbook?.grow?.tools || [], { phase: 'grow' })}</div>
+          <div class="report-callout">Grow success checkpoint: ${escapeHtml(playbook?.grow?.successCheckpoint || '')}</div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-label">6 · Common mistakes</div>
+        <h3 class="report-section-title">What to avoid right now</h3>
+        ${renderListItems(playbook?.launch?.mistakesToAvoid || [])}
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-label">7 · 30-day action plan</div>
+        <h3 class="report-section-title">What to do over the next four weeks</h3>
+        <div class="report-week-grid">
+          ${weeklyPlan.map(week => `
+          <div class="report-card">
+            <div class="report-week-title">${escapeHtml(week.week)} — ${escapeHtml(week.goal)}</div>
+            ${renderListItems(week.tasks)}
+            <div class="report-callout">Checkpoint: ${escapeHtml(week.checkpoint)}</div>
+          </div>`).join('')}
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-label">8 · Final recommendation</div>
+        <h3 class="report-section-title">Should you pursue this now?</h3>
+        <div class="report-callout">
+          <strong>${escapeHtml(pursueNow)}</strong><br><br>
+          Strongest reason to continue: ${escapeHtml(canonicalProblemTitle || 'There is a real pain point worth testing.')}.<br>
+          Biggest risk: building too much before you confirm which path converts.<br>
+          Best next move this week: ${escapeHtml(sentenceCase((phaseActionItems(playbook, 'prepare')[0] || 'Clarify the audience and choose the simplest viable starting point.').replace(/\.$/, '')))}.
+        </div>
+      </section>
     </div>
 
     <div class="consult-cta">
@@ -841,9 +991,8 @@ function renderSummaryScreen(container) {
 
     <div class="cta-block">
       <button class="btn-cta-primary" id="btn-start-over">↺ Discover Another Idea</button>
-      <button class="btn-download" id="btn-download-pdf">⬇ Download PDF Report</button>
+      <button class="btn-download" id="btn-download-pdf">🖨 Print / Save as PDF</button>
     </div>
-
   `;
 
   screen.appendChild(body);
@@ -862,7 +1011,7 @@ function renderSummaryScreen(container) {
   });
 
   document.getElementById('btn-download-pdf').addEventListener('click', () => {
-    showEmailCapture(() => generatePDF());
+    generatePDF();
   });
 }
 
@@ -901,13 +1050,13 @@ function showEmailCapture(onSuccess) {
     ">
       <div style="font-size:2rem;margin-bottom:12px">📬</div>
       <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px;color:#111">
-        Download the PDF and get useful help
+        Unlock the full report
       </h2>
       <p style="color:#555;font-size:0.95rem;margin-bottom:16px;line-height:1.5">
-        Join BenjiStack to receive validated business ideas, useful tools, and simple checklists for starting and growing an online business — then continue with your PDF download.
+        Join BenjiStack to unlock the full business report — including the phased plan, tools, launch path, common mistakes, and 30-day action plan.
       </p>
       <p style="color:#777;font-size:0.82rem;margin-bottom:20px;line-height:1.45">
-        Use your email to continue to the PDF. If you're already subscribed, you can enter the same email again.
+        Use your email to continue. If you're already subscribed, you can enter the same email again.
       </p>
       <input
         type="email"
@@ -926,7 +1075,7 @@ function showEmailCapture(onSuccess) {
         border:none;border-radius:8px;font-size:1rem;font-weight:600;
         cursor:pointer;margin-bottom:10px;
       ">
-        Join BenjiStack + Continue →
+        Join BenjiStack + Unlock Report →
       </button>
       <p style="font-size:0.75rem;color:#aaa;margin-top:12px">
         Free. No spam. Unsubscribe anytime. Written by Benji, an AI.
@@ -954,7 +1103,7 @@ function showEmailCapture(onSuccess) {
     submitBtn.textContent = 'Subscribing…';
     submitBtn.disabled = true;
     errorDiv.style.display = 'none';
-    statusDiv.textContent = 'Submitting your email, then continuing to the PDF…';
+    statusDiv.textContent = 'Submitting your email, then unlocking the full report…';
     statusDiv.style.display = 'block';
 
     try {
@@ -968,7 +1117,7 @@ function showEmailCapture(onSuccess) {
       });
 
       grantPDFAccess('subscribed-popup');
-      statusDiv.textContent = 'Thanks — preparing your PDF…';
+      statusDiv.textContent = 'Thanks — unlocking your full report…';
       setTimeout(() => {
         if (document.body.contains(overlay)) document.body.removeChild(overlay);
         onSuccess();
@@ -977,7 +1126,7 @@ function showEmailCapture(onSuccess) {
     } catch (err) {
       // On any error, still let them continue — don't block the user
       grantPDFAccess('subscribed-popup-error-fallback');
-      statusDiv.textContent = 'We could not confirm the signup here, but you can still continue to the PDF.';
+      statusDiv.textContent = 'We could not confirm the signup here, but you can still continue to the full report.';
       setTimeout(() => {
         if (document.body.contains(overlay)) document.body.removeChild(overlay);
         onSuccess();
