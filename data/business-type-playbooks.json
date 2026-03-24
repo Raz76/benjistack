@@ -57,7 +57,7 @@
               {
                 "name": "GoHighLevel",
                 "category": "All-in-one",
-                "reason": "Useful for domain connection, simple site/funnel setup, lead capture, CRM, booking, and follow-up automation.",
+                "reason": "Strong all-in-one route if you want to connect a domain, publish pages and funnels fast, capture leads, book calls, collect payments, and automate follow-up without stitching multiple tools together.",
                 "affiliatePriority": "high",
                 "affiliate": {
                   "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -109,7 +109,7 @@
           {
             "name": "GoHighLevel",
             "category": "Automation",
-            "reason": "Strong option if the business is ready to centralize CRM, nurturing, and pipeline automation.",
+            "reason": "Strong growth option when you want to centralize CRM, pipelines, review requests, nurture sequences, social scheduling, and follow-up automation as client volume increases.",
             "affiliatePriority": "medium",
             "affiliate": {
               "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -169,7 +169,7 @@
               {
                 "name": "GoHighLevel",
                 "category": "All-in-one",
-                "reason": "Can handle landing page, forms, funnel, email/SMS follow-up, and CRM during pre-product validation.",
+                "reason": "Useful when you want one system for waitlist pages, funnels, forms, CRM, email/SMS follow-up, webinar-style demos, and pre-launch nurturing before the actual product needs its own stack.",
                 "affiliatePriority": "high",
                 "affiliate": {
                   "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -222,6 +222,19 @@
             "name": "Ahrefs or Semrush",
             "category": "SEO",
             "reason": "Useful when content-led acquisition becomes viable."
+          },
+          {
+            "name": "GoHighLevel",
+            "category": "Growth ops",
+            "reason": "Worth considering in Grow if you want one system around the product for CRM, lifecycle campaigns, webinar funnels, support follow-up, affiliate/referral flows, and community or course layers.",
+            "affiliatePriority": "medium",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           }
         ]
       }
@@ -275,7 +288,7 @@
               {
                 "name": "GoHighLevel",
                 "category": "All-in-one",
-                "reason": "Can be a strong Launch option when the content business also needs pages, forms, automations, and simple offer funnels in one place.",
+                "reason": "Strong option when the content business also needs landing pages, lead magnets, email follow-up, simple offer funnels, communities, or paid content in one place.",
                 "affiliatePriority": "high",
                 "affiliate": {
                   "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -331,6 +344,19 @@
             "name": "SparkLoop",
             "category": "Growth",
             "reason": "Useful later for newsletter referral growth if unit economics work."
+          },
+          {
+            "name": "GoHighLevel",
+            "category": "Growth ops",
+            "reason": "Strong option once the media business expands into lead magnets, funnels, sponsorship flows, social scheduling, communities, courses, or paid memberships alongside the newsletter/content engine.",
+            "affiliatePriority": "medium",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           }
         ]
       }
@@ -377,7 +403,7 @@
               {
                 "name": "GoHighLevel",
                 "category": "All-in-one",
-                "reason": "Useful for sales pages, capture funnels, email follow-up, and early product funnel testing in one system.",
+                "reason": "Strong all-in-one option for sales pages, lead capture, email sequences, checkout flows, upsells, courses, memberships, and community access without needing a fragmented stack.",
                 "affiliatePriority": "high",
                 "affiliate": {
                   "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -430,7 +456,7 @@
           {
             "name": "GoHighLevel",
             "category": "Automation",
-            "reason": "Can make sense later if the business wants one place for funnel logic, CRM, and follow-up.",
+            "reason": "Useful when the business wants one place for funnels, CRM, email/SMS follow-up, upsells, memberships, courses, and community offers as the product ecosystem expands.",
             "affiliatePriority": "medium",
             "affiliate": {
               "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -485,7 +511,7 @@
               {
                 "name": "GoHighLevel",
                 "category": "All-in-one",
-                "reason": "Very strong fit for agencies that want client pipelines, funnels, forms, booking, and nurturing in one platform.",
+                "reason": "Very strong fit for agencies that want one platform for domain and site setup, funnels, CRM, forms, calendars, proposals, payments, reviews, and nurturing.",
                 "affiliatePriority": "high",
                 "affiliate": {
                   "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -535,7 +561,7 @@
           {
             "name": "GoHighLevel",
             "category": "Growth ops",
-            "reason": "Good long-term fit when the agency wants centralized pipelines, automations, and client tracking.",
+            "reason": "Very strong long-term fit when the agency wants centralized pipelines, automations, review generation, reporting, social scheduling, and client communication in one platform.",
             "affiliatePriority": "high",
             "affiliate": {
               "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -600,7 +626,7 @@
               {
                 "name": "GoHighLevel",
                 "category": "All-in-one",
-                "reason": "Strong Launch fit for lead-gen because it combines funnels, forms, CRM, automation, calendar booking, and follow-up.",
+                "reason": "Excellent fit when lead-gen depends on funnels, forms, CRM, booking, automated follow-up, call tracking, and fast handoff from new lead to booked conversation.",
                 "affiliatePriority": "high",
                 "affiliate": {
                   "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -660,7 +686,7 @@
           {
             "name": "GoHighLevel",
             "category": "Scale ops",
-            "reason": "Strong fit if centralizing pipeline, nurturing, and client/buyer workflows matters.",
+            "reason": "Strong fit in Grow when you need centralized pipeline management, nurture workflows, reporting, review flows, and ad-linked follow-up across multiple campaigns or clients.",
             "affiliatePriority": "high",
             "affiliate": {
               "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -715,7 +741,7 @@
               {
                 "name": "GoHighLevel",
                 "category": "All-in-one",
-                "reason": "Can help with domain, landing pages, forms, CRM, and nurturing while the marketplace logic is still manual.",
+                "reason": "Useful while the marketplace is still simple or partly manual because it can handle domain setup, landing pages, forms, lead capture, nurturing, and offer funnels before custom product complexity is needed.",
                 "affiliatePriority": "medium",
                 "affiliate": {
                   "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -769,6 +795,19 @@
             "name": "beehiiv or Kit",
             "category": "Retention",
             "reason": "Keeps users engaged through updates and curation."
+          },
+          {
+            "name": "GoHighLevel",
+            "category": "Growth ops",
+            "reason": "Useful in Grow when you need funnels, CRM, email/SMS nurture, review collection, social scheduling, and partner or lead management around the marketplace experience.",
+            "affiliatePriority": "medium",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           }
         ]
       }
@@ -815,7 +854,7 @@
               {
                 "name": "GoHighLevel",
                 "category": "All-in-one",
-                "reason": "Can simplify early-stage setup with pages, forms, CRM, and follow-up in one system.",
+                "reason": "Strong all-in-one route when you want to simplify setup across pages, forms, CRM, email follow-up, payments, automations, and simple digital offers in one system.",
                 "affiliatePriority": "medium",
                 "affiliate": {
                   "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
@@ -853,6 +892,19 @@
             "name": "The phase-appropriate tools from the now-clearer primary business type",
             "category": "Strategy",
             "reason": "Once the model is clearer, borrow the sharper playbook instead of staying generic."
+          },
+          {
+            "name": "GoHighLevel",
+            "category": "Growth ops",
+            "reason": "Good long-term option if you want one operating system for funnels, CRM, payments, automation, social scheduling, reviews, courses, memberships, or community-led monetization.",
+            "affiliatePriority": "medium",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           }
         ]
       }
