@@ -114,12 +114,26 @@ async function checkJourneyStart() {
 // EMAIL GATE MODAL — GHL iframe form
 // ----------------------------------------------------------------
 async function submitEmailGateSubscription(email) {
-  await fetch('https://app.beehiiv.com/subscribe', {
+  const res = await fetch(`${WORKER_URL}/subscribe-beehiiv`, {
     method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `email=${encodeURIComponent(email)}&publication_id=pub_67a3d01a-868c-40ab-8273-c5ba5e65829f&utm_source=validator-tool&utm_medium=validation-gate&utm_campaign=tool-signup`
+    headers: {
+      'x-api-key': UV_SECRET,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      email,
+      utm_source: 'validator-tool',
+      utm_medium: 'validation-gate',
+      utm_campaign: 'tool-signup'
+    })
   });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || `Subscribe failed (${res.status})`);
+  }
+
+  return data;
 }
 
 function showEmailGate() {
@@ -191,10 +205,10 @@ function showEmailGate() {
       localStorage.setItem('uv_gate_submitted', 'true');
       overlay.remove();
       showPendingConfirmation();
-    } catch {
+    } catch (err) {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Join BenjiStack for free';
-      errorDiv.textContent = 'That did not go through. Please try again.';
+      errorDiv.textContent = err?.message || 'That did not go through. Please try again.';
       errorDiv.style.display = 'block';
       statusDiv.style.display = 'none';
     }

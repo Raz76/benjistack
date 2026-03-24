@@ -2,6 +2,7 @@
 const ANTHROPIC_API_KEY = 'My Api key'; // ← paste your Anthropic key here
 const SERPER_API_KEY    = 'My Api key'; // ← paste your Serper key here
 const UV_SECRET         = 'My Secret key'; // ← shared secret (must match api.js)
+const BEEHIIV_PUBLICATION_ID = 'pub_67a3d01a-868c-40ab-8273-c5ba5e65829f';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -31,6 +32,42 @@ function json(data, status = 200) {
     status,
     headers: { ...CORS, 'Content-Type': 'application/json' },
   });
+}
+
+async function subscribeBeehiiv(env, payload = {}) {
+  const apiKey = env.BEEHIIV_API_KEY;
+  const publicationId = env.BEEHIIV_PUBLICATION_ID || BEEHIIV_PUBLICATION_ID;
+
+  if (!apiKey) {
+    return { ok: false, status: 500, error: 'Beehiiv API key is not configured in the worker.' };
+  }
+
+  if (!publicationId) {
+    return { ok: false, status: 500, error: 'Beehiiv publication ID is not configured.' };
+  }
+
+  const response = await fetch(`https://api.beehiiv.com/v2/publications/${publicationId}/subscriptions`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: payload.email,
+      send_welcome_email: true,
+      utm_source: payload.utm_source || 'validator-tool',
+      utm_medium: payload.utm_medium || 'validation-gate',
+      utm_campaign: payload.utm_campaign || 'tool-signup',
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = data?.errors?.[0]?.message || data?.error || data?.message || 'Beehiiv subscription failed.';
+    return { ok: false, status: response.status, error: message, raw: data };
+  }
+
+  return { ok: true, status: response.status, data };
 }
 // ─────────────────────────────────────────────────────────────────
 
@@ -82,6 +119,35 @@ export default {
       rec.confirmed = true;
       await setRateRecord(env.UV_RATE, clientIp, rec);
       return json({ ok: true });
+    }
+
+    // ── POST /subscribe-beehiiv ──────────────────────────────────
+    if (url.pathname === '/subscribe-beehiiv' && request.method === 'POST') {
+      if (!authorized) return json({ error: 'Unauthorized' }, 401);
+
+      try {
+        const body = await request.json();
+        const email = String(body?.email || '').trim().toLowerCase();
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          return json({ ok: false, error: 'Please enter a valid email address.' }, 400);
+        }
+
+        const result = await subscribeBeehiiv(env, {
+          email,
+          utm_source: body?.utm_source,
+          utm_medium: body?.utm_medium,
+          utm_campaign: body?.utm_campaign,
+        });
+
+        if (!result.ok) {
+          return json({ ok: false, error: result.error, details: result.raw || null }, result.status || 500);
+        }
+
+        return json({ ok: true, subscription: result.data || null });
+      } catch (err) {
+        return json({ ok: false, error: err.message || 'Beehiiv subscription failed.' }, 500);
+      }
     }
 
     // ── POST /reset-rate (owner only) ────────────────────────────
