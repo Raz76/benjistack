@@ -72,6 +72,10 @@ async function checkRateStatus() {
     STATE.confirmed  = data.confirmed  || false;
     STATE.dailyCount = data.count      || 0;
     STATE.dailyLimit = data.limit      || 1;
+
+    if (STATE.confirmed || STATE.dailyCount === 0) {
+      clearFreeValidationConsumed();
+    }
   } catch {
     // fail open — don't block users if Worker has a hiccup
   }
