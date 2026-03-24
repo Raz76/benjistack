@@ -548,7 +548,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (params.has('sample_report') || params.has('sample_pdf')) {
     loadDebugSample();
-    localStorage.setItem(PDF_ACCESS_KEY, 'granted');
     goTo('summary');
     if (params.has('print_report') || params.has('download_pdf')) {
       setTimeout(() => generatePDF(), 250);

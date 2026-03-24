@@ -7,7 +7,6 @@
 'use strict';
 
 const BOOKING_LINK = 'https://newsletter.benjistack.com';
-const PDF_ACCESS_KEY = 'benjistack_pdf_access';
 
 // ----------------------------------------------------------------
 // HELPER: Create a standard screen wrapper with header + back nav
@@ -639,7 +638,7 @@ function renderValidationScreen(container) {
   document.getElementById('btn-validation-next').addEventListener('click', () => {
     STATE.selectedBrand = null;
     STATE.brandOptions = [];
-    showEmailCapture(() => goTo('summary'));
+    goTo('summary');
   });
 }
 
@@ -1021,131 +1020,6 @@ async function renderSummaryScreen(container) {
 
   document.getElementById('btn-download-pdf').addEventListener('click', () => {
     generatePDF();
-  });
-}
-
-// ----------------------------------------------------------------
-// EMAIL CAPTURE — shown before PDF download
-// ----------------------------------------------------------------
-function hasPDFAccess() {
-  return localStorage.getItem(PDF_ACCESS_KEY) === 'granted';
-}
-
-function grantPDFAccess(reason = 'unknown') {
-  localStorage.setItem(PDF_ACCESS_KEY, 'granted');
-  localStorage.setItem(`${PDF_ACCESS_KEY}_reason`, reason);
-}
-
-function showEmailCapture(onSuccess) {
-  // Trust-first: once PDF access is granted, don't gate again
-  if (hasPDFAccess()) {
-    onSuccess();
-    return;
-  }
-
-  // Build modal
-  const overlay = document.createElement('div');
-  overlay.id = 'email-capture-overlay';
-  overlay.style.cssText = `
-    position:fixed;inset:0;background:rgba(0,0,0,0.7);
-    display:flex;align-items:center;justify-content:center;
-    z-index:9999;padding:20px;
-  `;
-
-  overlay.innerHTML = `
-    <div style="
-      background:#fff;border-radius:16px;padding:36px;max-width:460px;width:100%;
-      box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center;
-    ">
-      <div style="font-size:2rem;margin-bottom:12px">📬</div>
-      <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px;color:#111">
-        Unlock the full report
-      </h2>
-      <p style="color:#555;font-size:0.95rem;margin-bottom:16px;line-height:1.5">
-        Join BenjiStack for free to unlock the full business report — including the phased plan, tools, launch path, common mistakes, and 30-day action plan.
-      </p>
-      <p style="color:#777;font-size:0.82rem;margin-bottom:20px;line-height:1.45">
-        Use your email to continue. If you're already subscribed, you can enter the same email again.
-      </p>
-      <input
-        type="email"
-        id="capture-email"
-        placeholder="your@email.com"
-        style="
-          width:100%;padding:12px 16px;border:2px solid #e0e0e0;
-          border-radius:8px;font-size:1rem;box-sizing:border-box;
-          margin-bottom:12px;outline:none;
-        "
-      />
-      <div id="capture-error" style="color:#e53e3e;font-size:0.85rem;margin-bottom:8px;display:none"></div>
-      <div id="capture-status" style="color:#555;font-size:0.85rem;margin-bottom:8px;display:none"></div>
-      <button id="capture-submit" style="
-        width:100%;padding:14px;background:#111;color:#fff;
-        border:none;border-radius:8px;font-size:1rem;font-weight:600;
-        cursor:pointer;margin-bottom:10px;
-      ">
-        Join BenjiStack for free + Unlock Report →
-      </button>
-      <p style="font-size:0.75rem;color:#aaa;margin-top:12px">
-        Free. No spam. Unsubscribe anytime. Written by Benji, an AI.
-      </p>
-    </div>
-  `;
-
-  document.body.appendChild(overlay);
-
-  const emailInput = document.getElementById('capture-email');
-  const submitBtn = document.getElementById('capture-submit');
-  const errorDiv = document.getElementById('capture-error');
-  const statusDiv = document.getElementById('capture-status');
-
-  emailInput.focus();
-
-  submitBtn.addEventListener('click', async () => {
-    const email = emailInput.value.trim();
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errorDiv.textContent = 'Please enter a valid email address.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    submitBtn.textContent = 'Subscribing…';
-    submitBtn.disabled = true;
-    errorDiv.style.display = 'none';
-    statusDiv.textContent = 'Submitting your email, then unlocking the full report…';
-    statusDiv.style.display = 'block';
-
-    try {
-      // POST directly to beehiiv's subscribe endpoint (no API key needed)
-      // mode: 'no-cors' = fire and forget, can't read response but request is sent
-      await fetch('https://app.beehiiv.com/subscribe', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `email=${encodeURIComponent(email)}&publication_id=pub_67a3d01a-868c-40ab-8273-c5ba5e65829f&utm_source=validator-tool&utm_medium=pdf-gate&utm_campaign=tool-signup`
-      });
-
-      grantPDFAccess('subscribed-popup');
-      statusDiv.textContent = 'Thanks — unlocking your full report…';
-      setTimeout(() => {
-        if (document.body.contains(overlay)) document.body.removeChild(overlay);
-        onSuccess();
-      }, 250);
-
-    } catch (err) {
-      // On any error, still let them continue — don't block the user
-      grantPDFAccess('subscribed-popup-error-fallback');
-      statusDiv.textContent = 'We could not confirm the signup here, but you can still continue to the full report.';
-      setTimeout(() => {
-        if (document.body.contains(overlay)) document.body.removeChild(overlay);
-        onSuccess();
-      }, 300);
-    }
-  });
-
-  // Allow Enter key
-  emailInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') submitBtn.click();
   });
 }
 
