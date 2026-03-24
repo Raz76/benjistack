@@ -1283,6 +1283,16 @@ async function generatePDF() {
       color: var(--muted);
       font-family: 'DM Mono', 'Courier New', monospace;
     }
+    .section > .label {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(13, 122, 82, 0.10);
+      color: var(--signal);
+      border: 1px solid rgba(13, 122, 82, 0.18);
+      margin-bottom: 10px;
+    }
     .cover h1 {
       font-size: 30pt;
       line-height: 1.05;
