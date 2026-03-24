@@ -918,7 +918,7 @@ function showEmailCapture(onSuccess) {
         Join BenjiStack to receive validated business ideas, useful tools, and simple checklists for starting and growing an online business — then continue with your PDF download.
       </p>
       <p style="color:#777;font-size:0.82rem;margin-bottom:20px;line-height:1.45">
-        Already subscribed elsewhere? That's fine — we can't verify that automatically yet, so you can continue to the PDF below.
+        Use your email to continue to the PDF. If you're already subscribed, you can enter the same email again.
       </p>
       <input
         type="email"
@@ -939,18 +939,6 @@ function showEmailCapture(onSuccess) {
       ">
         Join BenjiStack + Continue →
       </button>
-      <button id="capture-already" style="
-        background:none;border:none;color:#555;font-size:0.9rem;
-        cursor:pointer;text-decoration:underline;display:block;width:100%;margin-bottom:8px;
-      ">
-        Already subscribed — continue to PDF
-      </button>
-      <button id="capture-skip" style="
-        background:none;border:none;color:#999;font-size:0.85rem;
-        cursor:pointer;text-decoration:underline;
-      ">
-        Just download the PDF
-      </button>
       <p style="font-size:0.75rem;color:#aaa;margin-top:12px">
         Free. No spam. Unsubscribe anytime. Written by Benji, an AI.
       </p>
@@ -961,8 +949,6 @@ function showEmailCapture(onSuccess) {
 
   const emailInput = document.getElementById('capture-email');
   const submitBtn = document.getElementById('capture-submit');
-  const alreadyBtn = document.getElementById('capture-already');
-  const skipBtn = document.getElementById('capture-skip');
   const errorDiv = document.getElementById('capture-error');
   const statusDiv = document.getElementById('capture-status');
 
@@ -978,8 +964,6 @@ function showEmailCapture(onSuccess) {
 
     submitBtn.textContent = 'Subscribing…';
     submitBtn.disabled = true;
-    alreadyBtn.disabled = true;
-    skipBtn.disabled = true;
     errorDiv.style.display = 'none';
     statusDiv.textContent = 'Submitting your email, then continuing to the PDF…';
     statusDiv.style.display = 'block';
@@ -1010,18 +994,6 @@ function showEmailCapture(onSuccess) {
         onSuccess();
       }, 300);
     }
-  });
-
-  alreadyBtn.addEventListener('click', () => {
-    grantPDFAccess('already-subscribed-self-attested');
-    if (document.body.contains(overlay)) document.body.removeChild(overlay);
-    onSuccess();
-  });
-
-  skipBtn.addEventListener('click', () => {
-    grantPDFAccess('skipped-gate');
-    if (document.body.contains(overlay)) document.body.removeChild(overlay);
-    onSuccess();
   });
 
   // Allow Enter key
@@ -1116,8 +1088,7 @@ function renderToolList(tools = []) {
       ? `<div class="tool-links">
           <a href="${escapeHtml(affiliate.primaryUrl)}" target="_blank" rel="noopener">${escapeHtml(affiliate.primaryLabel || 'Recommended link')}</a>
           ${affiliate.secondaryUrl ? ` · <a href="${escapeHtml(affiliate.secondaryUrl)}" target="_blank" rel="noopener">${escapeHtml(affiliate.secondaryLabel || 'Alternative link')}</a>` : ''}
-        </div>
-        <div class="tool-note">${escapeHtml(affiliate.useWhen || '')}</div>`
+        </div>`
       : '';
 
     return `<div class="tool-card">
@@ -1610,10 +1581,13 @@ async function generatePDF() {
   container.setAttribute('aria-hidden', 'true');
 
   const styleEl = document.createElement('style');
-  styleEl.textContent = Array.from(parsed.head.querySelectorAll('style')).map(s => s.textContent).join('\n');
+  styleEl.textContent = Array.from(parsed.head.querySelectorAll('style')).map(s => s.textContent).join('\n')
+    .replace(/\bbody\s*\{/g, '.pdf-root {')
+    .replace(/@media print\s*\{\s*body\s*\{/g, '@media print { .pdf-root {');
   container.appendChild(styleEl);
 
   const sourceNode = document.createElement('div');
+  sourceNode.className = 'pdf-root';
   sourceNode.innerHTML = parsed.body.innerHTML;
   container.appendChild(sourceNode);
   document.body.appendChild(container);

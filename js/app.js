@@ -108,7 +108,6 @@ function showEmailGate() {
       </p>
       <div class="gate-iframe-wrap">
         <iframe
-          
           style="width:100%;height:412px;border:none;border-radius:3px"
           id="inline-lDgjUTQXJ4CuJBhzanD4"
           data-layout="{'id':'INLINE'}"
@@ -122,9 +121,9 @@ function showEmailGate() {
           title="Urban Voice Discover Gate">
         </iframe>
       </div>
-      <a href="${BOOKING_LINK}" target="_blank" class="gate-skip-link">
-        Skip — read the newsletter instead →
-      </a>
+      <p class="modal-note" style="margin-top:14px;">
+        Already subscribed? Use the same email here to unlock your searches.
+      </p>
     </div>
   `;
   document.body.appendChild(overlay);
