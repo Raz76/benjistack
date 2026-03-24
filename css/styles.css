@@ -562,9 +562,10 @@ img { max-width: 100%; display: block; }
 }
 
 .screen-logo {
-  height: 38px;
-  width: auto;
-  object-fit: contain;
+  display: block;
+  width: min(220px, 48vw);
+  height: auto;
+  max-width: 100%;
 }
 
 .btn-back {
@@ -1323,7 +1324,8 @@ img { max-width: 100%; display: block; }
   }
 
   .screen-logo {
-    height: 30px;
+    width: min(170px, 52vw);
+    height: auto;
   }
 
   .screen-body {

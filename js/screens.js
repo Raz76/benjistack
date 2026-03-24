@@ -24,7 +24,7 @@ function createScreenShell(id, { showBack = true } = {}) {
   const header = document.createElement('header');
   header.className = 'screen-header';
   header.innerHTML = `
-    <img src="Brand/logo_11.png" alt="BenjiStack" class="screen-logo" />
+    <img src="Brand/logo-primary.svg" alt="BenjiStack" class="screen-logo" />
     ${showBack ? `<button class="btn-back" id="btn-back-${id}">← Back</button>` : ''}
   `;
   screen.appendChild(header);
