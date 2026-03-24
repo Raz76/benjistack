@@ -24,7 +24,7 @@ function createScreenShell(id, { showBack = true } = {}) {
   const header = document.createElement('header');
   header.className = 'screen-header';
   header.innerHTML = `
-    <img src="Brand/logo-primary.svg" alt="BenjiStack" class="screen-logo" />
+    <img src="Brand/logo_11.png" alt="BenjiStack" class="screen-logo" />
     ${showBack ? `<button class="btn-back" id="btn-back-${id}">← Back</button>` : ''}
   `;
   screen.appendChild(header);
@@ -160,7 +160,7 @@ function renderNoResultsScreen(body, screen, reason) {
     : `We couldn't find enough public discussion about this topic to extract real problems. This usually means the topic is very niche, uses different terminology, or discussion happens in private communities.`;
 
   body.innerHTML = `
-    <p class="screen-eyebrow">Step 1 of 6 — No Discussion Found</p>
+    <p class="screen-eyebrow">Step 1 of 5 — No Discussion Found</p>
     <h1 class="screen-title">${title}</h1>
     <p class="screen-desc">${desc}</p>
     <div class="refine-section">
@@ -196,7 +196,7 @@ function renderNoResultsScreen(body, screen, reason) {
 
 function renderVagueScreen(body, screen) {
   body.innerHTML = `
-    <p class="screen-eyebrow">Step 1 of 6 — More Context Needed</p>
+    <p class="screen-eyebrow">Step 1 of 5 — More Context Needed</p>
     <h1 class="screen-title">What Direction Are You Thinking?</h1>
     <p class="screen-desc">
       Your topic is quite broad on its own. Adding a bit more context helps us find real problems
@@ -236,7 +236,7 @@ function renderVagueScreen(body, screen) {
 
 function renderAnglesContent(body, reason) {
   body.innerHTML = `
-    <p class="screen-eyebrow">Step 1 of 6 — Narrow Your Focus</p>
+    <p class="screen-eyebrow">Step 1 of 5 — Narrow Your Focus</p>
     <h1 class="screen-title">Your Topic Is Broad — Let's Narrow It</h1>
     <p class="screen-desc">
       Your search returned discussions across too many different audiences to extract one clear problem.
@@ -405,7 +405,7 @@ function renderProblemsContent(body) {
   ` : '';
 
   body.innerHTML = `
-    <p class="screen-eyebrow">Step 2 of 6 — Detected Pain Points</p>
+    <p class="screen-eyebrow">Step 2 of 5 — Detected Pain Points</p>
     <h1 class="screen-title">What Are People Actually Complaining About?</h1>
     <p class="screen-desc">
       These are real pain points extracted from online discussions — not business ideas.
@@ -497,7 +497,7 @@ async function loadAndRenderSolutions(body) {
 
 function renderSolutionsContent(body) {
   body.innerHTML = `
-    <p class="screen-eyebrow">Step 3 of 6 — Business Ideas</p>
+    <p class="screen-eyebrow">Step 3 of 5 — Business Ideas</p>
     <h1 class="screen-title">Here's What You Could Build</h1>
     <p class="screen-desc">
       Five research-based business ideas matched to the problem you chose. Each is
@@ -580,7 +580,7 @@ function renderValidationScreen(container) {
     .join('');
 
   body.innerHTML = `
-    <p class="screen-eyebrow">Step 4 of 6 — Validation Report</p>
+    <p class="screen-eyebrow">Step 4 of 5 — Validation Report</p>
     <h1 class="screen-title">Here's the Market Reality</h1>
     <p class="screen-desc">
       Based on real data from G2, Product Hunt, Reddit, and pricing pages — not guesses.
@@ -625,7 +625,7 @@ function renderValidationScreen(container) {
     </div>
 
     <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
-      <button class="btn-primary" id="btn-validation-next">Build My Brand Identity →</button>
+      <button class="btn-primary" id="btn-validation-next">See My Full Report →</button>
     </div>
   `;
 
@@ -641,7 +641,9 @@ function renderValidationScreen(container) {
   });
 
   document.getElementById('btn-validation-next').addEventListener('click', () => {
-    goTo('brand');
+    STATE.selectedBrand = null;
+    STATE.brandOptions = [];
+    goTo('summary');
   });
 }
 
@@ -784,7 +786,7 @@ function renderSummaryScreen(container) {
   const v = STATE.validation;
 
   body.innerHTML = `
-    <p class="screen-eyebrow">Step 6 of 6 — Your Discovery Report</p>
+    <p class="screen-eyebrow">Step 5 of 5 — Your Discovery Report</p>
     <h1 class="screen-title">You're Ready to Build</h1>
     <p class="screen-desc">
       Here's everything you discovered. This is your validated business blueprint.
@@ -826,15 +828,6 @@ function renderSummaryScreen(container) {
       <div class="summary-section">
         <div class="summary-label">Validation Verdict</div>
         <div class="val-verdict" style="margin-top: 8px;">${v.verdict}</div>
-      </div>` : ''}
-      ${STATE.selectedBrand ? `
-      <div class="summary-section">
-        <div class="summary-label">Brand Identity</div>
-        <div class="summary-value">
-          <span style="font-family: var(--font-head); font-size: 1.6rem; color: var(--accent);">${STATE.selectedBrand.name}</span><br>
-          <em style="color: var(--text-muted);">"${STATE.selectedBrand.tagline}"</em><br>
-          <span style="color: var(--text-faint); font-size: 0.85rem;">${STATE.selectedBrand.positioning}</span>
-        </div>
       </div>` : ''}
     </div>
 

@@ -38,8 +38,7 @@ const STEPS = [
   'problems',    // 2: problem picker
   'solutions',   // 3: solution picker (validation pre-computed here)
   'validation',  // 4: validation detail — instant, data already cached
-  'brand',       // 5: brand identity
-  'summary',     // 6: final summary
+  'summary',     // 5: final summary
 ];
 
 // ----------------------------------------------------------------
@@ -294,7 +293,6 @@ function renderScreen(stepName) {
     case 'problems':   renderProblemsScreen(container);  break;
     case 'solutions':  renderSolutionsScreen(container); break;
     case 'validation': renderValidationScreen(container);break;
-    case 'brand':      renderBrandScreen(container);     break;
     case 'summary':    renderSummaryScreen(container);   break;
     default: console.warn('Unknown step:', stepName);
   }

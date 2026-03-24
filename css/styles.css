@@ -562,8 +562,9 @@ img { max-width: 100%; display: block; }
 }
 
 .screen-logo {
-  height: 36px;
+  height: 34px;
   width: auto;
+  object-fit: contain;
 }
 
 .btn-back {
@@ -1321,6 +1322,10 @@ img { max-width: 100%; display: block; }
     padding: 16px 20px;
   }
 
+  .screen-logo {
+    height: 28px;
+  }
+
   .screen-body {
     padding: 28px 20px;
   }
@@ -1342,41 +1347,4 @@ img { max-width: 100%; display: block; }
     width: 100%;
     justify-content: center;
   }
-}
-dth: 100%;
-    justify-content: center;
-  }
-}
- }
-}
-content: center;
-  }
-}
- }
-}
-mary,
-  .btn-download {
-    width: 100%;
-    justify-content: center;
-  }
-}
-dth: 100%;
-    justify-content: center;
-  }
-}
- }
-}
-content: center;
-  }
-}
- }
-}
- }
-}
-: center;
-  }
-}
- }
-}
- }
 }
