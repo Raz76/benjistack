@@ -113,6 +113,15 @@ async function checkJourneyStart() {
 // ----------------------------------------------------------------
 // EMAIL GATE MODAL — GHL iframe form
 // ----------------------------------------------------------------
+async function submitEmailGateSubscription(email) {
+  await fetch('https://app.beehiiv.com/subscribe', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `email=${encodeURIComponent(email)}&publication_id=pub_67a3d01a-868c-40ab-8273-c5ba5e65829f&utm_source=validator-tool&utm_medium=validation-gate&utm_campaign=tool-signup`
+  });
+}
+
 function showEmailGate() {
   const existing = document.getElementById('gate-modal');
   window.removeEventListener('message', handleGHLMessage);
@@ -127,28 +136,74 @@ function showEmailGate() {
       <p class="modal-desc">
         You've used your free idea validation. Join BenjiStack for free and confirm your email to unlock up to 3 idea validations per day.
       </p>
-      <div class="gate-iframe-wrap">
-        <iframe
-          style="width:100%;height:412px;border:none;border-radius:3px"
-          id="inline-lDgjUTQXJ4CuJBhzanD4"
-          data-layout="{'id':'INLINE'}"
-          data-trigger-type="alwaysShow"
-          data-activation-type="alwaysActivated"
-          data-deactivation-type="neverDeactivate"
-          data-form-name="Urban Voice Discover Gate"
-          data-height="412"
-          data-layout-iframe-id="inline-lDgjUTQXJ4CuJBhzanD4"
-          data-form-id="lDgjUTQXJ4CuJBhzanD4"
-          title="Urban Voice Discover Gate">
-        </iframe>
-      </div>
+      <input
+        type="email"
+        id="gate-email"
+        placeholder="your@email.com"
+        style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-size:1rem;margin-top:14px;background:#fff;"
+        autocomplete="email"
+      />
+      <div id="gate-error" style="color:#c53b3b;font-size:0.85rem;margin-top:10px;display:none"></div>
+      <div id="gate-status" style="color:var(--text-muted);font-size:0.85rem;margin-top:10px;display:none"></div>
+      <button class="btn-primary" id="btn-gate-submit"
+              style="width:100%;margin-top:14px;">
+        Join BenjiStack for free
+      </button>
       <p class="modal-note" style="margin-top:14px;">
         Already subscribed? Use the same email here. You'll need to confirm your free subscription before continuing.
       </p>
+      <button class="btn-secondary" id="btn-gate-close"
+              style="width:100%;margin-top:10px;">
+        Close
+      </button>
     </div>
   `;
   document.body.appendChild(overlay);
-  window.addEventListener('message', handleGHLMessage);
+
+  const emailInput = document.getElementById('gate-email');
+  const submitBtn = document.getElementById('btn-gate-submit');
+  const closeBtn = document.getElementById('btn-gate-close');
+  const errorDiv = document.getElementById('gate-error');
+  const statusDiv = document.getElementById('gate-status');
+
+  emailInput?.focus();
+
+  closeBtn?.addEventListener('click', () => overlay.remove());
+
+  const submit = async () => {
+    const email = emailInput.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errorDiv.textContent = 'Please enter a valid email address.';
+      errorDiv.style.display = 'block';
+      statusDiv.style.display = 'none';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+    errorDiv.style.display = 'none';
+    statusDiv.textContent = 'Submitting your email…';
+    statusDiv.style.display = 'block';
+
+    try {
+      await submitEmailGateSubscription(email);
+      STATE.gateSubmitted = true;
+      localStorage.setItem('uv_gate_submitted', 'true');
+      overlay.remove();
+      showPendingConfirmation();
+    } catch {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Join BenjiStack for free';
+      errorDiv.textContent = 'That did not go through. Please try again.';
+      errorDiv.style.display = 'block';
+      statusDiv.style.display = 'none';
+    }
+  };
+
+  submitBtn?.addEventListener('click', submit);
+  emailInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submit();
+  });
 }
 
 function handleGHLMessage(event) {
