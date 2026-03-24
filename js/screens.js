@@ -1210,10 +1210,9 @@ async function generatePDF() {
   const v = STATE.validation;
   const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const previewHost = /127\.0\.0\.1:3002\/workspace|vscode-webview|vscode-file/i.test(window.location.href);
-  const popup = window.open('', '_blank');
 
-  if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-    alert('PDF export needs a normal browser window or popup permission. If you are testing inside a VS Code preview, open the app in a regular browser and try again.');
+  if (typeof window.html2pdf !== 'function') {
+    alert('PDF export library did not load. Refresh the page once and try again.');
     return;
   }
 
@@ -1383,6 +1382,13 @@ async function generatePDF() {
       font-family: 'DM Mono', 'Courier New', monospace;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+    }
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+      height: 0;
+      margin: 0;
+      border: 0;
     }
     @media print {
       body { padding: 0; background: #fff; }
@@ -1588,16 +1594,48 @@ async function generatePDF() {
 </body>
 </html>`;
 
-  popup.document.write(html);
-  popup.document.close();
-  popup.focus();
-  setTimeout(() => {
-    try {
-      popup.print();
-    } catch (err) {
-      if (previewHost) {
-        alert('Printing is limited in embedded previews. Open the site in a normal browser to download/print the PDF.');
-      }
-    }
-  }, 600);
+  const filenameBase = (STATE.rawIdea || 'benjistack-blueprint')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60) || 'benjistack-blueprint';
+
+  const parsed = new DOMParser().parseFromString(html, 'text/html');
+  const container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.left = '-99999px';
+  container.style.top = '0';
+  container.style.width = '820px';
+  container.style.background = '#ffffff';
+  container.setAttribute('aria-hidden', 'true');
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = Array.from(parsed.head.querySelectorAll('style')).map(s => s.textContent).join('\n');
+  container.appendChild(styleEl);
+
+  const sourceNode = document.createElement('div');
+  sourceNode.innerHTML = parsed.body.innerHTML;
+  container.appendChild(sourceNode);
+  document.body.appendChild(container);
+
+  try {
+    await window.html2pdf()
+      .set({
+        margin: [8, 8, 8, 8],
+        filename: `${filenameBase}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      })
+      .from(sourceNode)
+      .save();
+  } catch (err) {
+    console.error('PDF generation failed:', err);
+    alert(previewHost
+      ? 'PDF generation was blocked in the embedded preview. Open the app in a normal browser and try again.'
+      : 'PDF generation failed. Refresh once and try again.');
+  } finally {
+    container.remove();
+  }
 }
