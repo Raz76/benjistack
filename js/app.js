@@ -6,6 +6,8 @@
 
 'use strict';
 
+const FREE_VALIDATION_CONSUMED_KEY = 'benjistack_free_validation_consumed';
+
 // ----------------------------------------------------------------
 // GLOBAL STATE
 // ----------------------------------------------------------------
@@ -30,6 +32,7 @@ const STATE = {
   dailyCount: 0,
   dailyLimit: 1,
   gateSubmitted: false,
+  freeValidationConsumed: false,
 };
 
 const STEPS = [
@@ -40,6 +43,20 @@ const STEPS = [
   'validation',  // 4: validation detail — instant, data already cached
   'summary',     // 5: final summary
 ];
+
+function hasConsumedFreeValidation() {
+  return STATE.freeValidationConsumed || localStorage.getItem(FREE_VALIDATION_CONSUMED_KEY) === 'true';
+}
+
+function markFreeValidationConsumed() {
+  STATE.freeValidationConsumed = true;
+  localStorage.setItem(FREE_VALIDATION_CONSUMED_KEY, 'true');
+}
+
+function clearFreeValidationConsumed() {
+  STATE.freeValidationConsumed = false;
+  localStorage.removeItem(FREE_VALIDATION_CONSUMED_KEY);
+}
 
 // ----------------------------------------------------------------
 // RATE LIMITING — Worker-based (IP tracked server-side)
@@ -94,6 +111,7 @@ async function checkJourneyStart() {
 // ----------------------------------------------------------------
 function showEmailGate() {
   const existing = document.getElementById('gate-modal');
+  window.removeEventListener('message', handleGHLMessage);
   if (existing) existing.remove();
 
   const overlay = document.createElement('div');
@@ -101,9 +119,9 @@ function showEmailGate() {
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
     <div class="modal gate-modal">
-      <h2 class="modal-title">Want more validated ideas?</h2>
+      <h2 class="modal-title">Join BenjiStack for free</h2>
       <p class="modal-desc">
-        Enter your details below to join BenjiStack and unlock 3 searches per day.
+        You've used your free idea validation. Join BenjiStack for free and confirm your email to unlock up to 3 idea validations per day.
       </p>
       <div class="gate-iframe-wrap">
         <iframe
@@ -121,7 +139,7 @@ function showEmailGate() {
         </iframe>
       </div>
       <p class="modal-note" style="margin-top:14px;">
-        Already subscribed? Use the same email here to unlock your searches.
+        Already subscribed? Use the same email here. You'll need to confirm your free subscription before continuing.
       </p>
     </div>
   `;
@@ -150,7 +168,7 @@ function handleGHLMessage(event) {
     modal.innerHTML = `
       <h2 class="modal-title">Almost there!</h2>
       <p class="modal-desc">
-        Check your email and click the confirmation link to finish joining BenjiStack and unlock 3 searches per day.
+        Check your email and click the confirmation link to finish joining BenjiStack for free and unlock up to 3 idea validations per day.
       </p>
       <p class="modal-note" style="margin-top:16px;">
         You can also read the newsletter now.
@@ -181,7 +199,7 @@ function showPendingConfirmation() {
     <div class="modal">
       <h2 class="modal-title">Check Your Email</h2>
       <p class="modal-desc">
-        Click the confirmation link we sent you to finish joining BenjiStack and unlock 3 searches per day.
+        Click the confirmation link we sent you to finish joining BenjiStack for free and unlock up to 3 idea validations per day.
       </p>
       <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
          style="display:block;text-align:center;margin-top:20px;text-decoration:none;">
@@ -208,7 +226,7 @@ function showDailyLimitWall() {
     <div class="modal">
       <h2 class="modal-title">You're on a roll.</h2>
       <p class="modal-desc">
-        You've used all 3 searches for today. Your limit resets at midnight UTC.
+        You've used all 3 idea validations for today. Your limit resets at midnight UTC.
         In the meantime, you can read the BenjiStack newsletter for more validated ideas.
       </p>
       <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
@@ -218,6 +236,29 @@ function showDailyLimitWall() {
       <button class="btn-secondary" id="btn-gate-close"
               style="width:100%;margin-top:10px;">
         Come Back Tomorrow
+      </button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById('btn-gate-close').addEventListener('click', () => overlay.remove());
+}
+
+function showConfirmationSuccess() {
+  const existing = document.getElementById('gate-modal');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'gate-modal';
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <h2 class="modal-title">You're confirmed</h2>
+      <p class="modal-desc">
+        Your free subscription is confirmed. You can now validate up to 3 ideas per day.
+      </p>
+      <button class="btn-primary" id="btn-gate-close"
+              style="width:100%;margin-top:16px;">
+        Continue
       </button>
     </div>
   `;
@@ -236,6 +277,11 @@ function goTo(stepName) {
 }
 
 function goBack() {
+  if (!STATE.confirmed && hasConsumedFreeValidation() && STATE.currentStep === STEPS.indexOf('summary')) {
+    showEmailGate();
+    return;
+  }
+
   // If going back from problems and angles was skipped, return to landing
   if (STATE.currentStep === STEPS.indexOf('problems') && STATE.anglesSkipped) {
     STATE.currentStep = 0;
@@ -315,32 +361,6 @@ function showLandingScreen() {
     btn.disabled = STATE.rawIdea.trim().length < 3;
   }
 
-  // Reset button — testing only, remove before final launch
-  const existingReset = document.getElementById('btn-owner-reset');
-  if (existingReset) existingReset.remove();
-  const resetBtn = document.createElement('button');
-  resetBtn.id = 'btn-owner-reset';
-  resetBtn.textContent = '[reset rate limit]';
-  resetBtn.style.cssText = 'display:block;margin:8px auto 0;font-size:0.75rem;color:var(--text-faint);background:none;border:none;cursor:pointer;text-decoration:underline;';
-  resetBtn.addEventListener('click', async () => {
-    resetBtn.textContent = '[resetting...]';
-    try {
-      await fetch(`${WORKER_URL}/reset-rate`, {
-        method: 'POST',
-        headers: { 'x-api-key': UV_SECRET, 'X-Owner-Token': OWNER_TOKEN },
-      });
-      STATE.dailyCount = 0;
-      STATE.gateSubmitted = false;
-      localStorage.removeItem('uv_gate_submitted');
-      resetBtn.textContent = '[reset ✓]';
-      setTimeout(() => { resetBtn.textContent = '[reset rate limit]'; }, 2000);
-    } catch {
-      resetBtn.textContent = '[reset failed]';
-    }
-  });
-  const footer = document.querySelector('.landing-footer');
-  if (footer) footer.insertAdjacentElement('beforebegin', resetBtn);
-
   input.addEventListener('input', () => {
     charCount.textContent = input.value.length;
     btn.disabled = input.value.trim().length < 3;
@@ -357,6 +377,11 @@ async function handleDiscover() {
   const input = document.getElementById('idea-input');
   const idea  = input.value.trim();
   if (!idea || idea.length < 3) return;
+
+  if (!STATE.confirmed && hasConsumedFreeValidation()) {
+    showEmailGate();
+    return;
+  }
 
   const gated = await checkJourneyStart();
   if (gated) return;
@@ -376,6 +401,7 @@ async function handleEmailConfirmation() {
     STATE.dailyLimit = 3;
     STATE.gateSubmitted = false;
     localStorage.removeItem('uv_gate_submitted');
+    clearFreeValidationConsumed();
   } catch {
     // fail silently — they'll just hit the gate again if needed
   }
@@ -438,8 +464,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Email confirmation from GHL link
+  let justConfirmed = false;
   if (params.has('confirmed')) {
     await handleEmailConfirmation();
+    justConfirmed = true;
     params.delete('confirmed');
     const clean = params.toString();
     history.replaceState({}, '', clean ? `?${clean}` : window.location.pathname);
@@ -453,6 +481,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Restore gate-submitted flag
   if (localStorage.getItem('uv_gate_submitted') === 'true') {
     STATE.gateSubmitted = true;
+  }
+
+  if (localStorage.getItem(FREE_VALIDATION_CONSUMED_KEY) === 'true') {
+    STATE.freeValidationConsumed = true;
   }
 
   if (params.has('sample_report') || params.has('sample_pdf')) {
@@ -469,4 +501,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   await checkRateStatus();
 
   showLandingScreen();
+  if (justConfirmed) showConfirmationSuccess();
 });

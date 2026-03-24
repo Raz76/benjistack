@@ -86,7 +86,7 @@ export default {
 
     // ── POST /reset-rate (owner only) ────────────────────────────
     if (url.pathname === '/reset-rate' && request.method === 'POST') {
-      if (!authorized) return json({ error: 'Unauthorized' }, 401);
+      if (!authorized || !isOwner) return json({ error: 'Unauthorized' }, 401);
       await env.UV_RATE.delete(`ip:${clientIp}`);
       return json({ ok: true });
     }

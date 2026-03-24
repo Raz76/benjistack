@@ -985,7 +985,7 @@ async function renderSummaryScreen(container) {
         <li>Useful tools that can actually save you time</li>
         <li>Simple checklists for starting and growing an online business</li>
       </ul>
-      <a href="${BOOKING_LINK}" target="_blank" class="btn-cta-primary consult-cta-btn">Join BenjiStack →</a>
+      <a href="${BOOKING_LINK}" target="_blank" class="btn-cta-primary consult-cta-btn">Join BenjiStack for free →</a>
       <p class="consult-cta-note">Free. No spam. Unsubscribe anytime.</p>
     </div>
 
@@ -998,7 +998,16 @@ async function renderSummaryScreen(container) {
   screen.appendChild(body);
   container.appendChild(screen);
 
+  if (!STATE.confirmed && !STATE.ownerMode) {
+    markFreeValidationConsumed();
+  }
+
   document.getElementById('btn-start-over').addEventListener('click', () => {
+    if (!STATE.confirmed && hasConsumedFreeValidation()) {
+      showEmailGate();
+      return;
+    }
+
     Object.assign(STATE, {
       currentStep: 0,
       rawIdea: '', selectedAngle: null, selectedProblem: null,
@@ -1053,7 +1062,7 @@ function showEmailCapture(onSuccess) {
         Unlock the full report
       </h2>
       <p style="color:#555;font-size:0.95rem;margin-bottom:16px;line-height:1.5">
-        Join BenjiStack to unlock the full business report — including the phased plan, tools, launch path, common mistakes, and 30-day action plan.
+        Join BenjiStack for free to unlock the full business report — including the phased plan, tools, launch path, common mistakes, and 30-day action plan.
       </p>
       <p style="color:#777;font-size:0.82rem;margin-bottom:20px;line-height:1.45">
         Use your email to continue. If you're already subscribed, you can enter the same email again.
@@ -1075,7 +1084,7 @@ function showEmailCapture(onSuccess) {
         border:none;border-radius:8px;font-size:1rem;font-weight:600;
         cursor:pointer;margin-bottom:10px;
       ">
-        Join BenjiStack + Unlock Report →
+        Join BenjiStack for free + Unlock Report →
       </button>
       <p style="font-size:0.75rem;color:#aaa;margin-top:12px">
         Free. No spam. Unsubscribe anytime. Written by Benji, an AI.
