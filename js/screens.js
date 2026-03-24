@@ -1123,10 +1123,10 @@ function phaseActionItems(playbook, phaseKey) {
       'Set up only the essential foundations you need to launch, not a giant brand system.'
     ],
     launch: [
-      `Talk to 5 people who clearly struggle with ${problemTitle}.`,
-      `Publish a simple offer for ${solutionTitle} with one clear CTA.`,
-      'Choose the simplest stack that lets you capture interest or take payments this week.',
-      'Start direct outreach, content, or another single acquisition path instead of spreading effort.'
+      'Choose the core stack you actually need: CRM, email, funnel builder, payments, and light automation.',
+      `Build the core pages and funnel for ${solutionTitle}: landing page, sales page if needed, email sequence, and checkout.`,
+      'Connect the domain, forms, automations, and payment flow so the system works end to end.',
+      'Go live with a simple, functional setup instead of endlessly refining drafts.'
     ],
     grow: [
       'Double down on the one channel that is already producing signal.',
@@ -1142,7 +1142,7 @@ function phaseActionItems(playbook, phaseKey) {
 function phaseObjective(playbook, phaseKey) {
   const objectives = {
     prepare: 'Clarify the audience, positioning, core brand direction, and essential setup before you try to scale attention.',
-    launch: playbook?.launch?.objective || 'Get first proof of demand.',
+    launch: 'Choose the right tools, build the core pages and funnel, and get the business live online.',
     grow: playbook?.grow?.objective || 'Scale what is already working.'
   };
 
@@ -1152,7 +1152,7 @@ function phaseObjective(playbook, phaseKey) {
 function phaseSuccessCheckpoint(playbook, phaseKey) {
   const checkpoints = {
     prepare: 'You have a clear audience, a simple offer direction, a usable brand direction, and a domain/setup path you can actually move forward with.',
-    launch: playbook?.launch?.successCheckpoint || '',
+    launch: 'The stack is connected, the pages are live, the funnel works, and someone can move from visitor to lead or buyer without friction.',
     grow: playbook?.grow?.successCheckpoint || ''
   };
 
@@ -1502,7 +1502,7 @@ async function generatePDF() {
 
   <div class="section">
     <div class="label">4 · Launch phase</div>
-    <div class="section-title">Get first proof of demand</div>
+    <div class="section-title">Build the stack and go live</div>
     <div class="phase-grid">
       ${preferredLaunch ? `
       <div class="phase-card">
