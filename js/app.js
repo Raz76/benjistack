@@ -455,11 +455,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     STATE.gateSubmitted = true;
   }
 
-  if (params.has('sample_pdf')) {
+  if (params.has('sample_report') || params.has('sample_pdf')) {
     loadDebugSample();
     localStorage.setItem(PDF_ACCESS_KEY, 'granted');
     goTo('summary');
-    if (params.has('download_pdf')) {
+    if (params.has('print_report') || params.has('download_pdf')) {
       setTimeout(() => generatePDF(), 250);
     }
     return;
