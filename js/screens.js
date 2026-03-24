@@ -1108,21 +1108,25 @@ function renderToolList(tools = []) {
   }).join('');
 }
 
+function getProblemLabel() {
+  return STATE.selectedProblem?.title || 'the problem';
+}
+
 function phaseActionItems(playbook, phaseKey) {
-  const problemTitle = STATE.selectedProblem?.title || 'the problem';
+  const problemTitle = getProblemLabel();
   const solutionTitle = STATE.selectedSolution?.title || 'your offer';
   const base = {
+    prepare: [
+      `Define the audience most affected by ${problemTitle}.`,
+      `Write a clear promise for ${solutionTitle} so the positioning is easy to understand.`,
+      'Pick a working brand direction: simple name, basic visual style, and tone — then check whether the domain is actually available before you commit to it.',
+      'Set up only the essential foundations you need to launch, not a giant brand system.'
+    ],
     launch: [
       `Talk to 5 people who clearly struggle with ${problemTitle}.`,
-      `Write a simple offer around ${solutionTitle}.`,
-      'Create one page with one CTA instead of building a full brand system.',
-      'Choose the simplest stack that lets you test demand this week.'
-    ],
-    prepare: [
-      'Turn repeated questions into onboarding, intake, or setup steps.',
-      'Document the first repeatable workflow so delivery is easier next time.',
-      'Refine the offer using the objections and questions you already heard.',
-      'Keep your tool stack lean until one acquisition path starts working.'
+      `Publish a simple offer for ${solutionTitle} with one clear CTA.`,
+      'Choose the simplest stack that lets you capture interest or take payments this week.',
+      'Start direct outreach, content, or another single acquisition path instead of spreading effort.'
     ],
     grow: [
       'Double down on the one channel that is already producing signal.',
@@ -1135,27 +1139,67 @@ function phaseActionItems(playbook, phaseKey) {
   return base[phaseKey] || [];
 }
 
+function phaseObjective(playbook, phaseKey) {
+  const objectives = {
+    prepare: 'Clarify the audience, positioning, core brand direction, and essential setup before you try to scale attention.',
+    launch: playbook?.launch?.objective || 'Get first proof of demand.',
+    grow: playbook?.grow?.objective || 'Scale what is already working.'
+  };
+
+  return objectives[phaseKey] || '';
+}
+
+function phaseSuccessCheckpoint(playbook, phaseKey) {
+  const checkpoints = {
+    prepare: 'You have a clear audience, a simple offer direction, a usable brand direction, and a domain/setup path you can actually move forward with.',
+    launch: playbook?.launch?.successCheckpoint || '',
+    grow: playbook?.grow?.successCheckpoint || ''
+  };
+
+  return checkpoints[phaseKey] || '';
+}
+
+function preparePhaseTools() {
+  return [
+    {
+      name: 'Notion or Google Docs',
+      category: 'Strategy',
+      reason: 'Use it to define audience, mission, offer, and messaging before you start building pages.'
+    },
+    {
+      name: 'Canva',
+      category: 'Brand basics',
+      reason: 'Good enough for a simple logo direction, color choices, and a lightweight style guide.'
+    },
+    {
+      name: 'Cloudflare Registrar or Namecheap',
+      category: 'Domain',
+      reason: 'Check domain availability before locking yourself into a brand name you cannot actually buy.'
+    }
+  ];
+}
+
 function build30DayPlan(playbook) {
   return [
     {
       week: 'Week 1',
-      goal: 'Clarify the offer and the audience',
+      goal: 'Prepare the foundations',
       tasks: [
-        `Choose one audience around ${STATE.selectedProblem?.title || 'the clearest pain point'}.`,
+        `Choose one audience around ${getProblemLabel()}.`,
         `Write a simple promise for ${STATE.selectedSolution?.title || 'your idea'}.`,
-        'Pick your Launch path: lean stack or all-in-one setup.'
+        'Pick a workable brand direction and check domain availability before committing to the name.'
       ],
-      checkpoint: 'You can explain the offer in one sentence without rambling.'
+      checkpoint: 'You can explain who this is for, what it helps with, and what name/domain path is actually viable.'
     },
     {
       week: 'Week 2',
-      goal: 'Get the launch assets live',
+      goal: 'Launch the simplest test',
       tasks: [
         'Publish one page, one form, and one CTA.',
-        'Set up the minimum tools needed to capture interest.',
-        'Start direct outreach or publish the first useful content asset.'
+        'Set up the minimum tools needed to capture interest or take payment.',
+        'Choose one launch path and get it live this week.'
       ],
-      checkpoint: 'A stranger can understand what you offer and what to do next.'
+      checkpoint: 'A stranger can understand the offer and take the next step without confusion.'
     },
     {
       week: 'Week 3',
@@ -1169,13 +1213,13 @@ function build30DayPlan(playbook) {
     },
     {
       week: 'Week 4',
-      goal: 'Tighten the system and prepare to grow',
+      goal: 'Move into growth with more clarity',
       tasks: [
-        `Move into the Prepare phase for a ${playbook?.label || 'hybrid online business'}.`,
+        `Tighten the system for this ${playbook?.label || 'hybrid online business'}.`,
         'Clean up onboarding, follow-up, or delivery so the process can repeat.',
         'Choose one growth channel to test next instead of scattering effort.'
       ],
-      checkpoint: 'The business feels simpler and clearer than it did on day one.'
+      checkpoint: 'The business feels clearer, more repeatable, and more focused than it did on day one.'
     }
   ];
 }
@@ -1196,6 +1240,7 @@ async function generatePDF() {
   const secondaryLaunch = launchPaths[preferredLaunchPath === 'all_in_one' ? 'best_of_breed' : 'all_in_one'];
   const altList = v?.currentAlternatives?.length ? v.currentAlternatives.map(a => `<li>${escapeHtml(a)}</li>`).join('') : '';
   const weeklyPlan = build30DayPlan(playbook);
+  const canonicalProblemTitle = getProblemLabel();
   const score = Number(v?.opportunityScore || STATE.selectedSolution?.score || 0);
   const pursueNow = score >= 7 ? 'Yes — this is worth testing now.' : score >= 5 ? 'Maybe — test it quickly before investing too much.' : 'Only if you can validate demand very cheaply.';
 
@@ -1395,7 +1440,7 @@ async function generatePDF() {
     <div class="grid">
       <div class="stat">
         <div class="label">Problem identified</div>
-        <strong>${escapeHtml(STATE.selectedProblem?.title || '—')}</strong>
+        <strong>${escapeHtml(canonicalProblemTitle || '—')}</strong>
         <div>${escapeHtml(STATE.selectedProblem?.description || '')}</div>
         ${(STATE.selectedProblem?.quotes || []).slice(0, 2).map(q => `<div class="quote">“${escapeHtml(q)}”</div>`).join('')}
       </div>
@@ -1438,7 +1483,25 @@ async function generatePDF() {
   </div>
 
   <div class="section">
-    <div class="label">3 · Launch phase</div>
+    <div class="label">3 · Prepare phase</div>
+    <div class="section-title">Set the foundations before you launch</div>
+    <div class="phase-card">
+      <div class="phase-head">
+        <div class="phase-name">Prepare</div>
+        <div class="phase-path">Clarity first</div>
+      </div>
+      <div class="label">Objective</div>
+      <div>${escapeHtml(phaseObjective(playbook, 'prepare'))}</div>
+      <div class="label" style="margin-top:12px;">Actions</div>
+      ${renderListItems(phaseActionItems(playbook, 'prepare'))}
+      <div class="label" style="margin-top:12px;">Tools</div>
+      <div class="tool-grid">${renderToolList(preparePhaseTools())}</div>
+      <div class="callout">Prepare success checkpoint: ${escapeHtml(phaseSuccessCheckpoint(playbook, 'prepare'))}</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">4 · Launch phase</div>
     <div class="section-title">Get first proof of demand</div>
     <div class="phase-grid">
       ${preferredLaunch ? `
@@ -1449,7 +1512,7 @@ async function generatePDF() {
         </div>
         <div class="muted">${escapeHtml(preferredLaunch.whyChooseThis || '')}</div>
         <div class="label" style="margin-top:12px;">Objective</div>
-        <div>${escapeHtml(playbook?.launch?.objective || '')}</div>
+        <div>${escapeHtml(phaseObjective(playbook, 'launch'))}</div>
         <div class="label" style="margin-top:12px;">Actions</div>
         ${renderListItems(phaseActionItems(playbook, 'launch'))}
         <div class="label" style="margin-top:12px;">Tools</div>
@@ -1468,25 +1531,7 @@ async function generatePDF() {
         <div class="tool-grid">${renderToolList(secondaryLaunch.tools || [])}</div>
       </div>` : ''}
     </div>
-    <div class="callout">Launch success checkpoint: ${escapeHtml(playbook?.launch?.successCheckpoint || '')}</div>
-  </div>
-
-  <div class="section">
-    <div class="label">4 · Prepare phase</div>
-    <div class="section-title">Turn early signal into a repeatable system</div>
-    <div class="phase-card">
-      <div class="phase-head">
-        <div class="phase-name">Prepare</div>
-        <div class="phase-path">Operational clarity</div>
-      </div>
-      <div class="label">Objective</div>
-      <div>${escapeHtml(playbook?.prepare?.objective || '')}</div>
-      <div class="label" style="margin-top:12px;">Actions</div>
-      ${renderListItems(phaseActionItems(playbook, 'prepare'))}
-      <div class="label" style="margin-top:12px;">Tools</div>
-      <div class="tool-grid">${renderToolList(playbook?.prepare?.tools || [])}</div>
-      <div class="callout">Prepare success checkpoint: ${escapeHtml(playbook?.prepare?.successCheckpoint || '')}</div>
-    </div>
+    <div class="callout">Launch success checkpoint: ${escapeHtml(phaseSuccessCheckpoint(playbook, 'launch'))}</div>
   </div>
 
   <div class="section">
@@ -1531,9 +1576,9 @@ async function generatePDF() {
     <div class="section-title">Should you pursue this now?</div>
     <div class="callout">
       <strong>${escapeHtml(pursueNow)}</strong><br><br>
-      Strongest reason to continue: ${escapeHtml(STATE.selectedProblem?.title || 'There is a real pain point worth testing.')}.<br>
+      Strongest reason to continue: ${escapeHtml(canonicalProblemTitle || 'There is a real pain point worth testing.')}.<br>
       Biggest risk: building too much before you confirm which path converts.<br>
-      Best next move this week: ${escapeHtml(sentenceCase((phaseActionItems(playbook, 'launch')[0] || 'Talk to real users and choose the simplest launch path.').replace(/\.$/, '')))}.
+      Best next move this week: ${escapeHtml(sentenceCase((phaseActionItems(playbook, 'prepare')[0] || 'Clarify the audience and choose the simplest viable starting point.').replace(/\.$/, '')))}.
     </div>
   </div>
 

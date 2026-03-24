@@ -302,6 +302,7 @@ large datasets, or anything requiring developers.
 
 Ground each idea in the specific problem and audience from the search results.
 Do not invent generic business types — make each idea specific to this niche.
+When referring to the problem, preserve the full problem name exactly as given. Do not shorten or abbreviate it.
 
 Note: these are research-based suggestions only. Results are not guaranteed.
 
@@ -377,6 +378,7 @@ IMPORTANT: Absence of competitor data does NOT mean no competition exists — lo
 CRITICAL RULE: Absence of pricing or competitor data does NOT mean the market won't pay. Demand score applies independently. Only score below 4 if the data actively suggests the problem is trivial or that free alternatives fully satisfy users.
 
 Score comparatively — the 5 ideas should have meaningfully different scores based on how well each business model fits this specific audience and problem.
+When referring to the problem, preserve the full problem name exactly as given. Do not shorten or abbreviate it.
 
 Return a JSON array of exactly 5 objects, same order as the ideas above:
 [
@@ -410,6 +412,7 @@ no explanation.`;
 
 Suggest 3 distinct brand identity options. Each should feel like a real brand,
 not a generic placeholder.
+When referring to the problem, preserve the full problem name exactly as given. Do not shorten or abbreviate it.
 
 Return a JSON array of exactly 3 objects:
 [
