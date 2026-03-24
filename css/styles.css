@@ -1328,11 +1328,59 @@ img { max-width: 100%; display: block; }
   margin-bottom: 8px;
 }
 
+.tool-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 14px;
+  box-shadow: 0 6px 18px rgba(26, 26, 26, 0.03);
+}
+
+.tool-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.tool-name,
 .report-phase-name,
 .report-week-title {
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--text);
+}
+
+.tool-category,
+.tool-note {
+  color: var(--text-faint);
+  font-size: 0.78rem;
+}
+
+.tool-reason {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.tool-links {
+  margin-top: 10px;
+}
+
+.tool-links a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tool-links a:hover {
+  text-decoration: underline;
+}
+
+.tool-note {
+  margin-top: 8px;
+  line-height: 1.5;
 }
 
 .report-phase-pill {
@@ -1516,7 +1564,8 @@ img { max-width: 100%; display: block; }
     padding: 20px;
   }
 
-  .report-phase-head {
+  .report-phase-head,
+  .tool-head {
     flex-direction: column;
     align-items: flex-start;
   }
