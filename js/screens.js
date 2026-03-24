@@ -1084,10 +1084,16 @@ function renderToolList(tools = []) {
   if (!tools.length) return '<p class="muted">No tool recommendations yet.</p>';
   return tools.map(tool => {
     const affiliate = tool.affiliate;
+    const primaryLabel = tool.name === 'GoHighLevel'
+      ? 'Start free trial'
+      : (affiliate?.primaryLabel || 'Recommended link');
+    const secondaryLabel = tool.name === 'GoHighLevel'
+      ? 'Join bootcamp'
+      : (affiliate?.secondaryLabel || 'Alternative link');
     const linkHtml = affiliate
       ? `<div class="tool-links">
-          <a href="${escapeHtml(affiliate.primaryUrl)}" target="_blank" rel="noopener">${escapeHtml(affiliate.primaryLabel || 'Recommended link')}</a>
-          ${affiliate.secondaryUrl ? ` · <a href="${escapeHtml(affiliate.secondaryUrl)}" target="_blank" rel="noopener">${escapeHtml(affiliate.secondaryLabel || 'Alternative link')}</a>` : ''}
+          <a href="${escapeHtml(affiliate.primaryUrl)}" target="_blank" rel="noopener">${escapeHtml(primaryLabel)}</a>
+          ${affiliate.secondaryUrl ? ` · <a href="${escapeHtml(affiliate.secondaryUrl)}" target="_blank" rel="noopener">${escapeHtml(secondaryLabel)}</a>` : ''}
         </div>`
       : '';
 
@@ -1175,18 +1181,12 @@ function build30DayPlan(playbook) {
 }
 
 // ----------------------------------------------------------------
-// PDF GENERATION — phased PDF blueprint powered by playbooks
+// PDF GENERATION — export view + browser Print / Save as PDF
 // ----------------------------------------------------------------
 async function generatePDF() {
   const v = STATE.validation;
   const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const previewHost = /127\.0\.0\.1:3002\/workspace|vscode-webview|vscode-file/i.test(window.location.href);
-
-  if (typeof window.html2pdf !== 'function') {
-    alert('PDF export library did not load. Refresh the page once and try again.');
-    return;
-  }
-
   const playbookData = await getPlaybooksData();
   const businessTypeId = classifyBusinessType();
   const playbook = getPlaybookForType(playbookData, businessTypeId);
@@ -1263,7 +1263,7 @@ async function generatePDF() {
       padding: 14px;
     }
     .meta-card strong, .stat strong, .tool-name { display: block; font-size: 11.5pt; color: var(--ink); }
-    .muted, .meta-small, .tool-category, .tool-note {
+    .muted, .meta-small, .tool-category {
       color: var(--muted);
       font-size: 9.5pt;
     }
@@ -1354,16 +1354,9 @@ async function generatePDF() {
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-    .page-break {
-      page-break-before: always;
-      break-before: page;
-      height: 0;
-      margin: 0;
-      border: 0;
-    }
     @media print {
       body { padding: 0; background: #fff; }
-      @page { margin: 1.6cm; }
+      @page { margin: 1.15cm; }
     }
   </style>
 </head>
@@ -1399,7 +1392,6 @@ async function generatePDF() {
   <div class="section">
     <div class="label">1 · What you found</div>
     <div class="section-title">Proof before polish</div>
-    <p class="intro">This is the evidence behind the recommendation — the problem, the angle, and the market signal you already uncovered.</p>
     <div class="grid">
       <div class="stat">
         <div class="label">Problem identified</div>
@@ -1431,7 +1423,6 @@ async function generatePDF() {
   <div class="section">
     <div class="label">2 · Business type snapshot</div>
     <div class="section-title">Why this business model fits</div>
-    <p class="intro">Your idea behaves most like a <strong>${escapeHtml(playbook?.label || 'hybrid online business')}</strong>. That matters because the best launch path, tool stack, and growth moves depend on the type of business — not just the idea itself.</p>
     <div class="grid">
       <div class="stat">
         <div class="label">Why this fits</div>
@@ -1449,7 +1440,6 @@ async function generatePDF() {
   <div class="section">
     <div class="label">3 · Launch phase</div>
     <div class="section-title">Get first proof of demand</div>
-    <p class="intro">The goal here is simple: get the fastest real signal without overbuilding. This section shows the recommended path first, then the alternative.</p>
     <div class="phase-grid">
       ${preferredLaunch ? `
       <div class="phase-card">
@@ -1484,7 +1474,6 @@ async function generatePDF() {
   <div class="section">
     <div class="label">4 · Prepare phase</div>
     <div class="section-title">Turn early signal into a repeatable system</div>
-    <p class="intro">Once the market starts responding, the job changes: tighten delivery, clarify the offer, and remove chaos.</p>
     <div class="phase-card">
       <div class="phase-head">
         <div class="phase-name">Prepare</div>
@@ -1503,7 +1492,6 @@ async function generatePDF() {
   <div class="section">
     <div class="label">5 · Grow phase</div>
     <div class="section-title">Scale what is already working</div>
-    <p class="intro">Growth comes after the path is clearer. Don’t spread effort too early — systemize the channel and message that already show signal.</p>
     <div class="phase-card">
       <div class="phase-head">
         <div class="phase-name">Grow</div>
@@ -1522,7 +1510,6 @@ async function generatePDF() {
   <div class="section">
     <div class="label">6 · Common mistakes</div>
     <div class="section-title">What to avoid right now</div>
-    <p class="intro">Most online businesses don’t fail because the idea is impossible. They fail because the founder adds too much too early.</p>
     ${renderListItems(playbook?.launch?.mistakesToAvoid || [])}
   </div>
 
@@ -1550,66 +1537,43 @@ async function generatePDF() {
     </div>
   </div>
 
-  <div class="section">
-    <div class="label">Keep going</div>
-    <div class="section-title">Get the weekly newsletter</div>
-    <p class="intro">BenjiStack helps you validate ideas with real demand signals before you waste time building the wrong thing. If this report helped, get weekly validated ideas and useful tools straight to your inbox.</p>
-    <div class="meta-card">
-      <strong>newsletter.benjistack.com</strong>
-      <div class="meta-small">Free. No spam. Unsubscribe anytime.</div>
-      <div class="tool-links" style="margin-top:8px;"><a href="https://newsletter.benjistack.com" target="_blank" rel="noopener">Join BenjiStack →</a></div>
-    </div>
-  </div>
-
   <div class="footer">Generated by BenjiStack · Business idea validator · benjistack.com</div>
 </body>
 </html>`;
 
-  const filenameBase = (STATE.rawIdea || 'benjistack-blueprint')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 60) || 'benjistack-blueprint';
-
-  const parsed = new DOMParser().parseFromString(html, 'text/html');
-  const container = document.createElement('div');
-  container.style.position = 'fixed';
-  container.style.left = '-99999px';
-  container.style.top = '0';
-  container.style.width = '820px';
-  container.style.background = '#ffffff';
-  container.setAttribute('aria-hidden', 'true');
-
-  const styleEl = document.createElement('style');
-  styleEl.textContent = Array.from(parsed.head.querySelectorAll('style')).map(s => s.textContent).join('\n')
-    .replace(/\bbody\s*\{/g, '.pdf-root {')
-    .replace(/@media print\s*\{\s*body\s*\{/g, '@media print { .pdf-root {');
-  container.appendChild(styleEl);
-
-  const sourceNode = document.createElement('div');
-  sourceNode.className = 'pdf-root';
-  sourceNode.innerHTML = parsed.body.innerHTML;
-  container.appendChild(sourceNode);
-  document.body.appendChild(container);
-
   try {
-    await window.html2pdf()
-      .set({
-        margin: [8, 8, 8, 8],
-        filename: `${filenameBase}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
-      })
-      .from(sourceNode)
-      .save();
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('preview_export')) {
+      const previewWin = window.open('', '_blank');
+      if (previewWin) {
+        previewWin.document.write(html);
+        previewWin.document.close();
+      }
+      return;
+    }
+
+    const printWin = window.open('', '_blank');
+    if (!printWin || printWin.closed || typeof printWin.closed === 'undefined') {
+      throw new Error('Print window blocked');
+    }
+
+    printWin.document.write(html);
+    printWin.document.close();
+    printWin.focus();
+    setTimeout(() => {
+      try {
+        printWin.print();
+      } catch (err) {
+        console.error('Print failed:', err);
+        alert(previewHost
+          ? 'PDF print was blocked in the embedded preview. Open the app in a normal browser and try again.'
+          : 'PDF print failed. Refresh once and try again.');
+      }
+    }, 500);
   } catch (err) {
     console.error('PDF generation failed:', err);
     alert(previewHost
       ? 'PDF generation was blocked in the embedded preview. Open the app in a normal browser and try again.'
       : 'PDF generation failed. Refresh once and try again.');
-  } finally {
-    container.remove();
   }
 }

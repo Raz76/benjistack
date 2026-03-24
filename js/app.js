@@ -383,6 +383,40 @@ async function handleEmailConfirmation() {
   }
 }
 
+function loadDebugSample() {
+  Object.assign(STATE, {
+    rawIdea: 'content business for wedding cake guides',
+    selectedAngle: 'content + affiliate for wedding cake planning',
+    selectedProblem: {
+      title: 'Planning wedding cake details is confusing',
+      description: 'People struggle to compare cake styles, servings, design choices, and what different decoration levels actually cost before talking to suppliers.',
+      quotes: [
+        'I have no idea how much cake I actually need for 85 guests.',
+        'Every bakery shows pretty photos, but not enough practical guidance.'
+      ]
+    },
+    selectedSolution: {
+      title: 'Wedding Cake Planner + Vendor Guide',
+      description: 'A content-led business that helps couples choose cake styles, estimate servings, compare options, and discover trusted tools or vendors.',
+      score: 7
+    },
+    selectedBrand: {
+      name: 'Cake Path',
+      tagline: 'Choose your wedding cake with less stress',
+      targetAudience: 'Engaged couples planning weddings',
+      positioning: 'A calm, practical planning companion for couples comparing wedding cake options.'
+    },
+    validation: {
+      opportunityScore: 7,
+      monetizable: true,
+      willingnessToPay: 'Medium',
+      estimatedPriceRange: '€19–€79 for digital products, higher for services',
+      currentAlternatives: ['Pinterest boards', 'Bakery blogs', 'Wedding planning forums'],
+      verdict: 'There is clear planning friction here. This looks more promising as a content + affiliate or digital planning business than as a broad generic wedding blog.'
+    }
+  });
+}
+
 // ----------------------------------------------------------------
 // INIT
 // ----------------------------------------------------------------
@@ -421,6 +455,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Restore gate-submitted flag
   if (localStorage.getItem('uv_gate_submitted') === 'true') {
     STATE.gateSubmitted = true;
+  }
+
+  if (params.has('sample_pdf')) {
+    loadDebugSample();
+    localStorage.setItem(PDF_ACCESS_KEY, 'granted');
+    goTo('summary');
+    if (params.has('download_pdf')) {
+      setTimeout(() => generatePDF(), 250);
+    }
+    return;
   }
 
   // Fetch current rate status from Worker
