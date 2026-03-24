@@ -99,12 +99,38 @@ Include:
 - Common mistakes to avoid
 - Tool recommendations for this business type
 - Minimal success checkpoint
+- Where appropriate, two implementation paths:
+  - **Path A: lean multi-tool stack**
+  - **Path B: all-in-one stack**
 
 Examples by business type:
 - **Productized service:** outreach, landing page, Calendly, Stripe, simple offer page
 - **SaaS:** waitlist, manual concierge MVP, onboarding form, founder interviews
 - **Content + affiliate:** niche angle, lead magnet, newsletter setup, publishing cadence
 - **Digital product:** audience validation, presell page, Gumroad/Lemon Squeezy, email capture
+
+### Launch-phase recommendation style
+When relevant, present tool advice as a choice rather than a push:
+
+- **Option 1 — Best-of-breed stack:** combine multiple focused tools
+- **Option 2 — All-in-one setup:** use a platform like GHL if it clearly fits the use case
+
+This is especially useful for users who need to launch quickly and want fewer setup decisions.
+
+### GHL-specific use case in Launch
+GHL can be recommended in Launch when the business would benefit from an all-in-one setup such as:
+- buying/connecting a domain
+- getting a simple site live fast
+- building funnels
+- capturing leads
+- basic CRM and follow-up
+- consolidating early-stage operations in one place
+
+Important framing:
+- do not make GHL feel mandatory
+- explain why it fits this specific business type
+- show the tradeoff versus using multiple separate tools
+- use affiliate links where appropriate, but keep the recommendation trust-first and non-pushy
 
 ---
 
