@@ -619,10 +619,6 @@ function renderValidationScreen(container) {
 
     <div class="val-verdict">${v.verdict}</div>
 
-    <div class="consult-banner">
-      <span>Want someone to build this for you?</span>
-      <a href="${BOOKING_LINK}" target="_blank" class="consult-banner-link">Get the Weekly Newsletter →</a>
-    </div>
 
     <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
       <button class="btn-primary" id="btn-validation-next">See My Full Report →</button>
