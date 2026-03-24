@@ -1,0 +1,763 @@
+{
+  "version": 1,
+  "lastUpdated": "2026-03-24",
+  "notes": {
+    "purpose": "Business-type playbooks for BenjiStack PDF recommendations.",
+    "recommendationStyle": "Trust-first. Recommend the best fit for the business type and phase. When useful, present both a best-of-breed stack and an all-in-one option like GHL.",
+    "defaultLaunchPaths": [
+      "best_of_breed",
+      "all_in_one"
+    ]
+  },
+  "businessTypes": [
+    {
+      "id": "productized_service",
+      "label": "Productized service",
+      "summary": "A clearly packaged service solving one painful problem with a repeatable offer.",
+      "fastestPathToRevenue": "Sell a simple fixed-scope offer before building a complex website or backend.",
+      "launch": {
+        "objective": "Get first conversations and first paying clients with a tight offer.",
+        "successCheckpoint": "3-5 qualified conversations and at least 1 serious buyer signal or payment.",
+        "mistakesToAvoid": [
+          "Building a full brand before testing the offer",
+          "Offering too many services at once",
+          "Waiting for a perfect website before outreach"
+        ],
+        "paths": {
+          "best_of_breed": {
+            "label": "Lean multi-tool stack",
+            "whyChooseThis": "Best when the founder wants lower software cost and more control.",
+            "tools": [
+              {
+                "name": "Carrd or Framer",
+                "category": "Website",
+                "reason": "Fast offer page with clear positioning and CTA."
+              },
+              {
+                "name": "Calendly",
+                "category": "Scheduling",
+                "reason": "Lets prospects book discovery calls without back-and-forth."
+              },
+              {
+                "name": "Stripe Payment Links",
+                "category": "Payments",
+                "reason": "Quick way to collect payment for a fixed-scope offer."
+              },
+              {
+                "name": "Google Docs or Notion",
+                "category": "Delivery",
+                "reason": "Good enough for early proposals, onboarding, and client delivery."
+              }
+            ]
+          },
+          "all_in_one": {
+            "label": "All-in-one setup",
+            "whyChooseThis": "Best when the founder wants site, funnel, CRM, forms, and follow-up in one place.",
+            "tools": [
+              {
+                "name": "GoHighLevel",
+                "category": "All-in-one",
+                "reason": "Useful for domain connection, simple site/funnel setup, lead capture, CRM, booking, and follow-up automation.",
+                "affiliatePriority": "high"
+              }
+            ]
+          }
+        }
+      },
+      "prepare": {
+        "objective": "Tighten delivery, onboarding, and lead handling so the offer is repeatable.",
+        "successCheckpoint": "Clear onboarding flow, repeatable delivery steps, and a simple CRM process.",
+        "tools": [
+          {
+            "name": "Notion",
+            "category": "Operations",
+            "reason": "Keeps SOPs, delivery checklists, and client assets organized."
+          },
+          {
+            "name": "Tally or Typeform",
+            "category": "Intake",
+            "reason": "Collects structured onboarding details before work starts."
+          },
+          {
+            "name": "Airtable",
+            "category": "CRM / Tracking",
+            "reason": "Lightweight way to track leads, clients, and pipeline stages."
+          }
+        ]
+      },
+      "grow": {
+        "objective": "Increase deal flow and improve margins through systems and proof.",
+        "successCheckpoint": "Recurring inbound or outbound pipeline and at least one repeatable acquisition channel.",
+        "tools": [
+          {
+            "name": "Loom",
+            "category": "Sales / Delivery",
+            "reason": "Useful for personalized outreach, audits, and async updates."
+          },
+          {
+            "name": "Kit or beehiiv",
+            "category": "Email",
+            "reason": "Good for nurturing leads and sharing proof/case studies."
+          },
+          {
+            "name": "GoHighLevel",
+            "category": "Automation",
+            "reason": "Strong option if the business is ready to centralize CRM, nurturing, and pipeline automation.",
+            "affiliatePriority": "medium"
+          }
+        ]
+      }
+    },
+    {
+      "id": "saas_tool",
+      "label": "SaaS / software tool",
+      "summary": "A software product solving a repeat problem with recurring value.",
+      "fastestPathToRevenue": "Validate manually first with a waitlist, concierge MVP, or paid pilot.",
+      "launch": {
+        "objective": "Test demand before building a full product.",
+        "successCheckpoint": "10+ qualified signups or 3+ strong interviews with a clear willingness-to-pay signal.",
+        "mistakesToAvoid": [
+          "Building too much product before demand is clear",
+          "Leading with features instead of the painful outcome",
+          "Ignoring onboarding friction"
+        ],
+        "paths": {
+          "best_of_breed": {
+            "label": "Lean validation stack",
+            "whyChooseThis": "Best when validating demand with minimal engineering overhead.",
+            "tools": [
+              {
+                "name": "Framer or Webflow",
+                "category": "Landing page",
+                "reason": "Quick waitlist page to test problem/offer resonance."
+              },
+              {
+                "name": "Tally",
+                "category": "Research / Intake",
+                "reason": "Collects onboarding info and problem details before building."
+              },
+              {
+                "name": "Cal.com or Calendly",
+                "category": "Interviews",
+                "reason": "Makes founder interviews easy to book."
+              },
+              {
+                "name": "PostHog",
+                "category": "Analytics",
+                "reason": "Useful later for activation and onboarding insights."
+              }
+            ]
+          },
+          "all_in_one": {
+            "label": "All-in-one validation stack",
+            "whyChooseThis": "Useful when the founder mainly needs pages, forms, lead capture, and follow-up while testing demand.",
+            "tools": [
+              {
+                "name": "GoHighLevel",
+                "category": "All-in-one",
+                "reason": "Can handle landing page, forms, funnel, email/SMS follow-up, and CRM during pre-product validation.",
+                "affiliatePriority": "high"
+              }
+            ]
+          }
+        }
+      },
+      "prepare": {
+        "objective": "Turn early demand into a clear MVP and onboarding path.",
+        "successCheckpoint": "Clear MVP scope, onboarding flow, and first activation path defined.",
+        "tools": [
+          {
+            "name": "Linear or Trello",
+            "category": "Build planning",
+            "reason": "Keeps MVP scope tight and visible."
+          },
+          {
+            "name": "Stripe",
+            "category": "Payments",
+            "reason": "Supports trials, paid pilots, and recurring billing."
+          },
+          {
+            "name": "Intercom or Crisp",
+            "category": "Support",
+            "reason": "Captures onboarding friction early."
+          }
+        ]
+      },
+      "grow": {
+        "objective": "Improve activation, retention, and repeatable acquisition.",
+        "successCheckpoint": "Retention insights exist and at least one acquisition loop is working.",
+        "tools": [
+          {
+            "name": "PostHog",
+            "category": "Product analytics",
+            "reason": "Tracks activation and retention patterns."
+          },
+          {
+            "name": "Customer.io or Loops",
+            "category": "Lifecycle email",
+            "reason": "Supports onboarding and win-back automation."
+          },
+          {
+            "name": "Ahrefs or Semrush",
+            "category": "SEO",
+            "reason": "Useful when content-led acquisition becomes viable."
+          }
+        ]
+      }
+    },
+    {
+      "id": "content_affiliate",
+      "label": "Content + affiliate business",
+      "summary": "A media-style business monetized by affiliate recommendations, sponsorships, or partner products.",
+      "fastestPathToRevenue": "Pick a narrow problem angle, publish useful content, and convert readers into subscribers.",
+      "launch": {
+        "objective": "Establish the niche angle, subscriber capture, and first content loop.",
+        "successCheckpoint": "Working lead magnet / signup flow and first few pieces of useful content published.",
+        "mistakesToAvoid": [
+          "Starting too broad",
+          "Writing generic content with no conversion path",
+          "Pushing affiliate offers before trust exists"
+        ],
+        "paths": {
+          "best_of_breed": {
+            "label": "Editorial stack",
+            "whyChooseThis": "Best when content quality, email, and lightweight publishing matter most.",
+            "tools": [
+              {
+                "name": "beehiiv",
+                "category": "Newsletter",
+                "reason": "Strong for newsletter publishing, referral growth, and monetization later.",
+                "affiliatePriority": "medium"
+              },
+              {
+                "name": "Carrd or Framer",
+                "category": "Landing page",
+                "reason": "Fast niche landing page for lead capture."
+              },
+              {
+                "name": "Canva",
+                "category": "Creative",
+                "reason": "Good enough for lead magnets and social assets.",
+                "affiliatePriority": "medium"
+              },
+              {
+                "name": "Notion",
+                "category": "Content ops",
+                "reason": "Simple planning system for issue ideas and research."
+              }
+            ]
+          },
+          "all_in_one": {
+            "label": "Audience + funnel stack",
+            "whyChooseThis": "Useful when the founder wants stronger landing pages, funnels, and follow-up around offers or lead magnets.",
+            "tools": [
+              {
+                "name": "GoHighLevel",
+                "category": "All-in-one",
+                "reason": "Can be a strong Launch option when the content business also needs pages, forms, automations, and simple offer funnels in one place.",
+                "affiliatePriority": "high"
+              }
+            ]
+          }
+        }
+      },
+      "prepare": {
+        "objective": "Build a consistent publishing and conversion system.",
+        "successCheckpoint": "Steady content rhythm, basic segmentation, and at least one clear subscriber path.",
+        "tools": [
+          {
+            "name": "beehiiv or Kit",
+            "category": "Email",
+            "reason": "Supports subscriber segmentation and growth."
+          },
+          {
+            "name": "Canva",
+            "category": "Design",
+            "reason": "Fast creation of content upgrades and promo assets.",
+            "affiliatePriority": "medium"
+          },
+          {
+            "name": "Google Search Console",
+            "category": "SEO",
+            "reason": "Helps identify search traction opportunities early."
+          }
+        ]
+      },
+      "grow": {
+        "objective": "Increase traffic, trust, and conversions without sounding salesy.",
+        "successCheckpoint": "Repeatable content engine and at least one monetization channel showing traction.",
+        "tools": [
+          {
+            "name": "Semrush",
+            "category": "SEO / Research",
+            "reason": "Useful for search-driven expansion and affiliate content planning.",
+            "affiliatePriority": "medium"
+          },
+          {
+            "name": "beehiiv",
+            "category": "Monetization",
+            "reason": "Supports newsletter growth and future sponsorship workflows.",
+            "affiliatePriority": "medium"
+          },
+          {
+            "name": "SparkLoop",
+            "category": "Growth",
+            "reason": "Useful later for newsletter referral growth if unit economics work."
+          }
+        ]
+      }
+    },
+    {
+      "id": "digital_product",
+      "label": "Digital product business",
+      "summary": "A business selling templates, guides, assets, courses, or lightweight information products.",
+      "fastestPathToRevenue": "Presell a narrow product solving one urgent outcome before building a huge catalog.",
+      "launch": {
+        "objective": "Validate demand and collect early buyers or strong signup signals.",
+        "successCheckpoint": "Presell page live and first buyers or clear proof that people want the product.",
+        "mistakesToAvoid": [
+          "Creating too much content before testing demand",
+          "Making the product too broad",
+          "Skipping a simple sales page"
+        ],
+        "paths": {
+          "best_of_breed": {
+            "label": "Simple sales stack",
+            "whyChooseThis": "Best when speed and low complexity matter most.",
+            "tools": [
+              {
+                "name": "Gumroad or Lemon Squeezy",
+                "category": "Sales / Delivery",
+                "reason": "Makes presell and delivery simple."
+              },
+              {
+                "name": "Carrd or Framer",
+                "category": "Sales page",
+                "reason": "Fast page for one clear offer."
+              },
+              {
+                "name": "Kit or beehiiv",
+                "category": "Email capture",
+                "reason": "Captures interest before and after purchase."
+              }
+            ]
+          },
+          "all_in_one": {
+            "label": "All-in-one launch stack",
+            "whyChooseThis": "Useful when the founder wants site, forms, automations, and simple funnel logic together.",
+            "tools": [
+              {
+                "name": "GoHighLevel",
+                "category": "All-in-one",
+                "reason": "Useful for sales pages, capture funnels, email follow-up, and early product funnel testing in one system.",
+                "affiliatePriority": "high"
+              }
+            ]
+          }
+        }
+      },
+      "prepare": {
+        "objective": "Improve the product promise, delivery, and customer journey.",
+        "successCheckpoint": "Clear onboarding/delivery flow and at least one refined product version based on feedback.",
+        "tools": [
+          {
+            "name": "Canva",
+            "category": "Product creation",
+            "reason": "Fast for templates, worksheets, and visual assets.",
+            "affiliatePriority": "medium"
+          },
+          {
+            "name": "Notion",
+            "category": "Curriculum / Ops",
+            "reason": "Useful for structuring modules, assets, and customer updates."
+          },
+          {
+            "name": "Loom",
+            "category": "Support",
+            "reason": "Great for quick walk-throughs and product explanation."
+          }
+        ]
+      },
+      "grow": {
+        "objective": "Increase average order value and repeat sales.",
+        "successCheckpoint": "At least one upsell, bundle, or ladder offer exists.",
+        "tools": [
+          {
+            "name": "Kit",
+            "category": "Email automation",
+            "reason": "Useful for nurture, launch sequences, and upsells."
+          },
+          {
+            "name": "ThriveCart or Lemon Squeezy",
+            "category": "Checkout",
+            "reason": "Helps with order bumps, upsells, and cleaner checkout flows."
+          },
+          {
+            "name": "GoHighLevel",
+            "category": "Automation",
+            "reason": "Can make sense later if the business wants one place for funnel logic, CRM, and follow-up.",
+            "affiliatePriority": "medium"
+          }
+        ]
+      }
+    },
+    {
+      "id": "agency_service",
+      "label": "Agency / done-for-you service",
+      "summary": "A service business delivering a result for clients with more customization and ongoing account management.",
+      "fastestPathToRevenue": "Land one niche-specific client with a simple proof-led offer.",
+      "launch": {
+        "objective": "Get first client conversations and validate the service angle.",
+        "successCheckpoint": "Niche offer is clear and outreach is producing real replies or booked calls.",
+        "mistakesToAvoid": [
+          "Positioning too broadly",
+          "Overbuilding a brand before proving demand",
+          "Offering custom everything"
+        ],
+        "paths": {
+          "best_of_breed": {
+            "label": "Focused outbound stack",
+            "whyChooseThis": "Best when the founder wants a focused, lower-cost setup around outreach and proof.",
+            "tools": [
+              {
+                "name": "Clay or Apollo",
+                "category": "Prospecting",
+                "reason": "Useful for building prospect lists and niche targeting."
+              },
+              {
+                "name": "Calendly",
+                "category": "Booking",
+                "reason": "Keeps consult booking simple."
+              },
+              {
+                "name": "Stripe",
+                "category": "Payments",
+                "reason": "Easy invoicing/payment collection for early projects."
+              }
+            ]
+          },
+          "all_in_one": {
+            "label": "Agency OS",
+            "whyChooseThis": "Strong fit when the business needs CRM, funnels, pipelines, forms, calendars, and automation under one roof.",
+            "tools": [
+              {
+                "name": "GoHighLevel",
+                "category": "All-in-one",
+                "reason": "Very strong fit for agencies that want client pipelines, funnels, forms, booking, and nurturing in one platform.",
+                "affiliatePriority": "high"
+              }
+            ]
+          }
+        }
+      },
+      "prepare": {
+        "objective": "Standardize delivery and client handling.",
+        "successCheckpoint": "Documented onboarding, delivery checklist, and reporting rhythm.",
+        "tools": [
+          {
+            "name": "Notion",
+            "category": "Operations",
+            "reason": "Good for SOPs, client delivery boards, and templates."
+          },
+          {
+            "name": "Loom",
+            "category": "Client comms",
+            "reason": "Useful for async audits, updates, and handoffs."
+          },
+          {
+            "name": "GoHighLevel",
+            "category": "CRM / Automation",
+            "reason": "Still a strong fit if client management and pipeline automation are central.",
+            "affiliatePriority": "high"
+          }
+        ]
+      },
+      "grow": {
+        "objective": "Improve acquisition and retention while reducing chaos.",
+        "successCheckpoint": "One repeatable acquisition channel and stronger account retention systems.",
+        "tools": [
+          {
+            "name": "GoHighLevel",
+            "category": "Growth ops",
+            "reason": "Good long-term fit when the agency wants centralized pipelines, automations, and client tracking.",
+            "affiliatePriority": "high"
+          },
+          {
+            "name": "Databox or Looker Studio",
+            "category": "Reporting",
+            "reason": "Improves client reporting and perceived value."
+          },
+          {
+            "name": "Loom",
+            "category": "Retention",
+            "reason": "Supports proactive account communication and review cadence."
+          }
+        ]
+      }
+    },
+    {
+      "id": "lead_generation",
+      "label": "Lead generation business",
+      "summary": "A business that captures and qualifies demand, then monetizes through sold leads, appointments, or downstream services.",
+      "fastestPathToRevenue": "Prove you can capture qualified leads in one niche before scaling acquisition.",
+      "launch": {
+        "objective": "Get a lead funnel live and prove that leads can be captured and qualified.",
+        "successCheckpoint": "Working lead capture funnel and at least one buyer conversation or lead handoff path.",
+        "mistakesToAvoid": [
+          "Driving traffic before qualification is clear",
+          "Ignoring speed-to-lead",
+          "Using vague offers"
+        ],
+        "paths": {
+          "best_of_breed": {
+            "label": "Focused funnel stack",
+            "whyChooseThis": "Best when the founder wants focused tools for pages, forms, and tracking.",
+            "tools": [
+              {
+                "name": "Unbounce or Framer",
+                "category": "Landing pages",
+                "reason": "Useful for high-conversion pages and testing angles."
+              },
+              {
+                "name": "Typeform or Tally",
+                "category": "Lead qualification",
+                "reason": "Captures and qualifies lead intent."
+              },
+              {
+                "name": "HubSpot Free CRM",
+                "category": "CRM",
+                "reason": "Simple place to track lead flow early."
+              }
+            ]
+          },
+          "all_in_one": {
+            "label": "Lead funnel OS",
+            "whyChooseThis": "Very useful when the business needs pages, forms, CRM, calendar, automations, and follow-up together.",
+            "tools": [
+              {
+                "name": "GoHighLevel",
+                "category": "All-in-one",
+                "reason": "Strong Launch fit for lead-gen because it combines funnels, forms, CRM, automation, calendar booking, and follow-up.",
+                "affiliatePriority": "high"
+              }
+            ]
+          }
+        }
+      },
+      "prepare": {
+        "objective": "Improve qualification, routing, and buyer handoff.",
+        "successCheckpoint": "Qualification logic is clear and speed-to-lead workflow exists.",
+        "tools": [
+          {
+            "name": "Zapier or Make",
+            "category": "Automation",
+            "reason": "Connects lead capture to CRM and alerts."
+          },
+          {
+            "name": "GoHighLevel",
+            "category": "CRM / Automation",
+            "reason": "Good fit if the business wants lead routing and follow-up in one stack.",
+            "affiliatePriority": "high"
+          },
+          {
+            "name": "Calendly",
+            "category": "Appointments",
+            "reason": "Useful when the model includes booked calls instead of raw leads."
+          }
+        ]
+      },
+      "grow": {
+        "objective": "Scale volume while keeping lead quality and conversion quality high.",
+        "successCheckpoint": "At least one acquisition channel is scalable and lead quality is trackable.",
+        "tools": [
+          {
+            "name": "Meta Ads Manager or Google Ads",
+            "category": "Acquisition",
+            "reason": "Useful once conversion economics are known."
+          },
+          {
+            "name": "Looker Studio",
+            "category": "Reporting",
+            "reason": "Helps monitor CPL, lead quality, and handoff performance."
+          },
+          {
+            "name": "GoHighLevel",
+            "category": "Scale ops",
+            "reason": "Strong fit if centralizing pipeline, nurturing, and client/buyer workflows matters.",
+            "affiliatePriority": "high"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketplace_directory",
+      "label": "Marketplace / directory",
+      "summary": "A business that connects supply and demand or curates a searchable set of providers, listings, or opportunities.",
+      "fastestPathToRevenue": "Start manually with one side of the market and prove people care before building complexity.",
+      "launch": {
+        "objective": "Validate demand and prove that the listing or matching concept is useful.",
+        "successCheckpoint": "Useful MVP list or directory exists and one side of the market is engaging with it.",
+        "mistakesToAvoid": [
+          "Trying to fully automate too early",
+          "Going too broad on niche",
+          "Ignoring supply quality"
+        ],
+        "paths": {
+          "best_of_breed": {
+            "label": "Manual MVP stack",
+            "whyChooseThis": "Best when starting with a curated, manual approach.",
+            "tools": [
+              {
+                "name": "Softr or Glide",
+                "category": "No-code MVP",
+                "reason": "Fast way to publish a searchable MVP."
+              },
+              {
+                "name": "Airtable",
+                "category": "Database",
+                "reason": "Good for listings, submissions, and curation."
+              },
+              {
+                "name": "Tally",
+                "category": "Submissions",
+                "reason": "Makes listing submissions simple."
+              }
+            ]
+          },
+          "all_in_one": {
+            "label": "Landing + lead management stack",
+            "whyChooseThis": "Useful when the founder mainly needs pages, forms, and follow-up around a directory or matching concept before full productization.",
+            "tools": [
+              {
+                "name": "GoHighLevel",
+                "category": "All-in-one",
+                "reason": "Can help with domain, landing pages, forms, CRM, and nurturing while the marketplace logic is still manual.",
+                "affiliatePriority": "medium"
+              }
+            ]
+          }
+        }
+      },
+      "prepare": {
+        "objective": "Improve listing quality, submission flow, and monetization path.",
+        "successCheckpoint": "Submission workflow and monetization hypothesis are both clear.",
+        "tools": [
+          {
+            "name": "Airtable",
+            "category": "Ops",
+            "reason": "Useful for moderation and listing quality control."
+          },
+          {
+            "name": "Stripe",
+            "category": "Monetization",
+            "reason": "Supports paid listings or premium access."
+          },
+          {
+            "name": "Make",
+            "category": "Automation",
+            "reason": "Connects submissions, review, and publishing steps."
+          }
+        ]
+      },
+      "grow": {
+        "objective": "Increase inventory quality, traffic, and monetization density.",
+        "successCheckpoint": "Repeatable supply acquisition and one monetization path working.",
+        "tools": [
+          {
+            "name": "Semrush",
+            "category": "SEO",
+            "reason": "Useful if directory pages can capture search demand.",
+            "affiliatePriority": "medium"
+          },
+          {
+            "name": "Plausible",
+            "category": "Analytics",
+            "reason": "Simple visibility into traffic and page performance."
+          },
+          {
+            "name": "beehiiv or Kit",
+            "category": "Retention",
+            "reason": "Keeps users engaged through updates and curation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "hybrid_online_business",
+      "label": "Hybrid online business",
+      "summary": "A mixed model that does not fit neatly into one business type yet.",
+      "fastestPathToRevenue": "Reduce complexity and choose the shortest path to first customer or first subscriber.",
+      "launch": {
+        "objective": "Find the simplest version of the offer and validate it.",
+        "successCheckpoint": "One clear offer, one clear audience, and one working validation path.",
+        "mistakesToAvoid": [
+          "Trying to launch multiple business models at once",
+          "Overcomplicating tools",
+          "Skipping direct customer contact"
+        ],
+        "paths": {
+          "best_of_breed": {
+            "label": "Simple starter stack",
+            "whyChooseThis": "Best default when clarity is still emerging.",
+            "tools": [
+              {
+                "name": "Carrd",
+                "category": "Landing page",
+                "reason": "Simple page for one offer and one CTA."
+              },
+              {
+                "name": "Tally",
+                "category": "Intake / Validation",
+                "reason": "Easy way to collect interest and learn what users want."
+              },
+              {
+                "name": "Stripe Payment Links",
+                "category": "Payments",
+                "reason": "Useful if the founder wants to test willingness to pay quickly."
+              }
+            ]
+          },
+          "all_in_one": {
+            "label": "Simple all-in-one path",
+            "whyChooseThis": "Useful when the founder wants fewer decisions and a single place for early setup.",
+            "tools": [
+              {
+                "name": "GoHighLevel",
+                "category": "All-in-one",
+                "reason": "Can simplify early-stage setup with pages, forms, CRM, and follow-up in one system.",
+                "affiliatePriority": "medium"
+              }
+            ]
+          }
+        }
+      },
+      "prepare": {
+        "objective": "Clarify the dominant model and remove unnecessary complexity.",
+        "successCheckpoint": "The business now behaves mostly like one primary model.",
+        "tools": [
+          {
+            "name": "Notion",
+            "category": "Planning",
+            "reason": "Useful for decision-making, offer shaping, and operating clarity."
+          },
+          {
+            "name": "Airtable",
+            "category": "Tracking",
+            "reason": "Helps compare traction across experiments."
+          }
+        ]
+      },
+      "grow": {
+        "objective": "Commit to the strongest traction path and systemize it.",
+        "successCheckpoint": "The founder has chosen a primary model and is scaling one channel instead of many.",
+        "tools": [
+          {
+            "name": "The phase-appropriate tools from the now-clearer primary business type",
+            "category": "Strategy",
+            "reason": "Once the model is clearer, borrow the sharper playbook instead of staying generic."
+          }
+        ]
+      }
+    }
+  ]
+}
