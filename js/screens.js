@@ -1080,22 +1080,39 @@ function renderListItems(items = [], ordered = false) {
   return `<${tag}>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</${tag}>`;
 }
 
-function renderToolList(tools = []) {
+function renderToolList(tools = [], context = {}) {
   if (!tools.length) return '<p class="muted">No tool recommendations yet.</p>';
   return tools.map(tool => {
     const affiliate = tool.affiliate;
-    const primaryLabel = tool.name === 'GoHighLevel'
-      ? 'Start free trial'
-      : (affiliate?.primaryLabel || 'Recommended link');
-    const secondaryLabel = tool.name === 'GoHighLevel'
-      ? 'Join bootcamp'
-      : (affiliate?.secondaryLabel || 'Alternative link');
-    const linkHtml = affiliate
-      ? `<div class="tool-links">
-          <a href="${escapeHtml(affiliate.primaryUrl)}" target="_blank" rel="noopener">${escapeHtml(primaryLabel)}</a>
-          ${affiliate.secondaryUrl ? ` · <a href="${escapeHtml(affiliate.secondaryUrl)}" target="_blank" rel="noopener">${escapeHtml(secondaryLabel)}</a>` : ''}
-        </div>`
-      : '';
+    const isGHL = tool.name === 'GoHighLevel';
+    const preferBootcamp = isGHL && context.phase === 'launch' && context.launchPath === 'all_in_one';
+
+    let linkHtml = '';
+    if (affiliate) {
+      if (isGHL) {
+        const primaryUrl = preferBootcamp ? affiliate.secondaryUrl : affiliate.primaryUrl;
+        const primaryLabel = preferBootcamp
+          ? 'Start the 30-day trial + guided live setup'
+          : 'Start the 30-day trial';
+        const note = preferBootcamp
+          ? 'Best if you want guided implementation: the Bootcamp is a free live walkthrough where they help you set up core pieces inside HighLevel, not just watch a generic webinar.'
+          : 'Best if you already know you want HighLevel and prefer to explore the platform directly on your own timeline.';
+        const secondaryHtml = preferBootcamp && affiliate.primaryUrl
+          ? `<div class="tool-note" style="margin-top:6px;">Prefer to explore first? <a href="${escapeHtml(affiliate.primaryUrl)}" target="_blank" rel="noopener">Open the standard HighLevel trial page</a>.</div>`
+          : '';
+
+        linkHtml = `<div class="tool-links">
+          <a href="${escapeHtml(primaryUrl)}" target="_blank" rel="noopener">${escapeHtml(primaryLabel)}</a>
+        </div>
+        <div class="tool-note">${escapeHtml(note)}</div>
+        ${secondaryHtml}`;
+      } else {
+        linkHtml = `<div class="tool-links">
+          <a href="${escapeHtml(affiliate.primaryUrl)}" target="_blank" rel="noopener">${escapeHtml(affiliate.primaryLabel || 'Recommended link')}</a>
+          ${affiliate.secondaryUrl ? ` · <a href="${escapeHtml(affiliate.secondaryUrl)}" target="_blank" rel="noopener">${escapeHtml(affiliate.secondaryLabel || 'Alternative link')}</a>` : ''}
+        </div>`;
+      }
+    }
 
     return `<div class="tool-card">
       <div class="tool-head">
@@ -1318,9 +1335,13 @@ async function generatePDF() {
       padding: 14px;
     }
     .meta-card strong, .stat strong, .tool-name { display: block; font-size: 11.5pt; color: var(--ink); }
-    .muted, .meta-small, .tool-category {
+    .muted, .meta-small, .tool-category, .tool-note {
       color: var(--muted);
       font-size: 9.5pt;
+    }
+    .tool-note {
+      margin-top: 8px;
+      line-height: 1.5;
     }
     .section {
       margin-bottom: 24px;
@@ -1505,7 +1526,7 @@ async function generatePDF() {
       <div class="label" style="margin-top:12px;">Actions</div>
       ${renderListItems(phaseActionItems(playbook, 'prepare'))}
       <div class="label" style="margin-top:12px;">Tools</div>
-      <div class="tool-grid">${renderToolList(preparePhaseTools())}</div>
+      <div class="tool-grid">${renderToolList(preparePhaseTools(), { phase: 'prepare' })}</div>
       <div class="callout">Prepare success checkpoint: ${escapeHtml(phaseSuccessCheckpoint(playbook, 'prepare'))}</div>
     </div>
   </div>
@@ -1526,7 +1547,7 @@ async function generatePDF() {
         <div class="label" style="margin-top:12px;">Actions</div>
         ${renderListItems(phaseActionItems(playbook, 'launch'))}
         <div class="label" style="margin-top:12px;">Tools</div>
-        <div class="tool-grid">${renderToolList(preferredLaunch.tools || [])}</div>
+        <div class="tool-grid">${renderToolList(preferredLaunch.tools || [], { phase: 'launch', launchPath: preferredLaunchPath })}</div>
       </div>` : ''}
       ${secondaryLaunch ? `
       <div class="phase-card">
@@ -1538,7 +1559,7 @@ async function generatePDF() {
         <div class="label" style="margin-top:12px;">Tradeoff</div>
         <div>${preferredLaunchPath === 'all_in_one' ? 'You get more flexibility and usually lower software cost, but more setup overhead.' : 'You simplify setup and keep more things in one place, but accept less flexibility.'}</div>
         <div class="label" style="margin-top:12px;">Tools</div>
-        <div class="tool-grid">${renderToolList(secondaryLaunch.tools || [])}</div>
+        <div class="tool-grid">${renderToolList(secondaryLaunch.tools || [], { phase: 'launch', launchPath: preferredLaunchPath === 'all_in_one' ? 'best_of_breed' : 'all_in_one' })}</div>
       </div>` : ''}
     </div>
     <div class="callout">Launch success checkpoint: ${escapeHtml(phaseSuccessCheckpoint(playbook, 'launch'))}</div>
@@ -1557,7 +1578,7 @@ async function generatePDF() {
       <div class="label" style="margin-top:12px;">Actions</div>
       ${renderListItems(phaseActionItems(playbook, 'grow'))}
       <div class="label" style="margin-top:12px;">Tools</div>
-      <div class="tool-grid">${renderToolList(playbook?.grow?.tools || [])}</div>
+      <div class="tool-grid">${renderToolList(playbook?.grow?.tools || [], { phase: 'grow' })}</div>
       <div class="callout">Grow success checkpoint: ${escapeHtml(playbook?.grow?.successCheckpoint || '')}</div>
     </div>
   </div>
