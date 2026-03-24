@@ -992,9 +992,182 @@ function showEmailCapture(onSuccess) {
 }
 
 // ----------------------------------------------------------------
-// PDF GENERATION — opens a formatted print window
+// PDF PLAYBOOK HELPERS
 // ----------------------------------------------------------------
-function generatePDF() {
+function escapeHtml(str = '') {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function sentenceCase(str = '') {
+  return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+}
+
+function getPlaybooksData() {
+  if (!window.__benjiPlaybooksPromise) {
+    window.__benjiPlaybooksPromise = fetch('data/business-type-playbooks.json')
+      .then(res => {
+        if (!res.ok) throw new Error('Could not load playbooks');
+        return res.json();
+      })
+      .catch(err => {
+        console.error('Playbook load failed:', err);
+        return null;
+      });
+  }
+  return window.__benjiPlaybooksPromise;
+}
+
+function classifyBusinessType() {
+  const haystack = [
+    STATE.rawIdea,
+    STATE.selectedAngle,
+    STATE.selectedProblem?.title,
+    STATE.selectedProblem?.description,
+    STATE.selectedSolution?.title,
+    STATE.selectedSolution?.description,
+    STATE.selectedBrand?.positioning,
+  ].filter(Boolean).join(' ').toLowerCase();
+
+  const has = (...terms) => terms.some(t => haystack.includes(t));
+
+  if (has('newsletter', 'affiliate', 'content site', 'content business', 'blog', 'seo content')) return 'content_affiliate';
+  if (has('course', 'template', 'guide', 'digital product', 'workbook', 'download', 'resource pack')) return 'digital_product';
+  if (has('saas', 'software', 'app', 'tool', 'platform', 'automation software')) return 'saas_tool';
+  if (has('agency', 'done-for-you', 'dfy', 'client service', 'marketing service')) return 'agency_service';
+  if (has('lead gen', 'lead generation', 'appointment', 'qualified leads', 'booked calls')) return 'lead_generation';
+  if (has('directory', 'marketplace', 'listings', 'matching', 'providers')) return 'marketplace_directory';
+  if (has('service', 'consulting', 'coaching', 'audit', 'setup service', 'productized')) return 'productized_service';
+
+  return 'hybrid_online_business';
+}
+
+function getPlaybookForType(data, typeId) {
+  return data?.businessTypes?.find(bt => bt.id === typeId)
+    || data?.businessTypes?.find(bt => bt.id === 'hybrid_online_business')
+    || null;
+}
+
+function getLaunchPhasePreference(playbook) {
+  const text = [STATE.rawIdea, STATE.selectedSolution?.description, STATE.selectedProblem?.description]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+
+  const allInOneFriendlyTypes = new Set(['agency_service', 'lead_generation']);
+  if (allInOneFriendlyTypes.has(playbook?.id)) return 'all_in_one';
+  if (/crm|funnel|automation|pipeline|booking|forms|lead capture|follow-up/.test(text)) return 'all_in_one';
+  return 'best_of_breed';
+}
+
+function renderListItems(items = [], ordered = false) {
+  const tag = ordered ? 'ol' : 'ul';
+  return `<${tag}>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</${tag}>`;
+}
+
+function renderToolList(tools = []) {
+  if (!tools.length) return '<p class="muted">No tool recommendations yet.</p>';
+  return tools.map(tool => {
+    const affiliate = tool.affiliate;
+    const linkHtml = affiliate
+      ? `<div class="tool-links">
+          <a href="${escapeHtml(affiliate.primaryUrl)}" target="_blank" rel="noopener">${escapeHtml(affiliate.primaryLabel || 'Recommended link')}</a>
+          ${affiliate.secondaryUrl ? ` · <a href="${escapeHtml(affiliate.secondaryUrl)}" target="_blank" rel="noopener">${escapeHtml(affiliate.secondaryLabel || 'Alternative link')}</a>` : ''}
+        </div>
+        <div class="tool-note">${escapeHtml(affiliate.useWhen || '')}</div>`
+      : '';
+
+    return `<div class="tool-card">
+      <div class="tool-head">
+        <div class="tool-name">${escapeHtml(tool.name)}</div>
+        ${tool.category ? `<div class="tool-category">${escapeHtml(tool.category)}</div>` : ''}
+      </div>
+      <div class="tool-reason">${escapeHtml(tool.reason || '')}</div>
+      ${linkHtml}
+    </div>`;
+  }).join('');
+}
+
+function phaseActionItems(playbook, phaseKey) {
+  const problemTitle = STATE.selectedProblem?.title || 'the problem';
+  const solutionTitle = STATE.selectedSolution?.title || 'your offer';
+  const base = {
+    launch: [
+      `Talk to 5 people who clearly struggle with ${problemTitle}.`,
+      `Write a simple offer around ${solutionTitle}.`,
+      'Create one page with one CTA instead of building a full brand system.',
+      'Choose the simplest stack that lets you test demand this week.'
+    ],
+    prepare: [
+      'Turn repeated questions into onboarding, intake, or setup steps.',
+      'Document the first repeatable workflow so delivery is easier next time.',
+      'Refine the offer using the objections and questions you already heard.',
+      'Keep your tool stack lean until one acquisition path starts working.'
+    ],
+    grow: [
+      'Double down on the one channel that is already producing signal.',
+      'Use proof, case studies, or examples to reduce buyer hesitation.',
+      'Add simple automation only after the manual workflow is clear.',
+      'Track one or two metrics that actually predict revenue.'
+    ]
+  };
+
+  return base[phaseKey] || [];
+}
+
+function build30DayPlan(playbook) {
+  return [
+    {
+      week: 'Week 1',
+      goal: 'Clarify the offer and the audience',
+      tasks: [
+        `Choose one audience around ${STATE.selectedProblem?.title || 'the clearest pain point'}.`,
+        `Write a simple promise for ${STATE.selectedSolution?.title || 'your idea'}.`,
+        'Pick your Launch path: lean stack or all-in-one setup.'
+      ],
+      checkpoint: 'You can explain the offer in one sentence without rambling.'
+    },
+    {
+      week: 'Week 2',
+      goal: 'Get the launch assets live',
+      tasks: [
+        'Publish one page, one form, and one CTA.',
+        'Set up the minimum tools needed to capture interest.',
+        'Start direct outreach or publish the first useful content asset.'
+      ],
+      checkpoint: 'A stranger can understand what you offer and what to do next.'
+    },
+    {
+      week: 'Week 3',
+      goal: 'Collect real market feedback',
+      tasks: [
+        'Run conversations, outreach, or feedback loops with real prospects.',
+        'Track the objections, questions, and language people actually use.',
+        'Refine the offer based on what feels strongest in the market.'
+      ],
+      checkpoint: 'You have at least one real buyer signal, subscriber signal, or strong reply pattern.'
+    },
+    {
+      week: 'Week 4',
+      goal: 'Tighten the system and prepare to grow',
+      tasks: [
+        `Move into the Prepare phase for a ${playbook?.label || 'hybrid online business'}.`,
+        'Clean up onboarding, follow-up, or delivery so the process can repeat.',
+        'Choose one growth channel to test next instead of scattering effort.'
+      ],
+      checkpoint: 'The business feels simpler and clearer than it did on day one.'
+    }
+  ];
+}
+
+// ----------------------------------------------------------------
+// PDF GENERATION — phased PDF blueprint powered by playbooks
+// ----------------------------------------------------------------
+async function generatePDF() {
   const v = STATE.validation;
   const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const previewHost = /127\.0\.0\.1:3002\/workspace|vscode-webview|vscode-file/i.test(window.location.href);
@@ -1005,15 +1178,23 @@ function generatePDF() {
     return;
   }
 
-  const altList = v?.currentAlternatives?.length
-    ? v.currentAlternatives.map(a => `<li>${a}</li>`).join('')
-    : '';
+  const playbookData = await getPlaybooksData();
+  const businessTypeId = classifyBusinessType();
+  const playbook = getPlaybookForType(playbookData, businessTypeId);
+  const preferredLaunchPath = getLaunchPhasePreference(playbook);
+  const launchPaths = playbook?.launch?.paths || {};
+  const preferredLaunch = launchPaths[preferredLaunchPath];
+  const secondaryLaunch = launchPaths[preferredLaunchPath === 'all_in_one' ? 'best_of_breed' : 'all_in_one'];
+  const altList = v?.currentAlternatives?.length ? v.currentAlternatives.map(a => `<li>${escapeHtml(a)}</li>`).join('') : '';
+  const weeklyPlan = build30DayPlan(playbook);
+  const score = Number(v?.opportunityScore || STATE.selectedSolution?.score || 0);
+  const pursueNow = score >= 7 ? 'Yes — this is worth testing now.' : score >= 5 ? 'Maybe — test it quickly before investing too much.' : 'Only if you can validate demand very cheaply.';
 
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>BenjiStack Report — ${STATE.rawIdea}</title>
+  <title>BenjiStack Blueprint — ${escapeHtml(STATE.rawIdea)}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -1022,110 +1203,139 @@ function generatePDF() {
       --rule: #d9d2c7;
       --muted: #5e5850;
       --signal: #0d7a52;
-      --signal-light: #eef7f2;
+      --signal-soft: #eef7f2;
+      --sand: #faf8f4;
     }
     body {
       font-family: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
-      font-size: 11.5pt;
+      font-size: 11pt;
       color: var(--ink);
       background: var(--paper);
-      padding: 48px;
-      max-width: 760px;
+      padding: 42px;
+      max-width: 820px;
       margin: 0 auto;
       line-height: 1.65;
     }
-    .header {
+    .cover {
+      padding: 0 0 24px;
+      margin-bottom: 28px;
       border-bottom: 1.5px solid var(--rule);
-      padding-bottom: 18px;
-      margin-bottom: 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 16px;
     }
-    .brand {
-      font-size: 22pt;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      color: var(--ink);
-    }
-    .brand .stack { color: var(--signal); }
-    .report-meta {
-      font-size: 8.5pt;
-      color: var(--muted);
-      text-align: right;
-      font-family: 'DM Mono', 'Courier New', monospace;
-      letter-spacing: 0.04em;
+    .eyebrow, .label {
+      font-size: 8pt;
+      font-weight: 500;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      line-height: 1.6;
+      color: var(--muted);
+      font-family: 'DM Mono', 'Courier New', monospace;
+    }
+    .cover h1 {
+      font-size: 30pt;
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+      margin: 10px 0 12px;
+    }
+    .cover h1 .stack { color: var(--signal); }
+    .cover-sub {
+      max-width: 620px;
+      font-size: 12pt;
+      color: #2f2b27;
+    }
+    .meta-row, .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .meta-card, .stat, .tool-card, .phase-card, .week-card {
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      background: var(--sand);
+      padding: 14px;
+    }
+    .meta-card strong, .stat strong, .tool-name { display: block; font-size: 11.5pt; color: var(--ink); }
+    .muted, .meta-small, .tool-category, .tool-note {
+      color: var(--muted);
+      font-size: 9.5pt;
     }
     .section {
       margin-bottom: 24px;
       padding-bottom: 20px;
       border-bottom: 1px solid var(--rule);
+      page-break-inside: avoid;
     }
     .section:last-of-type { border-bottom: none; }
-    .label {
-      font-size: 8pt;
-      font-weight: 500;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
-      font-family: 'DM Mono', 'Courier New', monospace;
+    .section-title {
+      font-size: 19pt;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin: 8px 0 8px;
     }
-    .value {
-      font-size: 11pt;
-      color: var(--ink);
-      line-height: 1.7;
-    }
-    .value strong {
-      font-size: 12pt;
-      font-weight: 700;
+    .intro {
+      margin-bottom: 14px;
+      color: #3c3731;
     }
     .score {
-      font-size: 31pt;
+      font-size: 34pt;
       font-weight: 800;
       color: var(--signal);
       line-height: 1;
       letter-spacing: -0.04em;
     }
-    .verdict {
-      background: var(--signal-light);
-      border-left: 4px solid var(--signal);
-      padding: 14px 18px;
-      color: #2b2b2b;
-      margin-top: 10px;
-      border-radius: 0 6px 6px 0;
+    .quote {
       font-style: italic;
+      color: #4c4741;
+      font-size: 10pt;
+      margin-top: 8px;
+      padding-left: 12px;
+      border-left: 3px solid var(--signal);
     }
-    .brand-name {
-      font-size: 24pt;
-      font-weight: 800;
+    ul, ol { padding-left: 20px; margin-top: 8px; }
+    li { margin-bottom: 6px; }
+    .phase-grid, .tool-grid, .week-grid { display: grid; gap: 12px; }
+    .phase-head, .tool-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .phase-name {
+      font-size: 15pt;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .phase-path {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--signal-soft);
       color: var(--signal);
-      letter-spacing: -0.04em;
-    }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
-    .stat {
-      background: #faf8f4;
-      padding: 14px;
-      border: 1px solid var(--rule);
-      border-radius: 6px;
-    }
-    .stat-label {
-      font-size: 8pt;
-      font-weight: 500;
-      color: var(--muted);
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 4px;
       font-family: 'DM Mono', 'Courier New', monospace;
     }
-    .stat-value { font-size: 11pt; font-weight: 600; color: var(--ink); }
-    ul, ol { padding-left: 20px; margin-top: 8px; }
-    li { margin-bottom: 6px; font-size: 10.5pt; color: #333; }
+    .tool-links { margin-top: 8px; }
+    .tool-links a, a { color: var(--signal); text-decoration: none; }
+    .tool-links a:hover, a:hover { text-decoration: underline; }
+    .week-title {
+      font-size: 13pt;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .callout {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-left: 4px solid var(--signal);
+      background: var(--signal-soft);
+      border-radius: 0 8px 8px 0;
+      color: #2b2b2b;
+    }
     .footer {
-      margin-top: 44px;
+      margin-top: 34px;
       padding-top: 14px;
       border-top: 1px solid var(--rule);
       font-size: 8pt;
@@ -1135,125 +1345,207 @@ function generatePDF() {
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-    a { color: var(--signal); }
     @media print {
       body { padding: 0; background: #fff; }
-      @page { margin: 2cm; }
+      @page { margin: 1.6cm; }
     }
   </style>
 </head>
 <body>
-
-  <div class="header">
-    <div class="brand">Benji<span class="stack">Stack</span></div>
-    <div class="report-meta">
-      Validation report<br>
-      ${date}
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="label">Idea explored</div>
-    <div class="value"><strong>${STATE.rawIdea}</strong></div>
-    ${STATE.selectedAngle ? `<div class="value" style="margin-top:6px; color:#5e5850;">Niche: ${STATE.selectedAngle}</div>` : ''}
-  </div>
-
-  <div class="section">
-    <div class="label">Problem identified</div>
-    <div class="value">
-      <strong>${STATE.selectedProblem?.title || '—'}</strong><br>
-      ${STATE.selectedProblem?.description || ''}
-    </div>
-    ${STATE.selectedProblem?.quotes?.length ? `
-    <div style="margin-top: 12px;">
-      ${STATE.selectedProblem.quotes.map(q => `<div style="font-style:italic; color:#4c4741; font-size:10pt; margin-bottom:6px; padding-left:12px; border-left:3px solid #0d7a52;">"${q}"</div>`).join('')}
-    </div>` : ''}
-  </div>
-
-  <div class="section">
-    <div class="label">Business idea</div>
-    <div class="value">
-      <strong>${STATE.selectedSolution?.title || '—'}</strong><br>
-      ${STATE.selectedSolution?.description || ''}
-    </div>
-    ${STATE.selectedSolution?.score ? `<div style="margin-top:8px; font-size:9pt; color:#5e5850;">Opportunity score: <strong>${STATE.selectedSolution.score}/10</strong></div>` : ''}
-  </div>
-
-  ${v ? `
-  <div class="section">
-    <div class="label">Market validation</div>
-    <div class="score">${v.opportunityScore}<span style="font-size:16pt; color:#8a8880;">/10</span></div>
-    <div class="grid" style="margin-top: 16px;">
-      <div class="stat">
-        <div class="stat-label">Monetizable</div>
-        <div class="stat-value">${v.monetizable ? '✓ Yes' : '✗ Unclear'}</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Willingness to pay</div>
-        <div class="stat-value">${v.willingnessToPay}</div>
-      </div>
-      <div class="stat" style="grid-column: 1 / -1;">
-        <div class="stat-label">Estimated price range</div>
-        <div class="stat-value">${v.estimatedPriceRange}</div>
-      </div>
-    </div>
-    ${altList ? `
-    <div style="margin-top:16px;">
-      <div class="label">What people use instead</div>
-      <ul>${altList}</ul>
-    </div>` : ''}
-    <div class="verdict">${v.verdict}</div>
-  </div>` : ''}
-
-  ${STATE.selectedBrand ? `
-  <div class="section">
-    <div class="label">Brand identity</div>
-    <div class="brand-name">${STATE.selectedBrand.name}</div>
-    <div class="value" style="margin-top: 8px;">
-      <em>"${STATE.selectedBrand.tagline}"</em><br>
-      <span style="color:#5e5850; font-size:10pt;">For: ${STATE.selectedBrand.targetAudience}</span><br>
-      <span style="color:#4c4741; font-size:10pt; margin-top:4px; display:block;">${STATE.selectedBrand.positioning}</span>
-    </div>
-  </div>` : ''}
-
-  <div class="section">
-    <div class="label">Suggested next steps</div>
-    <ol style="padding-left:20px; margin-top:8px;">
-      <li style="margin-bottom:10px; font-size:11pt; color:#333; line-height:1.6;">
-        <strong>Validate demand manually.</strong> Find 5–10 people who match your target audience
-        and ask them one question: "How do you currently deal with [the problem]?" Listen for pain
-        words — frustration, cost, time wasted.
-      </li>
-      <li style="margin-bottom:10px; font-size:11pt; color:#333; line-height:1.6;">
-        <strong>Find your first customer before you build.</strong> Post in one relevant community
-        (Reddit, Facebook group, LinkedIn) describing the problem and asking if anyone would pay
-        for a solution. A handful of "yes" responses is more valuable than months of planning.
-      </li>
-      <li style="margin-bottom:10px; font-size:11pt; color:#333; line-height:1.6;">
-        <strong>Test your messaging.</strong> Write three versions of a one-paragraph pitch for your
-        idea. Share each with someone in your target audience and see which one makes them lean in.
-        The winning message becomes your brand voice.
-      </li>
-    </ol>
-  </div>
-
-  <div class="section">
-    <div class="label">Ready to build?</div>
-    <p style="margin-bottom:12px; line-height:1.7; font-size:11pt;">
-      BenjiStack helps you validate ideas with real demand signals before you waste time building the wrong thing.
-      If this report helped, get weekly validated ideas and tool recommendations straight to your inbox.
+  <div class="cover">
+    <div class="eyebrow">BenjiStack blueprint · ${escapeHtml(date)}</div>
+    <h1>Launch, prepare, and <span class="stack">grow</span> this idea</h1>
+    <p class="cover-sub">
+      This report turns your validation results into a practical business plan — with tools, tradeoffs, and the fastest path to momentum for this type of business.
     </p>
-    <div style="background:#ffffff; border:1.5px solid #d9d2c7; border-radius:8px; padding:20px; text-align:center;">
-      <div style="font-size:12pt; font-weight:700; color:#171717; margin-bottom:6px;">Get the weekly newsletter</div>
-      <div style="font-size:10pt; color:#5e5850; margin-bottom:12px;">Free. No spam. Unsubscribe anytime.</div>
-      <a href="https://newsletter.benjistack.com" style="color:#0d7a52; font-weight:700; font-size:12pt; text-decoration:none;">newsletter.benjistack.com</a>
+    <div class="meta-row">
+      <div class="meta-card">
+        <div class="label">Idea explored</div>
+        <strong>${escapeHtml(STATE.rawIdea)}</strong>
+        ${STATE.selectedAngle ? `<div class="meta-small">Niche: ${escapeHtml(STATE.selectedAngle)}</div>` : ''}
+      </div>
+      <div class="meta-card">
+        <div class="label">Business type</div>
+        <strong>${escapeHtml(playbook?.label || 'Hybrid online business')}</strong>
+        <div class="meta-small">${escapeHtml(playbook?.summary || 'A mixed model that needs a simple first path.')}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Fastest path to revenue</div>
+        <strong>${escapeHtml(playbook?.fastestPathToRevenue || 'Validate demand fast before building too much.')}</strong>
+      </div>
+      <div class="meta-card">
+        <div class="label">Opportunity score</div>
+        <div class="score">${escapeHtml(String(v?.opportunityScore || STATE.selectedSolution?.score || '—'))}<span style="font-size:16pt; color:#8a8880;">/10</span></div>
+      </div>
     </div>
   </div>
 
-  <div class="footer">
-    Generated by BenjiStack — Business Idea Validator · benjistack.com
+  <div class="section">
+    <div class="label">1 · What you found</div>
+    <div class="section-title">Proof before polish</div>
+    <p class="intro">This is the evidence behind the recommendation — the problem, the angle, and the market signal you already uncovered.</p>
+    <div class="grid">
+      <div class="stat">
+        <div class="label">Problem identified</div>
+        <strong>${escapeHtml(STATE.selectedProblem?.title || '—')}</strong>
+        <div>${escapeHtml(STATE.selectedProblem?.description || '')}</div>
+        ${(STATE.selectedProblem?.quotes || []).slice(0, 2).map(q => `<div class="quote">“${escapeHtml(q)}”</div>`).join('')}
+      </div>
+      <div class="stat">
+        <div class="label">Business idea</div>
+        <strong>${escapeHtml(STATE.selectedSolution?.title || '—')}</strong>
+        <div>${escapeHtml(STATE.selectedSolution?.description || '')}</div>
+      </div>
+      ${v ? `
+      <div class="stat">
+        <div class="label">Market validation</div>
+        <strong>${v.monetizable ? 'Monetizable signal exists' : 'Signal is still weak'}</strong>
+        <div>Willingness to pay: ${escapeHtml(v.willingnessToPay || 'Unknown')}</div>
+        <div>Estimated price range: ${escapeHtml(v.estimatedPriceRange || 'Unknown')}</div>
+      </div>` : ''}
+      ${altList ? `
+      <div class="stat">
+        <div class="label">What people use instead</div>
+        <ul>${altList}</ul>
+      </div>` : ''}
+    </div>
+    ${v?.verdict ? `<div class="callout">${escapeHtml(v.verdict)}</div>` : ''}
   </div>
 
+  <div class="section">
+    <div class="label">2 · Business type snapshot</div>
+    <div class="section-title">Why this business model fits</div>
+    <p class="intro">Your idea behaves most like a <strong>${escapeHtml(playbook?.label || 'hybrid online business')}</strong>. That matters because the best launch path, tool stack, and growth moves depend on the type of business — not just the idea itself.</p>
+    <div class="grid">
+      <div class="stat">
+        <div class="label">Why this fits</div>
+        <strong>${escapeHtml(playbook?.label || 'Hybrid online business')}</strong>
+        <div>${escapeHtml(playbook?.summary || '')}</div>
+      </div>
+      <div class="stat">
+        <div class="label">Fastest route</div>
+        <strong>Get to signal quickly</strong>
+        <div>${escapeHtml(playbook?.fastestPathToRevenue || '')}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">3 · Launch phase</div>
+    <div class="section-title">Get first proof of demand</div>
+    <p class="intro">The goal here is simple: get the fastest real signal without overbuilding. This section shows the recommended path first, then the alternative.</p>
+    <div class="phase-grid">
+      ${preferredLaunch ? `
+      <div class="phase-card">
+        <div class="phase-head">
+          <div class="phase-name">Recommended path: ${escapeHtml(preferredLaunch.label)}</div>
+          <div class="phase-path">Best fit now</div>
+        </div>
+        <div class="muted">${escapeHtml(preferredLaunch.whyChooseThis || '')}</div>
+        <div class="label" style="margin-top:12px;">Objective</div>
+        <div>${escapeHtml(playbook?.launch?.objective || '')}</div>
+        <div class="label" style="margin-top:12px;">Actions</div>
+        ${renderListItems(phaseActionItems(playbook, 'launch'))}
+        <div class="label" style="margin-top:12px;">Tools</div>
+        <div class="tool-grid">${renderToolList(preferredLaunch.tools || [])}</div>
+      </div>` : ''}
+      ${secondaryLaunch ? `
+      <div class="phase-card">
+        <div class="phase-head">
+          <div class="phase-name">Alternative path: ${escapeHtml(secondaryLaunch.label)}</div>
+          <div class="phase-path">Use if it fits better</div>
+        </div>
+        <div class="muted">${escapeHtml(secondaryLaunch.whyChooseThis || '')}</div>
+        <div class="label" style="margin-top:12px;">Tradeoff</div>
+        <div>${preferredLaunchPath === 'all_in_one' ? 'You get more flexibility and usually lower software cost, but more setup overhead.' : 'You simplify setup and keep more things in one place, but accept less flexibility.'}</div>
+        <div class="label" style="margin-top:12px;">Tools</div>
+        <div class="tool-grid">${renderToolList(secondaryLaunch.tools || [])}</div>
+      </div>` : ''}
+    </div>
+    <div class="callout">Launch success checkpoint: ${escapeHtml(playbook?.launch?.successCheckpoint || '')}</div>
+  </div>
+
+  <div class="section">
+    <div class="label">4 · Prepare phase</div>
+    <div class="section-title">Turn early signal into a repeatable system</div>
+    <p class="intro">Once the market starts responding, the job changes: tighten delivery, clarify the offer, and remove chaos.</p>
+    <div class="phase-card">
+      <div class="phase-head">
+        <div class="phase-name">Prepare</div>
+        <div class="phase-path">Operational clarity</div>
+      </div>
+      <div class="label">Objective</div>
+      <div>${escapeHtml(playbook?.prepare?.objective || '')}</div>
+      <div class="label" style="margin-top:12px;">Actions</div>
+      ${renderListItems(phaseActionItems(playbook, 'prepare'))}
+      <div class="label" style="margin-top:12px;">Tools</div>
+      <div class="tool-grid">${renderToolList(playbook?.prepare?.tools || [])}</div>
+      <div class="callout">Prepare success checkpoint: ${escapeHtml(playbook?.prepare?.successCheckpoint || '')}</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">5 · Grow phase</div>
+    <div class="section-title">Scale what is already working</div>
+    <p class="intro">Growth comes after the path is clearer. Don’t spread effort too early — systemize the channel and message that already show signal.</p>
+    <div class="phase-card">
+      <div class="phase-head">
+        <div class="phase-name">Grow</div>
+        <div class="phase-path">Scale with discipline</div>
+      </div>
+      <div class="label">Objective</div>
+      <div>${escapeHtml(playbook?.grow?.objective || '')}</div>
+      <div class="label" style="margin-top:12px;">Actions</div>
+      ${renderListItems(phaseActionItems(playbook, 'grow'))}
+      <div class="label" style="margin-top:12px;">Tools</div>
+      <div class="tool-grid">${renderToolList(playbook?.grow?.tools || [])}</div>
+      <div class="callout">Grow success checkpoint: ${escapeHtml(playbook?.grow?.successCheckpoint || '')}</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">6 · Common mistakes</div>
+    <div class="section-title">What to avoid right now</div>
+    <p class="intro">Most online businesses don’t fail because the idea is impossible. They fail because the founder adds too much too early.</p>
+    ${renderListItems(playbook?.launch?.mistakesToAvoid || [])}
+  </div>
+
+  <div class="section">
+    <div class="label">7 · 30-day action plan</div>
+    <div class="section-title">What to do over the next four weeks</div>
+    <div class="week-grid">
+      ${weeklyPlan.map(week => `
+      <div class="week-card">
+        <div class="week-title">${escapeHtml(week.week)} — ${escapeHtml(week.goal)}</div>
+        ${renderListItems(week.tasks)}
+        <div class="callout">Checkpoint: ${escapeHtml(week.checkpoint)}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">8 · Final recommendation</div>
+    <div class="section-title">Should you pursue this now?</div>
+    <div class="callout">
+      <strong>${escapeHtml(pursueNow)}</strong><br><br>
+      Strongest reason to continue: ${escapeHtml(STATE.selectedProblem?.title || 'There is a real pain point worth testing.')}.<br>
+      Biggest risk: building too much before you confirm which path converts.<br>
+      Best next move this week: ${escapeHtml(sentenceCase((phaseActionItems(playbook, 'launch')[0] || 'Talk to real users and choose the simplest launch path.').replace(/\.$/, '')))}.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Keep going</div>
+    <div class="section-title">Get the weekly newsletter</div>
+    <p class="intro">BenjiStack helps you validate ideas with real demand signals before you waste time building the wrong thing. If this report helped, get weekly validated ideas and useful tools straight to your inbox.</p>
+    <div class="meta-card">
+      <strong>newsletter.benjistack.com</strong>
+      <div class="meta-small">Free. No spam. Unsubscribe anytime.</div>
+      <div class="tool-links" style="margin-top:8px;"><a href="https://newsletter.benjistack.com" target="_blank" rel="noopener">Join BenjiStack →</a></div>
+    </div>
+  </div>
+
+  <div class="footer">Generated by BenjiStack · Business idea validator · benjistack.com</div>
 </body>
 </html>`;
 
