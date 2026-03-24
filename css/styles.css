@@ -557,12 +557,12 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 32px;
+  padding: 20px 32px;
   border-bottom: 1px solid var(--border);
 }
 
 .screen-logo {
-  height: 34px;
+  height: 38px;
   width: auto;
   object-fit: contain;
 }
@@ -1319,11 +1319,11 @@ img { max-width: 100%; display: block; }
   }
 
   .screen-header {
-    padding: 16px 20px;
+    padding: 14px 20px;
   }
 
   .screen-logo {
-    height: 28px;
+    height: 30px;
   }
 
   .screen-body {
