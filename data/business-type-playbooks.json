@@ -58,7 +58,14 @@
                 "name": "GoHighLevel",
                 "category": "All-in-one",
                 "reason": "Useful for domain connection, simple site/funnel setup, lead capture, CRM, booking, and follow-up automation.",
-                "affiliatePriority": "high"
+                "affiliatePriority": "high",
+                "affiliate": {
+                  "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+                  "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+                  "primaryLabel": "Main trial / homepage",
+                  "secondaryLabel": "Bootcamp offer",
+                  "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+                }
               }
             ]
           }
@@ -103,7 +110,14 @@
             "name": "GoHighLevel",
             "category": "Automation",
             "reason": "Strong option if the business is ready to centralize CRM, nurturing, and pipeline automation.",
-            "affiliatePriority": "medium"
+            "affiliatePriority": "medium",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           }
         ]
       }
@@ -156,7 +170,14 @@
                 "name": "GoHighLevel",
                 "category": "All-in-one",
                 "reason": "Can handle landing page, forms, funnel, email/SMS follow-up, and CRM during pre-product validation.",
-                "affiliatePriority": "high"
+                "affiliatePriority": "high",
+                "affiliate": {
+                  "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+                  "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+                  "primaryLabel": "Main trial / homepage",
+                  "secondaryLabel": "Bootcamp offer",
+                  "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+                }
               }
             ]
           }
@@ -255,7 +276,14 @@
                 "name": "GoHighLevel",
                 "category": "All-in-one",
                 "reason": "Can be a strong Launch option when the content business also needs pages, forms, automations, and simple offer funnels in one place.",
-                "affiliatePriority": "high"
+                "affiliatePriority": "high",
+                "affiliate": {
+                  "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+                  "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+                  "primaryLabel": "Main trial / homepage",
+                  "secondaryLabel": "Bootcamp offer",
+                  "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+                }
               }
             ]
           }
@@ -350,7 +378,14 @@
                 "name": "GoHighLevel",
                 "category": "All-in-one",
                 "reason": "Useful for sales pages, capture funnels, email follow-up, and early product funnel testing in one system.",
-                "affiliatePriority": "high"
+                "affiliatePriority": "high",
+                "affiliate": {
+                  "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+                  "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+                  "primaryLabel": "Main trial / homepage",
+                  "secondaryLabel": "Bootcamp offer",
+                  "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+                }
               }
             ]
           }
@@ -396,7 +431,14 @@
             "name": "GoHighLevel",
             "category": "Automation",
             "reason": "Can make sense later if the business wants one place for funnel logic, CRM, and follow-up.",
-            "affiliatePriority": "medium"
+            "affiliatePriority": "medium",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           }
         ]
       }
@@ -444,7 +486,14 @@
                 "name": "GoHighLevel",
                 "category": "All-in-one",
                 "reason": "Very strong fit for agencies that want client pipelines, funnels, forms, booking, and nurturing in one platform.",
-                "affiliatePriority": "high"
+                "affiliatePriority": "high",
+                "affiliate": {
+                  "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+                  "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+                  "primaryLabel": "Main trial / homepage",
+                  "secondaryLabel": "Bootcamp offer",
+                  "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+                }
               }
             ]
           }
@@ -468,7 +517,14 @@
             "name": "GoHighLevel",
             "category": "CRM / Automation",
             "reason": "Still a strong fit if client management and pipeline automation are central.",
-            "affiliatePriority": "high"
+            "affiliatePriority": "high",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           }
         ]
       },
@@ -480,7 +536,14 @@
             "name": "GoHighLevel",
             "category": "Growth ops",
             "reason": "Good long-term fit when the agency wants centralized pipelines, automations, and client tracking.",
-            "affiliatePriority": "high"
+            "affiliatePriority": "high",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           },
           {
             "name": "Databox or Looker Studio",
@@ -538,7 +601,14 @@
                 "name": "GoHighLevel",
                 "category": "All-in-one",
                 "reason": "Strong Launch fit for lead-gen because it combines funnels, forms, CRM, automation, calendar booking, and follow-up.",
-                "affiliatePriority": "high"
+                "affiliatePriority": "high",
+                "affiliate": {
+                  "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+                  "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+                  "primaryLabel": "Main trial / homepage",
+                  "secondaryLabel": "Bootcamp offer",
+                  "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+                }
               }
             ]
           }
@@ -557,7 +627,14 @@
             "name": "GoHighLevel",
             "category": "CRM / Automation",
             "reason": "Good fit if the business wants lead routing and follow-up in one stack.",
-            "affiliatePriority": "high"
+            "affiliatePriority": "high",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           },
           {
             "name": "Calendly",
@@ -584,7 +661,14 @@
             "name": "GoHighLevel",
             "category": "Scale ops",
             "reason": "Strong fit if centralizing pipeline, nurturing, and client/buyer workflows matters.",
-            "affiliatePriority": "high"
+            "affiliatePriority": "high",
+            "affiliate": {
+              "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+              "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+              "primaryLabel": "Main trial / homepage",
+              "secondaryLabel": "Bootcamp offer",
+              "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+            }
           }
         ]
       }
@@ -632,7 +716,14 @@
                 "name": "GoHighLevel",
                 "category": "All-in-one",
                 "reason": "Can help with domain, landing pages, forms, CRM, and nurturing while the marketplace logic is still manual.",
-                "affiliatePriority": "medium"
+                "affiliatePriority": "medium",
+                "affiliate": {
+                  "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+                  "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+                  "primaryLabel": "Main trial / homepage",
+                  "secondaryLabel": "Bootcamp offer",
+                  "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+                }
               }
             ]
           }
@@ -725,7 +816,14 @@
                 "name": "GoHighLevel",
                 "category": "All-in-one",
                 "reason": "Can simplify early-stage setup with pages, forms, CRM, and follow-up in one system.",
-                "affiliatePriority": "medium"
+                "affiliatePriority": "medium",
+                "affiliate": {
+                  "primaryUrl": "https://www.gohighlevel.com/?fp_ref=launch-here",
+                  "secondaryUrl": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here",
+                  "primaryLabel": "Main trial / homepage",
+                  "secondaryLabel": "Bootcamp offer",
+                  "useWhen": "Use the Bootcamp link when guided onboarding and launch support feel especially relevant; otherwise use the main homepage/trial link."
+                }
               }
             ]
           }
