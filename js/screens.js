@@ -7,6 +7,7 @@
 'use strict';
 
 const BOOKING_LINK = 'https://newsletter.benjistack.com';
+const PDF_ACCESS_KEY = 'benjistack_pdf_access';
 
 // ----------------------------------------------------------------
 // HELPER: Create a standard screen wrapper with header + back nav
@@ -879,9 +880,18 @@ function renderSummaryScreen(container) {
 // ----------------------------------------------------------------
 // EMAIL CAPTURE — shown before PDF download
 // ----------------------------------------------------------------
+function hasPDFAccess() {
+  return localStorage.getItem(PDF_ACCESS_KEY) === 'granted';
+}
+
+function grantPDFAccess(reason = 'unknown') {
+  localStorage.setItem(PDF_ACCESS_KEY, 'granted');
+  localStorage.setItem(`${PDF_ACCESS_KEY}_reason`, reason);
+}
+
 function showEmailCapture(onSuccess) {
-  // If already captured this session, skip straight to PDF
-  if (sessionStorage.getItem('benjistack_subscribed')) {
+  // Trust-first: once PDF access is granted, don't gate again
+  if (hasPDFAccess()) {
     onSuccess();
     return;
   }
@@ -904,8 +914,11 @@ function showEmailCapture(onSuccess) {
       <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px;color:#111">
         Download the PDF and get useful help
       </h2>
-      <p style="color:#555;font-size:0.95rem;margin-bottom:24px;line-height:1.5">
+      <p style="color:#555;font-size:0.95rem;margin-bottom:16px;line-height:1.5">
         Join BenjiStack to receive validated business ideas, useful tools, and simple checklists for starting and growing an online business — then continue with your PDF download.
+      </p>
+      <p style="color:#777;font-size:0.82rem;margin-bottom:20px;line-height:1.45">
+        Already subscribed elsewhere? That's fine — we can't verify that automatically yet, so you can continue to the PDF below.
       </p>
       <input
         type="email"
@@ -918,12 +931,19 @@ function showEmailCapture(onSuccess) {
         "
       />
       <div id="capture-error" style="color:#e53e3e;font-size:0.85rem;margin-bottom:8px;display:none"></div>
+      <div id="capture-status" style="color:#555;font-size:0.85rem;margin-bottom:8px;display:none"></div>
       <button id="capture-submit" style="
         width:100%;padding:14px;background:#111;color:#fff;
         border:none;border-radius:8px;font-size:1rem;font-weight:600;
         cursor:pointer;margin-bottom:10px;
       ">
         Join BenjiStack + Continue →
+      </button>
+      <button id="capture-already" style="
+        background:none;border:none;color:#555;font-size:0.9rem;
+        cursor:pointer;text-decoration:underline;display:block;width:100%;margin-bottom:8px;
+      ">
+        Already subscribed — continue to PDF
       </button>
       <button id="capture-skip" style="
         background:none;border:none;color:#999;font-size:0.85rem;
@@ -941,8 +961,10 @@ function showEmailCapture(onSuccess) {
 
   const emailInput = document.getElementById('capture-email');
   const submitBtn = document.getElementById('capture-submit');
+  const alreadyBtn = document.getElementById('capture-already');
   const skipBtn = document.getElementById('capture-skip');
   const errorDiv = document.getElementById('capture-error');
+  const statusDiv = document.getElementById('capture-status');
 
   emailInput.focus();
 
@@ -956,7 +978,11 @@ function showEmailCapture(onSuccess) {
 
     submitBtn.textContent = 'Subscribing…';
     submitBtn.disabled = true;
+    alreadyBtn.disabled = true;
+    skipBtn.disabled = true;
     errorDiv.style.display = 'none';
+    statusDiv.textContent = 'Submitting your email, then continuing to the PDF…';
+    statusDiv.style.display = 'block';
 
     try {
       // POST directly to beehiiv's subscribe endpoint (no API key needed)
@@ -968,20 +994,33 @@ function showEmailCapture(onSuccess) {
         body: `email=${encodeURIComponent(email)}&publication_id=pub_67a3d01a-868c-40ab-8273-c5ba5e65829f&utm_source=validator-tool&utm_medium=pdf-gate&utm_campaign=tool-signup`
       });
 
-      sessionStorage.setItem('benjistack_subscribed', '1');
-      document.body.removeChild(overlay);
-      onSuccess();
+      grantPDFAccess('subscribed-popup');
+      statusDiv.textContent = 'Thanks — preparing your PDF…';
+      setTimeout(() => {
+        if (document.body.contains(overlay)) document.body.removeChild(overlay);
+        onSuccess();
+      }, 250);
 
     } catch (err) {
-      // On any error, still let them download — don't block the user
-      sessionStorage.setItem('benjistack_subscribed', '1');
-      document.body.removeChild(overlay);
-      onSuccess();
+      // On any error, still let them continue — don't block the user
+      grantPDFAccess('subscribed-popup-error-fallback');
+      statusDiv.textContent = 'We could not confirm the signup here, but you can still continue to the PDF.';
+      setTimeout(() => {
+        if (document.body.contains(overlay)) document.body.removeChild(overlay);
+        onSuccess();
+      }, 300);
     }
   });
 
+  alreadyBtn.addEventListener('click', () => {
+    grantPDFAccess('already-subscribed-self-attested');
+    if (document.body.contains(overlay)) document.body.removeChild(overlay);
+    onSuccess();
+  });
+
   skipBtn.addEventListener('click', () => {
-    document.body.removeChild(overlay);
+    grantPDFAccess('skipped-gate');
+    if (document.body.contains(overlay)) document.body.removeChild(overlay);
     onSuccess();
   });
 
