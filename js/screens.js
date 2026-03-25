@@ -6,7 +6,8 @@
 
 'use strict';
 
-const BOOKING_LINK = 'https://newsletter.benjistack.com';
+// TODO: replace with the first public issue URL once Issue #1 is live.
+const LATEST_ISSUE_LINK = 'https://newsletter.benjistack.com';
 
 // ----------------------------------------------------------------
 // HELPER: Create a standard screen wrapper with header + back nav
@@ -989,7 +990,7 @@ async function renderSummaryScreen(container) {
         <li>Useful tools that can actually save you time</li>
         <li>Simple checklists for starting and growing an online business</li>
       </ul>
-      <a href="${BOOKING_LINK}" target="_blank" class="btn-cta-primary consult-cta-btn">Join BenjiStack for free →</a>
+      <a href="${LATEST_ISSUE_LINK}" target="_blank" class="btn-cta-primary consult-cta-btn">Read the latest issue →</a>
       <p class="consult-cta-note">Free. No spam. Unsubscribe anytime.</p>
     </div>
 

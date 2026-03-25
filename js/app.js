@@ -244,11 +244,11 @@ function handleGHLMessage(event) {
         Check your email and click the confirmation link to finish joining BenjiStack for free and unlock up to 3 idea validations per day.
       </p>
       <p class="modal-note" style="margin-top:16px;">
-        You can also read the newsletter now.
+        You can also read the latest BenjiStack issue.
       </p>
-      <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
+      <a href="${LATEST_ISSUE_LINK}" target="_blank" class="btn-primary"
          style="display:block;text-align:center;margin-top:12px;text-decoration:none;">
-        Open the BenjiStack Newsletter →
+        Read the latest issue →
       </a>
       <button class="btn-secondary" id="btn-gate-close"
               style="width:100%;margin-top:10px;">
@@ -274,9 +274,9 @@ function showPendingConfirmation() {
       <p class="modal-desc">
         Click the confirmation link we sent you to finish joining BenjiStack for free and unlock up to 3 idea validations per day.
       </p>
-      <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
+      <a href="${LATEST_ISSUE_LINK}" target="_blank" class="btn-primary"
          style="display:block;text-align:center;margin-top:20px;text-decoration:none;">
-        Open the BenjiStack Newsletter →
+        Read the latest issue →
       </a>
       <button class="btn-secondary" id="btn-gate-close"
               style="width:100%;margin-top:10px;">
@@ -300,11 +300,11 @@ function showDailyLimitWall() {
       <h2 class="modal-title">You're on a roll.</h2>
       <p class="modal-desc">
         You've used all 3 idea validations for today. Your limit resets at midnight UTC.
-        In the meantime, you can read the BenjiStack newsletter for more validated ideas.
+        In the meantime, you can read the latest BenjiStack issue for more validated ideas.
       </p>
-      <a href="${BOOKING_LINK}" target="_blank" class="btn-primary"
+      <a href="${LATEST_ISSUE_LINK}" target="_blank" class="btn-primary"
          style="display:block;text-align:center;margin-top:20px;text-decoration:none;">
-        Open the BenjiStack Newsletter →
+        Read the latest issue →
       </a>
       <button class="btn-secondary" id="btn-gate-close"
               style="width:100%;margin-top:10px;">
