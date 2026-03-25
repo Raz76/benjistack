@@ -1045,13 +1045,69 @@ function sentenceCase(str = '') {
   return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
 }
 
-function getPlaybooksData() {
-  if (!window.__benjiPlaybooksPromise) {
-    window.__benjiPlaybooksPromise = fetch('data/business-type-playbooks.json')
+function getAffiliateProgramsData() {
+  if (!window.__benjiAffiliateProgramsPromise) {
+    window.__benjiAffiliateProgramsPromise = fetch('data/affiliate-programs.json')
       .then(res => {
-        if (!res.ok) throw new Error('Could not load playbooks');
+        if (!res.ok) throw new Error('Could not load affiliate programs');
         return res.json();
       })
+      .catch(err => {
+        console.error('Affiliate program load failed:', err);
+        return null;
+      });
+  }
+  return window.__benjiAffiliateProgramsPromise;
+}
+
+function attachAffiliateDataToPlaybooks(playbooks, affiliateRegistry) {
+  if (!playbooks || !affiliateRegistry?.programs?.length) return playbooks;
+
+  const byId = Object.fromEntries(
+    affiliateRegistry.programs.map(program => [program.id, program])
+  );
+
+  function walk(node) {
+    if (Array.isArray(node)) {
+      node.forEach(walk);
+      return;
+    }
+
+    if (!node || typeof node !== 'object') return;
+
+    if (Array.isArray(node.tools)) {
+      node.tools.forEach(tool => {
+        const program = byId[tool.affiliateProgramId];
+        if (!program) return;
+
+        tool.affiliate = {
+          primaryUrl: program.links?.primary || '',
+          secondaryUrl: program.links?.secondary || '',
+          primaryLabel: program.labels?.primary || 'Recommended link',
+          secondaryLabel: program.labels?.secondary || 'Alternative link',
+          useWhen: program.linkRule?.usePrimaryWhen || ''
+        };
+      });
+    }
+
+    Object.values(node).forEach(walk);
+  }
+
+  walk(playbooks);
+  return playbooks;
+}
+
+function getPlaybooksData() {
+  if (!window.__benjiPlaybooksPromise) {
+    window.__benjiPlaybooksPromise = Promise.all([
+      fetch('data/business-type-playbooks.json')
+        .then(res => {
+          if (!res.ok) throw new Error('Could not load playbooks');
+          return res.json();
+        }),
+      getAffiliateProgramsData()
+    ])
+      .then(([playbooks, affiliateRegistry]) => attachAffiliateDataToPlaybooks(playbooks, affiliateRegistry))
       .catch(err => {
         console.error('Playbook load failed:', err);
         return null;
