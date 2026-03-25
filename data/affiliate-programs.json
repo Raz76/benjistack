@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "lastUpdated": "2026-03-25",
+  "notes": {
+    "purpose": "Canonical affiliate registry for BenjiStack. This is the single source of truth for approved links and usage guidance.",
+    "usageRule": "Recommend tools only when they genuinely fit the business type and phase. Relevance beats monetization.",
+    "placementPriority": [
+      "full_report",
+      "newsletter_issues",
+      "editorial_pages"
+    ]
+  },
+  "programs": [
+    {
+      "id": "gohighlevel",
+      "name": "GoHighLevel",
+      "status": "approved",
+      "category": "all_in_one",
+      "priority": "high",
+      "links": {
+        "primary": "https://www.gohighlevel.com/?fp_ref=launch-here",
+        "secondary": "https://www.gohighlevel.com/highlevel-bootcamp?fp_ref=launch-here"
+      },
+      "labels": {
+        "primary": "Start the trial",
+        "secondary": "Start the trial + guided live setup"
+      },
+      "useCases": [
+        "launch_all_in_one_path",
+        "crm",
+        "funnels",
+        "forms",
+        "booking",
+        "payments",
+        "automations",
+        "follow_up",
+        "memberships",
+        "communities",
+        "grow_stage_ops"
+      ],
+      "whenToUse": "Use when the founder wants one system instead of stitching together multiple tools.",
+      "linkRule": {
+        "usePrimaryWhen": "Presenting GHL as the straightforward all-in-one trial option.",
+        "useSecondaryWhen": "Guided onboarding, launch support, or beginner hand-holding would materially help."
+      }
+    },
+    {
+      "id": "beehiiv",
+      "name": "beehiiv",
+      "status": "approved",
+      "category": "newsletter",
+      "priority": "high",
+      "links": {
+        "primary": "https://www.beehiiv.com?via=BenjiStack"
+      },
+      "labels": {
+        "primary": "Start on beehiiv"
+      },
+      "useCases": [
+        "newsletter_business",
+        "content_affiliate_business",
+        "audience_building",
+        "media_business",
+        "newsletter_growth",
+        "future_monetization"
+      ],
+      "whenToUse": "Use when newsletter or audience-building is core to the business model, not as a generic email recommendation for every business.",
+      "linkRule": {
+        "usePrimaryWhen": "The business model depends on newsletter publishing, audience growth, referrals, or sponsorship potential."
+      }
+    },
+    {
+      "id": "shopify",
+      "name": "Shopify",
+      "status": "approved",
+      "category": "ecommerce",
+      "priority": "high",
+      "links": {
+        "primary": "https://shopify.pxf.io/benjistack"
+      },
+      "labels": {
+        "primary": "Start on Shopify"
+      },
+      "useCases": [
+        "ecommerce_business",
+        "storefront",
+        "checkout",
+        "product_catalog",
+        "online_store"
+      ],
+      "whenToUse": "Use when the business clearly needs a real storefront and ecommerce backend.",
+      "linkRule": {
+        "usePrimaryWhen": "The offer is product-led and needs catalog, cart, checkout, and store infrastructure."
+      }
+    },
+    {
+      "id": "bluehost",
+      "name": "Bluehost",
+      "status": "approved",
+      "category": "hosting",
+      "priority": "low",
+      "links": {
+        "primary": "https://bluehost.sjv.io/benjistack"
+      },
+      "labels": {
+        "primary": "Set up hosting with Bluehost"
+      },
+      "useCases": [
+        "basic_hosting",
+        "starter_website",
+        "beginner_setup"
+      ],
+      "whenToUse": "Use only when simple beginner hosting is the real need.",
+      "linkRule": {
+        "usePrimaryWhen": "The recommendation is specifically about basic hosting or a simple starter site."
+      }
+    },
+    {
+      "id": "invideo",
+      "name": "InVideo",
+      "status": "approved",
+      "category": "video",
+      "priority": "medium",
+      "links": {
+        "primary": "https://invideo.sjv.io/benjistack"
+      },
+      "labels": {
+        "primary": "Try InVideo"
+      },
+      "useCases": [
+        "video_marketing",
+        "content_creation",
+        "promo_assets",
+        "social_video"
+      ],
+      "whenToUse": "Use when video is part of the acquisition or content strategy.",
+      "linkRule": {
+        "usePrimaryWhen": "The business needs fast video output for content, promotion, or audience growth."
+      }
+    }
+  ],
+  "pendingPrograms": [
+    {
+      "id": "semrush",
+      "name": "Semrush",
+      "status": "pending_or_reapply",
+      "intendedUse": [
+        "seo_growth",
+        "content_research",
+        "search_driven_businesses"
+      ]
+    },
+    {
+      "id": "canva",
+      "name": "Canva",
+      "status": "applied",
+      "intendedUse": [
+        "lead_magnets",
+        "simple_design",
+        "digital_products",
+        "content_assets"
+      ]
+    },
+    {
+      "id": "namecheap",
+      "name": "Namecheap",
+      "status": "applied",
+      "intendedUse": [
+        "domain_registration",
+        "simple_setup",
+        "early_launch"
+      ]
+    },
+    {
+      "id": "hostinger",
+      "name": "Hostinger",
+      "status": "applied",
+      "intendedUse": [
+        "affordable_hosting",
+        "starter_site",
+        "early_launch"
+      ]
+    },
+    {
+      "id": "otter",
+      "name": "Otter.ai",
+      "status": "application_prepared",
+      "intendedUse": [
+        "transcription",
+        "research_calls",
+        "meeting_notes",
+        "founder_productivity"
+      ]
+    }
+  ]
+}
