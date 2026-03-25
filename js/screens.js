@@ -1184,6 +1184,9 @@ function renderToolList(tools = [], context = {}) {
     const affiliate = tool.affiliate;
     const isGHL = tool.name === 'GoHighLevel';
     const preferBootcamp = isGHL && context.phase === 'launch' && context.launchPath === 'all_in_one';
+    const toolNameUrl = affiliate
+      ? (isGHL && preferBootcamp && affiliate.secondaryUrl ? affiliate.secondaryUrl : affiliate.primaryUrl)
+      : '';
 
     const howToUseHtml = Array.isArray(tool.howToUseForBusiness) && tool.howToUseForBusiness.length
       ? `<div class="tool-note" style="margin-top:8px;"><strong>How to use it here:</strong> ${escapeHtml(tool.howToUseForBusiness[0])}</div>`
@@ -1224,7 +1227,7 @@ function renderToolList(tools = [], context = {}) {
 
     return `<div class="tool-card">
       <div class="tool-head">
-        <div class="tool-name">${escapeHtml(tool.name)}</div>
+        <div class="tool-name">${toolNameUrl ? `<a href="${escapeHtml(toolNameUrl)}" target="_blank" rel="noopener">${escapeHtml(tool.name)}</a>` : escapeHtml(tool.name)}</div>
         ${tool.category ? `<div class="tool-category">${escapeHtml(tool.category)}</div>` : ''}
       </div>
       <div class="tool-reason">${escapeHtml(tool.reason || tool.summary || '')}</div>

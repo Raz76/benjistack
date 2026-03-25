@@ -11,7 +11,8 @@
     ],
     "decisionFramework": "Start from the user phase and actual job-to-be-done. Identify the most useful tool(s) for that need. Prefer tools with approved affiliate links when they are genuinely good fits. If the best useful option has no affiliate link yet, still recommend it honestly and treat it as a candidate program to pursue.",
     "recommendationRule": "Never recommend a tool only because it has an affiliate link. Utility and fit come first.",
-    "comparisonRule": "When two tools both fit and both are useful, recommend both with a short explanation of who each is better for."
+    "comparisonRule": "When two tools both fit and both are useful, recommend both with a short explanation of who each is better for.",
+    "linkPresentationRule": "Whenever an approved affiliate tool name is shown in BenjiStack-facing recommendations, the tool name itself should carry the affiliate link so clicks on the tool name can redirect through the affiliate URL, not only separate CTA text."
   },
   "programs": [
     {
