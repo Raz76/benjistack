@@ -420,6 +420,28 @@ function renderScreen(stepName) {
 // ----------------------------------------------------------------
 // LANDING SCREEN
 // ----------------------------------------------------------------
+function renderUsageCounter() {
+  const searchCard = document.querySelector('#screen-landing .search-card');
+  if (!searchCard) return;
+
+  let counter = document.getElementById('usage-counter');
+  if (!counter) {
+    counter = document.createElement('div');
+    counter.id = 'usage-counter';
+    counter.className = 'usage-counter';
+    searchCard.insertAdjacentElement('afterend', counter);
+  }
+
+  if (STATE.confirmed) {
+    const remaining = Math.max(0, (STATE.dailyLimit || 0) - (STATE.dailyCount || 0));
+    counter.textContent = `${remaining} of ${STATE.dailyLimit || 3} idea validations left today`;
+    counter.style.display = 'block';
+    return;
+  }
+
+  counter.style.display = 'none';
+}
+
 function showLandingScreen() {
   const screen    = document.getElementById('screen-landing');
   screen.classList.add('active');
@@ -427,6 +449,8 @@ function showLandingScreen() {
   const input     = document.getElementById('idea-input');
   const btn       = document.getElementById('btn-discover');
   const charCount = document.getElementById('char-count');
+
+  renderUsageCounter();
 
   if (STATE.rawIdea) {
     input.value = STATE.rawIdea;
