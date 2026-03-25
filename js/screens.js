@@ -22,19 +22,24 @@ function createScreenShell(id, { showBack = true } = {}) {
 
   const header = document.createElement('header');
   header.className = 'screen-header';
-  header.innerHTML = `
-    <img src="Brand/logo-primary.svg" alt="BenjiStack" class="screen-logo" />
-    ${showBack ? `<button class="btn-back" id="btn-back-${id}">← Back</button>` : ''}
-  `;
-  screen.appendChild(header);
+
+  const logo = document.createElement('img');
+  logo.src = 'Brand/logo-primary.svg';
+  logo.alt = 'BenjiStack';
+  logo.className = 'screen-logo';
+  header.appendChild(logo);
 
   if (showBack) {
-    setTimeout(() => {
-      const btn = document.getElementById(`btn-back-${id}`);
-      if (btn) btn.addEventListener('click', goBack);
-    }, 0);
+    const backBtn = document.createElement('button');
+    backBtn.className = 'btn-back';
+    backBtn.id = `btn-back-${id}`;
+    backBtn.type = 'button';
+    backBtn.textContent = '← Back';
+    backBtn.addEventListener('click', goBack);
+    header.appendChild(backBtn);
   }
 
+  screen.appendChild(header);
   return screen;
 }
 
