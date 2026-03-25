@@ -1067,6 +1067,28 @@ function attachAffiliateDataToPlaybooks(playbooks, affiliateRegistry) {
     affiliateRegistry.programs.map(program => [program.id, program])
   );
 
+  function mergeProgramNotesIntoTool(tool, program) {
+    if (!tool || !program) return;
+
+    tool.affiliate = {
+      primaryUrl: program.links?.primary || '',
+      secondaryUrl: program.links?.secondary || '',
+      primaryLabel: program.labels?.primary || 'Recommended link',
+      secondaryLabel: program.labels?.secondary || 'Alternative link',
+      useWhen: program.linkRule?.usePrimaryWhen || ''
+    };
+
+    if (program.summary) tool.summary = tool.summary || program.summary;
+    if (program.idealFor) tool.idealFor = tool.idealFor || program.idealFor;
+    if (program.notIdealFor) tool.notIdealFor = tool.notIdealFor || program.notIdealFor;
+    if (program.businessModelFits) tool.businessModelFits = tool.businessModelFits || program.businessModelFits;
+    if (program.jobsToBeDone) tool.jobsToBeDone = tool.jobsToBeDone || program.jobsToBeDone;
+    if (program.howToUseForBusiness) tool.howToUseForBusiness = tool.howToUseForBusiness || program.howToUseForBusiness;
+    if (program.specificScenarios) tool.specificScenarios = tool.specificScenarios || program.specificScenarios;
+    if (program.comparisonNotes) tool.comparisonNotes = tool.comparisonNotes || program.comparisonNotes;
+    if (program.recommendationStyle) tool.recommendationStyle = tool.recommendationStyle || program.recommendationStyle;
+  }
+
   function walk(node) {
     if (Array.isArray(node)) {
       node.forEach(walk);
@@ -1079,14 +1101,7 @@ function attachAffiliateDataToPlaybooks(playbooks, affiliateRegistry) {
       node.tools.forEach(tool => {
         const program = byId[tool.affiliateProgramId];
         if (!program) return;
-
-        tool.affiliate = {
-          primaryUrl: program.links?.primary || '',
-          secondaryUrl: program.links?.secondary || '',
-          primaryLabel: program.labels?.primary || 'Recommended link',
-          secondaryLabel: program.labels?.secondary || 'Alternative link',
-          useWhen: program.linkRule?.usePrimaryWhen || ''
-        };
+        mergeProgramNotesIntoTool(tool, program);
       });
     }
 
@@ -1170,6 +1185,16 @@ function renderToolList(tools = [], context = {}) {
     const isGHL = tool.name === 'GoHighLevel';
     const preferBootcamp = isGHL && context.phase === 'launch' && context.launchPath === 'all_in_one';
 
+    const howToUseHtml = Array.isArray(tool.howToUseForBusiness) && tool.howToUseForBusiness.length
+      ? `<div class="tool-note" style="margin-top:8px;"><strong>How to use it here:</strong> ${escapeHtml(tool.howToUseForBusiness[0])}</div>`
+      : '';
+    const bestForHtml = Array.isArray(tool.idealFor) && tool.idealFor.length
+      ? `<div class="tool-note" style="margin-top:6px;"><strong>Best for:</strong> ${escapeHtml(tool.idealFor.slice(0, 3).join(', '))}</div>`
+      : '';
+    const comparisonHtml = Array.isArray(tool.comparisonNotes) && tool.comparisonNotes.length
+      ? `<div class="tool-note" style="margin-top:6px;"><strong>Choosing tip:</strong> ${escapeHtml(tool.comparisonNotes[0])}</div>`
+      : '';
+
     let linkHtml = '';
     if (affiliate) {
       if (isGHL) {
@@ -1202,7 +1227,10 @@ function renderToolList(tools = [], context = {}) {
         <div class="tool-name">${escapeHtml(tool.name)}</div>
         ${tool.category ? `<div class="tool-category">${escapeHtml(tool.category)}</div>` : ''}
       </div>
-      <div class="tool-reason">${escapeHtml(tool.reason || '')}</div>
+      <div class="tool-reason">${escapeHtml(tool.reason || tool.summary || '')}</div>
+      ${howToUseHtml}
+      ${bestForHtml}
+      ${comparisonHtml}
       ${linkHtml}
     </div>`;
   }).join('');
