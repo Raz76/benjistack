@@ -8,7 +8,10 @@
       "full_report",
       "newsletter_issues",
       "editorial_pages"
-    ]
+    ],
+    "decisionFramework": "Start from the user phase and actual job-to-be-done. Identify the most useful tool(s) for that need. Prefer tools with approved affiliate links when they are genuinely good fits. If the best useful option has no affiliate link yet, still recommend it honestly and treat it as a candidate program to pursue.",
+    "recommendationRule": "Never recommend a tool only because it has an affiliate link. Utility and fit come first.",
+    "comparisonRule": "When two tools both fit and both are useful, recommend both with a short explanation of who each is better for."
   },
   "programs": [
     {
@@ -141,9 +144,19 @@
   ],
   "pendingPrograms": [
     {
+      "id": "kit",
+      "name": "Kit",
+      "status": "waiting_partnerstack_network_approval",
+      "intendedUse": [
+        "creator_email",
+        "email_automation",
+        "newsletter_alternative"
+      ]
+    },
+    {
       "id": "semrush",
       "name": "Semrush",
-      "status": "pending_or_reapply",
+      "status": "applied_waiting_response_or_reapply",
       "intendedUse": [
         "seo_growth",
         "content_research",
@@ -153,7 +166,7 @@
     {
       "id": "canva",
       "name": "Canva",
-      "status": "applied",
+      "status": "applied_waiting_response",
       "intendedUse": [
         "lead_magnets",
         "simple_design",
@@ -192,5 +205,184 @@
         "founder_productivity"
       ]
     }
-  ]
+  ],
+  "strategy": {
+    "phaseStrategy": {
+      "prepare": {
+        "meaning": "Clarify the business direction before building too much: offer, audience, positioning, brand direction, and basic setup decisions.",
+        "needs": [
+          {
+            "job": "Choose and validate a brand/domain direction",
+            "recommendations": [
+              {
+                "tool": "Namecheap",
+                "useWhen": "Need a straightforward domain registrar and simple setup.",
+                "affiliateStatus": "applied"
+              },
+              {
+                "tool": "Hostinger",
+                "useWhen": "Need domain plus beginner-friendly hosting/site setup.",
+                "affiliateStatus": "applied"
+              },
+              {
+                "tool": "Bluehost",
+                "useWhen": "Need simple beginner hosting and domain setup.",
+                "affiliateStatus": "approved"
+              },
+              {
+                "tool": "Cloudflare Registrar",
+                "useWhen": "Best practical registrar choice in some cases even without an affiliate link.",
+                "affiliateStatus": "none"
+              }
+            ]
+          },
+          {
+            "job": "Create basic assets / lead magnets / simple visuals",
+            "recommendations": [
+              {
+                "tool": "Canva",
+                "useWhen": "Fast visual creation for non-designers.",
+                "affiliateStatus": "applied"
+              }
+            ]
+          },
+          {
+            "job": "Set up email/newsletter infrastructure if audience-building matters early",
+            "recommendations": [
+              {
+                "tool": "beehiiv",
+                "useWhen": "Best for newsletter/media and audience-first models.",
+                "affiliateStatus": "approved"
+              },
+              {
+                "tool": "Kit",
+                "useWhen": "Good when creator-email automation matters more than newsletter/media positioning.",
+                "affiliateStatus": "waiting_partnerstack_approval"
+              }
+            ]
+          }
+        ]
+      },
+      "launch": {
+        "meaning": "Get the business online and usable: page/site, capture, checkout, booking, follow-up, and first customer path.",
+        "needs": [
+          {
+            "job": "Launch a simple store / sell products online",
+            "recommendations": [
+              {
+                "tool": "Shopify",
+                "useWhen": "Best when the business needs a real ecommerce storefront, catalog, and checkout.",
+                "affiliateStatus": "approved"
+              },
+              {
+                "tool": "GoHighLevel",
+                "useWhen": "Useful when the business needs funnels, pages, forms, CRM, and follow-up more than a classic storefront.",
+                "affiliateStatus": "approved"
+              }
+            ]
+          },
+          {
+            "job": "Launch an all-in-one lead capture / funnel / CRM setup",
+            "recommendations": [
+              {
+                "tool": "GoHighLevel",
+                "useWhen": "Best when one system is better than stitching together multiple tools.",
+                "affiliateStatus": "approved"
+              }
+            ]
+          },
+          {
+            "job": "Launch a newsletter or audience-first business",
+            "recommendations": [
+              {
+                "tool": "beehiiv",
+                "useWhen": "Best for newsletter publishing, referral growth, and media-style businesses.",
+                "affiliateStatus": "approved"
+              },
+              {
+                "tool": "Kit",
+                "useWhen": "Good alternative when creator-email workflows matter more than media features.",
+                "affiliateStatus": "waiting_partnerstack_approval"
+              }
+            ]
+          },
+          {
+            "job": "Publish a polished landing page quickly",
+            "recommendations": [
+              {
+                "tool": "Framer",
+                "useWhen": "Strong fit for polished landing pages if partner access becomes straightforward.",
+                "affiliateStatus": "partner_access_unclear"
+              },
+              {
+                "tool": "Carrd",
+                "useWhen": "Great for simple one-page validation sites even though it is mainly a referral program, not a major affiliate path.",
+                "affiliateStatus": "referral_only"
+              }
+            ]
+          }
+        ]
+      },
+      "grow": {
+        "meaning": "Improve traffic, conversion, retention, and operations once the core business is already live.",
+        "needs": [
+          {
+            "job": "Grow through SEO and content",
+            "recommendations": [
+              {
+                "tool": "Semrush",
+                "useWhen": "Best when the business is ready for keyword research, competitor analysis, and search-driven growth.",
+                "affiliateStatus": "applied_or_reapply"
+              }
+            ]
+          },
+          {
+            "job": "Grow a newsletter through referrals / paid recommendations",
+            "recommendations": [
+              {
+                "tool": "SparkLoop",
+                "useWhen": "Relevant once newsletter growth is serious enough to justify referral and paid recommendation mechanics.",
+                "affiliateStatus": "research_target"
+              }
+            ]
+          },
+          {
+            "job": "Add video to the acquisition/content strategy",
+            "recommendations": [
+              {
+                "tool": "InVideo",
+                "useWhen": "Useful when quick promo/content video creation helps distribution.",
+                "affiliateStatus": "approved"
+              }
+            ]
+          },
+          {
+            "job": "Automate heavier workflows after the manual process is already clear",
+            "recommendations": [
+              {
+                "tool": "Make",
+                "useWhen": "Useful for lead routing, directory workflows, and operational automation, but not a default beginner recommendation.",
+                "affiliateStatus": "research_target"
+              }
+            ]
+          },
+          {
+            "job": "Sell digital products with stronger checkout / affiliate / delivery options",
+            "recommendations": [
+              {
+                "tool": "Lemon Squeezy",
+                "useWhen": "Useful for software or digital product sellers who need merchant-of-record and creator commerce features.",
+                "affiliateStatus": "research_target"
+              },
+              {
+                "tool": "ThriveCart",
+                "useWhen": "Useful when checkout optimization and digital-product selling are central.",
+                "affiliateStatus": "research_target"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
 }
