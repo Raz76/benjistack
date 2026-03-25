@@ -55,6 +55,7 @@ async function subscribeBeehiiv(env, payload = {}) {
     body: JSON.stringify({
       email: payload.email,
       send_welcome_email: true,
+      double_opt_override: 'on',
       utm_source: payload.utm_source || 'validator-tool',
       utm_medium: payload.utm_medium || 'validation-gate',
       utm_campaign: payload.utm_campaign || 'tool-signup',
