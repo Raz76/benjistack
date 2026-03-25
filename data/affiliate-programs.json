@@ -45,7 +45,51 @@
       "linkRule": {
         "usePrimaryWhen": "Presenting GHL as the straightforward all-in-one trial option.",
         "useSecondaryWhen": "Guided onboarding, launch support, or beginner hand-holding would materially help."
-      }
+      },
+      "summary": "All-in-one platform for pages, funnels, CRM, forms, bookings, follow-up, payments, and automation.",
+      "idealFor": [
+        "service businesses",
+        "agencies",
+        "lead generation businesses",
+        "coaches/consultants",
+        "operators who want one system"
+      ],
+      "notIdealFor": [
+        "simple one-page validation sites",
+        "people who only need a basic newsletter tool",
+        "classic multi-product ecommerce stores"
+      ],
+      "businessModelFits": [
+        "productized_service",
+        "agency_service",
+        "lead_generation",
+        "saas_tool_prelaunch",
+        "hybrid_online_business"
+      ],
+      "jobsToBeDone": [
+        "capture leads with forms and funnels",
+        "book calls",
+        "run automated follow-up sequences",
+        "manage a CRM/pipeline",
+        "launch an all-in-one online selling setup"
+      ],
+      "howToUseForBusiness": [
+        "Connect the domain and launch a landing page or funnel quickly.",
+        "Add forms, calendars, and pipeline stages so leads are tracked automatically.",
+        "Set up email/SMS follow-up for inquiries, no-shows, and nurturing.",
+        "Use it when the business is operationally complex enough that replacing 4-6 tools is actually helpful."
+      ],
+      "specificScenarios": [
+        "A lead-gen business that needs landing pages, forms, CRM, and automated follow-up in one stack.",
+        "A service business selling booked calls instead of products in a storefront.",
+        "A founder who wants one operational hub instead of stitching together separate page, CRM, and automation tools."
+      ],
+      "comparisonNotes": [
+        "Compared with Shopify: choose GHL when the business is funnel-led, service-led, or follow-up-heavy rather than a classic store.",
+        "Compared with beehiiv: choose GHL for funnels/CRM/automation; choose beehiiv for newsletter/media businesses.",
+        "Compared with Carrd: GHL is heavier but much more capable once forms, CRM, bookings, and automation matter."
+      ],
+      "recommendationStyle": "Present GHL as the strong all-in-one option when consolidation truly helps. Do not force it into cases where a lighter tool is enough."
     },
     {
       "id": "beehiiv",
@@ -70,7 +114,47 @@
       "whenToUse": "Use when newsletter or audience-building is core to the business model, not as a generic email recommendation for every business.",
       "linkRule": {
         "usePrimaryWhen": "The business model depends on newsletter publishing, audience growth, referrals, or sponsorship potential."
-      }
+      },
+      "summary": "Newsletter-first platform for publishing, audience building, referral growth, and later monetization.",
+      "idealFor": [
+        "newsletter businesses",
+        "content + affiliate businesses",
+        "media-style businesses",
+        "founders building an audience-first model"
+      ],
+      "notIdealFor": [
+        "people who mainly need CRM and funnels",
+        "founders who do not plan to build an email audience",
+        "pure ecommerce as the main model"
+      ],
+      "businessModelFits": [
+        "content_affiliate",
+        "newsletter_business",
+        "media_business",
+        "hybrid_online_business"
+      ],
+      "jobsToBeDone": [
+        "publish a newsletter",
+        "capture email subscribers",
+        "grow an owned audience",
+        "build toward referrals and sponsorships",
+        "monetize a media business later"
+      ],
+      "howToUseForBusiness": [
+        "Use beehiiv as the core newsletter home when the business depends on email audience growth.",
+        "Create the publication, signup flow, and welcome sequence first.",
+        "Publish consistently and use the platform to grow toward referrals, sponsorships, or paid recommendations later."
+      ],
+      "specificScenarios": [
+        "A founder turning niche research into a weekly newsletter business.",
+        "A content + affiliate business that needs email capture plus long-term audience ownership.",
+        "A business using free content and newsletter trust to support affiliate monetization later."
+      ],
+      "comparisonNotes": [
+        "Compared with Kit: beehiiv is stronger when the model feels like a media/newsletter business.",
+        "Compared with GHL: beehiiv is the better fit when the core asset is the newsletter, not the funnel/CRM stack."
+      ],
+      "recommendationStyle": "Recommend beehiiv when newsletter publishing and audience-building are central to the business model, not as a generic email tool for everything."
     },
     {
       "id": "shopify",
@@ -94,7 +178,45 @@
       "whenToUse": "Use when the business clearly needs a real storefront and ecommerce backend.",
       "linkRule": {
         "usePrimaryWhen": "The offer is product-led and needs catalog, cart, checkout, and store infrastructure."
-      }
+      },
+      "summary": "Ecommerce platform for running a real online store with products, catalog, cart, and checkout.",
+      "idealFor": [
+        "physical product brands",
+        "ecommerce stores",
+        "product-first businesses",
+        "brands that need catalog + checkout"
+      ],
+      "notIdealFor": [
+        "service businesses selling calls",
+        "newsletter-first media businesses",
+        "simple one-off digital offer funnels where storefront complexity is unnecessary"
+      ],
+      "businessModelFits": [
+        "ecommerce_business",
+        "product_brand",
+        "hybrid_online_business"
+      ],
+      "jobsToBeDone": [
+        "launch an online store",
+        "manage a product catalog",
+        "take payments through a standard storefront checkout",
+        "run a branded ecommerce site"
+      ],
+      "howToUseForBusiness": [
+        "Set up the store, products, collections, checkout, and basic brand pages.",
+        "Use Shopify when browsing, catalog structure, and standard ecommerce behavior matter.",
+        "Pair it later with email, ads, or content once the store foundation is working."
+      ],
+      "specificScenarios": [
+        "A founder selling physical products online with more than one SKU.",
+        "A niche product business that needs a normal storefront rather than a lead funnel.",
+        "A business that needs product pages, cart, checkout, and order handling as the core experience."
+      ],
+      "comparisonNotes": [
+        "Compared with GHL: choose Shopify for a true store; choose GHL for funnel-led/service-led selling and follow-up.",
+        "Compared with ThriveCart: choose Shopify for stores/catalogs; choose ThriveCart for digital offers and optimized checkout flows."
+      ],
+      "recommendationStyle": "Recommend Shopify when the business is genuinely store-led. Do not force it on service or newsletter businesses."
     },
     {
       "id": "bluehost",
@@ -116,7 +238,42 @@
       "whenToUse": "Use only when simple beginner hosting is the real need.",
       "linkRule": {
         "usePrimaryWhen": "The recommendation is specifically about basic hosting or a simple starter site."
-      }
+      },
+      "summary": "Beginner-friendly hosting/domain option for getting a simple website online quickly.",
+      "idealFor": [
+        "beginners who want a simple hosting path",
+        "people who need domain + hosting basics",
+        "starter websites"
+      ],
+      "notIdealFor": [
+        "founders who only need a one-page Carrd site",
+        "audience-first newsletter businesses",
+        "cases where a registrar-only choice or an all-in-one funnel platform is better"
+      ],
+      "businessModelFits": [
+        "starter_site",
+        "basic_launch",
+        "hybrid_online_business"
+      ],
+      "jobsToBeDone": [
+        "register a domain and set up hosting",
+        "get a basic starter website live",
+        "handle simple early website infrastructure"
+      ],
+      "howToUseForBusiness": [
+        "Use Bluehost when the bottleneck is simple hosting, not advanced sales or funnel logic.",
+        "Recommend it for basic website infrastructure when the user needs more than a one-page site but less than a complex stack.",
+        "Keep the recommendation simple and practical rather than hyped."
+      ],
+      "specificScenarios": [
+        "A beginner who wants a basic company website and domain in one place.",
+        "An early business that needs simple web presence before more advanced tooling."
+      ],
+      "comparisonNotes": [
+        "Compared with Carrd: choose Carrd for the fastest simple landing page; choose Bluehost when real hosting/site setup is the main need.",
+        "Compared with Namecheap/Hostinger later: use the tool that best matches registrar-only vs hosting-inclusive needs."
+      ],
+      "recommendationStyle": "Use sparingly. This is a useful infrastructure recommendation, not a centerpiece of the BenjiStack tool stack."
     },
     {
       "id": "invideo",
@@ -139,7 +296,231 @@
       "whenToUse": "Use when video is part of the acquisition or content strategy.",
       "linkRule": {
         "usePrimaryWhen": "The business needs fast video output for content, promotion, or audience growth."
-      }
+      },
+      "summary": "Fast video creation tool for promo assets, social content, and simple marketing videos.",
+      "idealFor": [
+        "content-led businesses",
+        "creators",
+        "founders using video for acquisition",
+        "operators who need simple promo videos without a full editing workflow"
+      ],
+      "notIdealFor": [
+        "businesses with no video strategy",
+        "founders who only need written/email assets",
+        "cases where video is not part of distribution"
+      ],
+      "businessModelFits": [
+        "content_affiliate",
+        "creator_business",
+        "hybrid_online_business"
+      ],
+      "jobsToBeDone": [
+        "make promo videos quickly",
+        "turn ideas into social/video content",
+        "support distribution with lightweight video assets"
+      ],
+      "howToUseForBusiness": [
+        "Create short product explainers, offer promos, social clips, or supporting content for distribution channels.",
+        "Use it when video helps the business get attention but a full production workflow would be overkill.",
+        "Treat it as a growth/distribution tool, not a core launch platform."
+      ],
+      "specificScenarios": [
+        "A founder using short-form video to promote a newsletter or offer.",
+        "A digital product business making simple launch/promo videos.",
+        "A content business repackaging ideas into visual distribution assets."
+      ],
+      "comparisonNotes": [
+        "Compared with Canva: Canva is better for static assets; InVideo is better when video itself is the channel."
+      ],
+      "recommendationStyle": "Recommend only when video is a real part of the go-to-market plan."
+    },
+    {
+      "id": "make",
+      "name": "Make",
+      "status": "approved",
+      "category": "automation",
+      "priority": "medium",
+      "links": {
+        "primary": "https://www.make.com/en/register?pc=benjistack"
+      },
+      "labels": {
+        "primary": "Try Make"
+      },
+      "useCases": [
+        "workflow_automation",
+        "lead_routing",
+        "ops_automation",
+        "directory_workflows",
+        "tool_connections"
+      ],
+      "whenToUse": "Use only after the business has a real repeatable workflow to automate; not as a default beginner recommendation.",
+      "linkRule": {
+        "usePrimaryWhen": "The business already has multiple tools or repetitive operational steps that would benefit from automation."
+      },
+      "summary": "Workflow automation tool for connecting apps and automating repeatable operational steps.",
+      "idealFor": [
+        "businesses with repeatable workflows",
+        "lead-gen businesses",
+        "directories/marketplaces",
+        "operators connecting multiple tools"
+      ],
+      "notIdealFor": [
+        "true beginners with no real workflow yet",
+        "businesses that can still run simply by hand",
+        "people looking for their first launch tool"
+      ],
+      "businessModelFits": [
+        "lead_generation",
+        "marketplace_directory",
+        "ops_heavy_hybrid"
+      ],
+      "jobsToBeDone": [
+        "route leads between tools",
+        "automate repetitive admin steps",
+        "connect forms, CRMs, sheets, and notifications",
+        "run directory/listing or ops workflows"
+      ],
+      "howToUseForBusiness": [
+        "Start only after the manual process is clear; do not automate chaos.",
+        "Use Make to connect lead capture, internal tracking, alerts, CRM steps, or directory workflows once they are repeatable.",
+        "Frame it as an operations multiplier, not as a beginner launch requirement."
+      ],
+      "specificScenarios": [
+        "A lead-gen business routing form leads into a CRM and alert system.",
+        "A directory business moving submissions into review and publishing workflows.",
+        "A founder syncing repetitive tasks between tools after the business is already working."
+      ],
+      "comparisonNotes": [
+        "Compared with GHL: use GHL when one platform can handle the workflow natively; use Make when multiple tools need to be connected.",
+        "Do not position Make as the first thing a beginner should buy."
+      ],
+      "recommendationStyle": "Be explicit that Make is for later-stage workflow automation, not default beginner setup."
+    },
+    {
+      "id": "carrd",
+      "name": "Carrd",
+      "status": "approved",
+      "category": "landing_page",
+      "priority": "medium",
+      "links": {
+        "primary": "https://try.carrd.co/v1wc4psl"
+      },
+      "labels": {
+        "primary": "Try Carrd"
+      },
+      "useCases": [
+        "simple_landing_page",
+        "one_page_site",
+        "validation_page",
+        "lightweight_launch"
+      ],
+      "whenToUse": "Use when someone needs the fastest, simplest one-page site or validation landing page without heavier tooling.",
+      "linkRule": {
+        "usePrimaryWhen": "The goal is to get a simple landing page or waitlist page live quickly and cheaply."
+      },
+      "summary": "Very lightweight one-page site builder for landing pages, waitlists, and simple validation sites.",
+      "idealFor": [
+        "founders validating an idea quickly",
+        "simple one-off offers",
+        "waitlist pages",
+        "lean early-stage landing pages"
+      ],
+      "notIdealFor": [
+        "complex multi-page sites",
+        "businesses needing deep funnel/CRM automation",
+        "full ecommerce stores"
+      ],
+      "businessModelFits": [
+        "productized_service",
+        "saas_tool_prelaunch",
+        "digital_product_prelaunch",
+        "hybrid_online_business"
+      ],
+      "jobsToBeDone": [
+        "launch a simple landing page fast",
+        "collect interest for an idea",
+        "put a one-page offer online cheaply"
+      ],
+      "howToUseForBusiness": [
+        "Use Carrd to test positioning, capture emails, or publish a simple offer page fast.",
+        "Recommend it when speed and simplicity matter more than advanced funnels or deep site structure.",
+        "It is often the right answer when the founder is overcomplicating the first launch."
+      ],
+      "specificScenarios": [
+        "A founder testing a waitlist before building the product.",
+        "A simple service or digital offer that only needs one strong page and a CTA.",
+        "An early validation page before investing in a larger stack."
+      ],
+      "comparisonNotes": [
+        "Compared with Framer: Carrd is usually simpler and lighter; Framer is better when polish/design flexibility matters more.",
+        "Compared with GHL: choose Carrd for the lean first page; choose GHL when funnels, CRM, forms, and follow-up matter."
+      ],
+      "recommendationStyle": "Recommend Carrd when the real need is to get something clean and simple live quickly."
+    },
+    {
+      "id": "thrivecart",
+      "name": "ThriveCart",
+      "status": "approved",
+      "category": "digital_checkout",
+      "priority": "medium",
+      "links": {
+        "primary": "https://benjistack--checkout.thrivecart.com/thrivecart-account-eu/"
+      },
+      "labels": {
+        "primary": "Try ThriveCart"
+      },
+      "useCases": [
+        "digital_product_sales",
+        "checkout_pages",
+        "order_bumps",
+        "upsells",
+        "affiliate_management",
+        "course_or_membership_sales"
+      ],
+      "whenToUse": "Use when someone is selling digital products, courses, memberships, workshops, or downloadable offers and needs strong checkout and sales-flow infrastructure without building a full ecommerce store.",
+      "linkRule": {
+        "usePrimaryWhen": "The business is selling digital offers and needs checkout, bumps, upsells, or affiliate management more than a classic storefront."
+      },
+      "summary": "Checkout-focused platform for selling digital products, courses, memberships, and other digital offers.",
+      "idealFor": [
+        "digital product businesses",
+        "course sellers",
+        "membership businesses",
+        "creators selling downloadable offers",
+        "coaches selling a focused digital offer"
+      ],
+      "notIdealFor": [
+        "classic multi-product ecommerce stores",
+        "businesses whose main need is CRM/funnels/lead management",
+        "simple free newsletter businesses"
+      ],
+      "businessModelFits": [
+        "digital_product",
+        "creator_business",
+        "course_business",
+        "hybrid_online_business"
+      ],
+      "jobsToBeDone": [
+        "sell a digital offer through optimized checkout",
+        "add bumps and upsells",
+        "run affiliate management for offers",
+        "support course or membership sales"
+      ],
+      "howToUseForBusiness": [
+        "Use ThriveCart when the business sells one or a few digital offers and checkout performance matters a lot.",
+        "Recommend it for templates, courses, workshops, memberships, downloadable products, and similar creator/digital offers.",
+        "Frame it as the selling/check-out layer rather than a full storefront platform."
+      ],
+      "specificScenarios": [
+        "A founder selling a paid template pack or mini-course.",
+        "A creator running a workshop or membership with optimized checkout and upsells.",
+        "A digital product business that wants stronger checkout flow without needing Shopify-level storefront complexity."
+      ],
+      "comparisonNotes": [
+        "Compared with Shopify: choose ThriveCart for digital offers and optimized checkout; choose Shopify for a true store/catalog.",
+        "Compared with GHL: choose ThriveCart when checkout and digital sales are the core need; choose GHL when the business needs CRM/funnels/follow-up around the sale."
+      ],
+      "recommendationStyle": "Recommend ThriveCart when digital selling is central and a full ecommerce storefront would be overkill."
     }
   ],
   "pendingPrograms": [
@@ -192,17 +573,6 @@
         "affordable_hosting",
         "starter_site",
         "early_launch"
-      ]
-    },
-    {
-      "id": "otter",
-      "name": "Otter.ai",
-      "status": "application_prepared",
-      "intendedUse": [
-        "transcription",
-        "research_calls",
-        "meeting_notes",
-        "founder_productivity"
       ]
     }
   ],
