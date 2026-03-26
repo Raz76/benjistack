@@ -7,7 +7,7 @@
 'use strict';
 
 // TODO: replace with the first public issue URL once Issue #1 is live.
-const LATEST_ISSUE_LINK = 'https://newsletter.benjistack.com';
+const LATEST_ISSUE_LINK = 'https://newsletter.benjistack.com/p/why-most-people-start-with-the-wrong-business-idea';
 
 // ----------------------------------------------------------------
 // HELPER: Create a standard screen wrapper with header + back nav
