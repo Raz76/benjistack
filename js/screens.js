@@ -1178,6 +1178,25 @@ function renderListItems(items = [], ordered = false) {
   return `<${tag}>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</${tag}>`;
 }
 
+function renderToolName(tool, toolNameUrl) {
+  const rawName = String(tool?.name || '');
+  if (!toolNameUrl) return escapeHtml(rawName);
+
+  const affiliateName = String(tool?.affiliate?.name || '').trim();
+  if (affiliateName) {
+    const start = rawName.toLowerCase().indexOf(affiliateName.toLowerCase());
+    if (start !== -1) {
+      const end = start + affiliateName.length;
+      const before = escapeHtml(rawName.slice(0, start));
+      const linked = escapeHtml(rawName.slice(start, end));
+      const after = escapeHtml(rawName.slice(end));
+      return `${before}<a href="${escapeHtml(toolNameUrl)}" target="_blank" rel="noopener">${linked}</a>${after}`;
+    }
+  }
+
+  return `<a href="${escapeHtml(toolNameUrl)}" target="_blank" rel="noopener">${escapeHtml(rawName)}</a>`;
+}
+
 function renderToolList(tools = [], context = {}) {
   if (!tools.length) return '<p class="muted">No tool recommendations yet.</p>';
   return tools.map(tool => {
@@ -1227,7 +1246,7 @@ function renderToolList(tools = [], context = {}) {
 
     return `<div class="tool-card">
       <div class="tool-head">
-        <div class="tool-name">${toolNameUrl ? `<a href="${escapeHtml(toolNameUrl)}" target="_blank" rel="noopener">${escapeHtml(tool.name)}</a>` : escapeHtml(tool.name)}</div>
+        <div class="tool-name">${renderToolName(tool, toolNameUrl)}</div>
         ${tool.category ? `<div class="tool-category">${escapeHtml(tool.category)}</div>` : ''}
       </div>
       <div class="tool-reason">${escapeHtml(tool.reason || tool.summary || '')}</div>
@@ -1294,8 +1313,8 @@ function preparePhaseTools() {
   return [
     {
       name: 'Notion or Google Docs',
-      category: 'Strategy',
-      reason: 'Use it to define audience, mission, offer, and messaging before you start building pages.'
+      category: 'Strategy notes',
+      reason: 'Use it to write down who this is for, what problem you are solving, and the simple offer/message you want to test.'
     },
     {
       name: 'Canva',
@@ -1303,9 +1322,9 @@ function preparePhaseTools() {
       reason: 'Good enough for a simple logo direction, color choices, and a lightweight style guide.'
     },
     {
-      name: 'Cloudflare Registrar or Namecheap',
-      category: 'Domain',
-      reason: 'Check domain availability before locking yourself into a brand name you cannot actually buy.'
+      name: 'Bluehost or Namecheap',
+      category: 'Domain / hosting',
+      reason: 'Use Bluehost if you want a beginner-friendly domain + WordPress setup in one place. Use Namecheap if you just want to secure the name first.'
     }
   ];
 }
