@@ -1,4 +1,4 @@
-// UrbanVoice.AI — Cloudflare Worker (DiscoverTool)
+// BenjiStack — Cloudflare Worker
 const ANTHROPIC_API_KEY = 'My Api key'; // ← paste your Anthropic key here
 const SERPER_API_KEY    = 'My Api key'; // ← paste your Serper key here
 const UV_SECRET         = 'My Secret key'; // ← shared secret (must match api.js)
@@ -202,7 +202,7 @@ export default {
       }
     }
 
-    return new Response('UrbanVoice DiscoverTool Proxy — OK', {
+    return new Response('BenjiStack Proxy — OK', {
       headers: { ...CORS, 'Content-Type': 'text/plain' },
     });
   },
