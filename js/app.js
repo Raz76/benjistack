@@ -350,10 +350,9 @@ function goTo(stepName) {
 }
 
 function goBack() {
-  if (!STATE.confirmed && hasConsumedFreeValidation() && STATE.currentStep === STEPS.indexOf('summary')) {
-    showEmailGate();
-    return;
-  }
+  // Allow normal step-by-step back navigation inside the first free report.
+  // The email gate should only block starting another validation journey,
+  // not reviewing the previous validation/solution screens.
 
   // If going back from problems and angles was skipped, return to landing
   if (STATE.currentStep === STEPS.indexOf('problems') && STATE.anglesSkipped) {
