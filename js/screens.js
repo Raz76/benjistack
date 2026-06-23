@@ -841,7 +841,7 @@ async function renderSummaryScreen(container) {
             <div class="report-mini-label">Problem identified</div>
             <strong>${escapeHtml(canonicalProblemTitle || '—')}</strong>
             <div>${escapeHtml(STATE.selectedProblem?.description || '')}</div>
-            ${(STATE.selectedProblem?.quotes || []).slice(0, 2).map(q => `<div class="report-quote">“${escapeHtml(q)}”</div>`).join('')}
+            ${renderEvidence(STATE.selectedProblem)}
           </div>
           <div class="report-card">
             <div class="report-mini-label">Business idea</div>
@@ -1028,7 +1028,26 @@ async function renderSummaryScreen(container) {
     generatePDF();
   });
 }
+function renderEvidence(problem, isPdf = false) {
+  const quoteClass = isPdf ? 'quote' : 'report-quote';
+  const evidence = Array.isArray(problem?.evidence) ? problem.evidence : [];
 
+  if (evidence.length) {
+    return evidence.slice(0, 3).map(e => {
+      const q = escapeHtml(e.quote || '');
+      const src = escapeHtml(e.source || 'Source');
+      const url = e.url || '';
+      const link = url
+        ? ` <a href="${escapeHtml(url)}" target="_blank" rel="noopener" style="font-size:0.8rem; white-space:nowrap;">View source (${src}) →</a>`
+        : ` <span style="font-size:0.8rem; color: var(--text-faint);">(${src})</span>`;
+      return `<div class="${quoteClass}">“${q}”${link}</div>`;
+    }).join('');
+  }
+
+  return (problem?.quotes || []).slice(0, 2)
+    .map(q => `<div class="${quoteClass}">“${escapeHtml(q)}”</div>`)
+    .join('');
+}
 // ----------------------------------------------------------------
 // PDF PLAYBOOK HELPERS
 // ----------------------------------------------------------------
@@ -1606,7 +1625,7 @@ async function generatePDF() {
         <div class="label">Problem identified</div>
         <strong>${escapeHtml(canonicalProblemTitle || '—')}</strong>
         <div>${escapeHtml(STATE.selectedProblem?.description || '')}</div>
-        ${(STATE.selectedProblem?.quotes || []).slice(0, 2).map(q => `<div class="quote">“${escapeHtml(q)}”</div>`).join('')}
+        ${renderEvidence(STATE.selectedProblem, true)}
       </div>
       <div class="stat">
         <div class="label">Business idea</div>
