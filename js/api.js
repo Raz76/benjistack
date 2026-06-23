@@ -183,6 +183,7 @@ Return when SUFFICIENT:
       "title": "Problem theme name (max 8 words)",
       "description": "2-3 sentences describing the problem",
       "quotes": ["Direct quote or paraphrase from a result", "Another quote"],
+      "evidence": [{ "quote": "the exact quote", "source": "Reddit", "url": "the real url from the result" }],
       "sources": ["Reddit", "Quora"],
       "frequency": "Low|Medium|High|Very High",
       "trend": "Declining|Stable|Growing|Growing Fast",
@@ -191,6 +192,7 @@ Return when SUFFICIENT:
   ]
 }
 Return up to 5 problems. Every field must come from the actual results above — no invention.
+For the "evidence" array: include 1-3 items, each pairing a real quote with the exact "url" field from the result it came from. Never invent or guess a URL. If a result has no url, do not include it in evidence.
 
 Return when TOO BROAD — suggest narrower niches based ONLY on patterns visible in the results:
 {
@@ -231,7 +233,7 @@ Return: { "related": true } or { "related": false }`;
 async function fetchProblems(angle) {
   const searchData = await callSearch(angle);
 
-const allResults = [
+  const allResults = [
     ...(searchData.results?.reddit  || []),
     ...(searchData.results?.quora   || []),
     ...(searchData.results?.general || []),
@@ -259,6 +261,7 @@ the hobby, or meta-commentary. Never include a problem whose fix is "talk to you
 
 Identify up to 5 broad, distinct practical problem themes.
 Every field must come from the actual results above — do not invent quotes or sources.
+For the "evidence" array: include 1-3 items, each pairing a real quote with the exact "url" field from the result it came from. Never invent a URL. If a result has no url, omit it from evidence.
 
 Return a JSON array of the qualifying objects (up to 5):
 [
@@ -266,6 +269,7 @@ Return a JSON array of the qualifying objects (up to 5):
     "title": "Problem theme name (max 8 words)",
     "description": "2-3 sentences describing the problem",
     "quotes": ["Direct quote or paraphrase from a result", "Another quote"],
+    "evidence": [{ "quote": "the exact quote", "source": "Reddit", "url": "the real url from the result" }],
     "sources": ["Reddit", "Quora"],
     "frequency": "Low|Medium|High|Very High",
     "trend": "Declining|Stable|Growing|Growing Fast",
