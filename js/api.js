@@ -71,7 +71,7 @@ function flattenResults(searchData) {
     ...(searchData.results?.reddit  || []),
     ...(searchData.results?.quora   || []),
     ...(searchData.results?.general || []),
-  ].map(r => ({ source: r.source, title: r.title, snippet: r.snippet }));
+  ].map(r => ({ source: r.source, title: r.title, snippet: r.snippet, url: r.url }));
 }
 
 // ----------------------------------------------------------------
@@ -231,11 +231,11 @@ Return: { "related": true } or { "related": false }`;
 async function fetchProblems(angle) {
   const searchData = await callSearch(angle);
 
-  const allResults = [
+const allResults = [
     ...(searchData.results?.reddit  || []),
     ...(searchData.results?.quora   || []),
     ...(searchData.results?.general || []),
-  ].map(r => ({ source: r.source, title: r.title, snippet: r.snippet }));
+  ].map(r => ({ source: r.source, title: r.title, snippet: r.snippet, url: r.url }));
 
   if (allResults.length === 0) {
     throw new Error(`No discussions found for "${angle}". Try going back and picking a different niche.`);
