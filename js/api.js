@@ -32,7 +32,7 @@ async function callAnthropic(systemPrompt, userPrompt) {
     headers,
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
+      max_tokens: 4096,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
     }),
@@ -178,12 +178,14 @@ Return when SUFFICIENT:
   "sufficient": true,
   "matchType": "direct" | "near_miss",
   "nearMissNote": "One sentence — only include this field on near_miss",
-  "problems": [
+ "problems": [
     {
       "title": "Problem theme name (max 8 words)",
       "description": "2-3 sentences describing the problem",
+      "evidence": [
+        { "quote": "exact quote from a result", "source": "Reddit", "url": "the exact url field from that same result object" }
+      ],
       "quotes": ["Direct quote or paraphrase from a result", "Another quote"],
-      "evidence": [{ "quote": "the exact quote", "source": "Reddit", "url": "the real url from the result" }],
       "sources": ["Reddit", "Quora"],
       "frequency": "Low|Medium|High|Very High",
       "trend": "Declining|Stable|Growing|Growing Fast",
@@ -192,7 +194,8 @@ Return when SUFFICIENT:
   ]
 }
 Return up to 5 problems. Every field must come from the actual results above — no invention.
-For the "evidence" array: include 1-3 items, each pairing a real quote with the exact "url" field from the result it came from. Never invent or guess a URL. If a result has no url, do not include it in evidence.
+
+CRITICAL — the "evidence" array is REQUIRED and must never be empty. For every problem, include 1 to 3 evidence items. Each result object in the search data has a "url" field. To build an evidence item: take a quote, then copy the "url" value from the EXACT SAME result object that quote came from. Do not pair a quote with a different result's url. If you genuinely cannot find a matching url for a quote, still include the evidence item using the url of the closest matching result. Never return a problem without an evidence array.
 
 Return when TOO BROAD — suggest narrower niches based ONLY on patterns visible in the results:
 {
