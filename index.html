@@ -52,13 +52,16 @@
               real demand, and better business opportunities before you waste time building the wrong thing.
             </p>
           </div>
-          <div class="search-card">
+          <div class="search-card" id="search-card">
             <label class="search-label" for="idea-input">What's your business idea or topic?</label>
             <p class="search-hint">Be as broad or specific as you like. E.g. "productivity coaching for freelancers" or "pet care" or "remote team communication".</p>
+            <p id="start-tip" style="display:none; margin:0 0 8px; font-weight:600; color:#0d7a52;">👇 Type your idea here, then hit Discover Problems</p>
             <div class="search-row">
               <input type="text" id="idea-input" class="search-input" placeholder="e.g. meal planning for busy parents…" maxlength="200" autocomplete="off" />
               <button id="btn-discover" class="btn-primary" disabled>Discover Problems →</button>
             </div>
+            <p class="search-char-count"><span id="char-count">0</span> / 200</p>
+          </div>
             <p class="search-char-count"><span id="char-count">0</span> / 200</p>
           </div>
           <div class="trust-strip">
@@ -74,9 +77,26 @@
       </div>
     </div>
   </div>
-  <script src="js/api.js?v=20260327a"></script>
+ <script src="js/api.js?v=20260327a"></script>
   <script src="js/screens.js?v=20260327a"></script>
   <script src="js/app.js?v=20260327a"></script>
+  <script>
+    (function () {
+      var logo = document.getElementById('logo-home');
+      var input = document.getElementById('idea-input');
+      var tip = document.getElementById('start-tip');
+      if (logo && input) {
+        logo.addEventListener('click', function () {
+          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          input.focus();
+          if (tip) {
+            tip.style.display = 'block';
+            setTimeout(function () { tip.style.display = 'none'; }, 4000);
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
 
