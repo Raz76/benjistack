@@ -402,7 +402,15 @@ function updateProgressDots(activeIndex) {
 // ----------------------------------------------------------------
 function renderScreen(stepName) {
   const container = document.getElementById('screen-container');
-  container.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  // Remove any dynamically-added screens (everything except the static landing screen),
+  // and deactivate all screens, so screens never stack on top of each other.
+  container.querySelectorAll('.screen').forEach(s => {
+    if (s.id !== 'screen-landing') {
+      s.remove();
+    } else {
+      s.classList.remove('active');
+    }
+  });
 
   switch (stepName) {
     case null:
