@@ -12,7 +12,7 @@ BenjiStack is a free tool for early-stage founders who want to know if a busines
  
 Each page below checks demand evidence for one common business idea category, pulling live counts from Reddit, Amazon reviews, and app stores.
  
-- [Is there demand for a dropshipping business](https://benjistack.com/ideas/dropshipping): Demand check for dropshipping, sourced from real complaints and reviews.
+- [Is there demand for a dropshipping business](https://benjistack.com/ideas/dropshipping-worth-it-2026.html: Demand check for dropshipping, sourced from real complaints and reviews.
  
 ## About
  
