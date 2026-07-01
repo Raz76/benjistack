@@ -1,0 +1,19 @@
+# BenjiStack
+ 
+> BenjiStack checks whether people are actually complaining about, and paying to solve, a specific business idea. It pulls real evidence from Reddit, Amazon reviews, and app store reviews instead of generating an AI-guessed score, so founders can see demand signals before building anything.
+ 
+BenjiStack is a free tool for early-stage founders who want to know if a business idea addresses a real, evidenced problem. Unlike AI-scoring validators that estimate viability from a language model's training data, BenjiStack searches live public complaint and review data and reports back what it finds, with counts and sources.
+ 
+## Core pages
+ 
+- [Home](https://benjistack.com/): Check any business idea for real demand signals from Reddit, Amazon, and app store reviews, free, no signup required.
+ 
+## Niche demand pages
+ 
+Each page below checks demand evidence for one common business idea category, pulling live counts from Reddit, Amazon reviews, and app stores.
+ 
+- [Is there demand for a dropshipping business](https://benjistack.com/ideas/dropshipping): Demand check for dropshipping, sourced from real complaints and reviews.
+ 
+## About
+ 
+BenjiStack exists to stop people from building things nobody's complaining about. The positioning: don't sell your passion, solve a problem people will pay for.
