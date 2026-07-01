@@ -10,9 +10,12 @@ BenjiStack is a free tool for early-stage founders who want to know if a busines
  
 ## Niche demand pages
  
-Each page below checks demand evidence for one common business idea category, pulling live counts from Reddit, Amazon reviews, and app stores.
+Each page below checks demand evidence for one common business idea category, pulling real pain points and quotes from Reddit and Quora.
  
-- [Is there demand for a dropshipping business](https://benjistack.com/ideas/dropshipping-worth-it-2026.html: Demand check for dropshipping, sourced from real complaints and reviews.
+- [Is dropshipping worth it in 2026?](https://benjistack.com/ideas/dropshipping-worth-it-2026.html): Real complaints on traffic, suppliers, and niche selection for beginner dropshippers.
+- [Is print on demand worth it in 2026?](https://benjistack.com/ideas/print-on-demand-worth-it-2026.html): Real complaints on market saturation, niche selection, and thin margins for POD sellers.
+- [Is a vending machine business worth it in 2026?](https://benjistack.com/ideas/vending-machine-business-worth-it-2026.html): Real complaints on securing locations, upfront costs, and declining profitability for vending operators.
+- [Is an online coaching business worth it in 2026?](https://benjistack.com/ideas/online-coaching-business-worth-it-2026.html): Real complaints on market saturation, client retention, and building a client pipeline for online coaches.
  
 ## About
  
